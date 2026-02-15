@@ -106,6 +106,12 @@ services:
                 - '${DB_USERNAME}'
             retries: 3
             timeout: 5s
+    tika:
+        image: apache/tika:latest
+        ports:
+            - '9998:9998'
+        networks:
+            - sail
 networks:
     sail:
         driver: bridge
