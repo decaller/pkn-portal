@@ -18,6 +18,7 @@ use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
+use App\Filament\Resources\News\Widgets\TopViewedNews; // <--- Import this
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -40,6 +41,7 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 AccountWidget::class,
                 FilamentInfoWidget::class,
+                TopViewedNews::class,
             ])
             ->middleware([
                 EncryptCookies::class,
