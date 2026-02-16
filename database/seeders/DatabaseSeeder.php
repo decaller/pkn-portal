@@ -20,7 +20,8 @@ class DatabaseSeeder extends Seeder
 
         User::factory()->create([
             'name' => 'Admin',
-            'email' => 'harridiilmantovid@gmail.com',
+            'type' => 'admin',
+            'phone_number' => '08111729896',
             'password' => Hash::make('cemara153'), // Change this later!
         ]);
     }

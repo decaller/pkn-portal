@@ -21,6 +21,7 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 use App\Filament\Resources\News\Widgets\TopViewedNews; // <--- Import this
 use App\Filament\Resources\Events\Widgets\TopViewedEvents;
 use App\Filament\Resources\Documents\Widgets\TopViewedDocuments;
+use App\Filament\Pages\Auth\CustomLogin;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -30,7 +31,9 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
-            ->login()
+            ->login(CustomLogin::class)
+            ->authGuard('web')
+            ->passwordReset()
             ->colors([
                 'primary' => Color::Amber,
             ])
