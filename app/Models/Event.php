@@ -14,9 +14,12 @@ class Event extends Model
     protected $guarded = [];
 
     protected $casts = [
-        'event_date' => 'date',
-        'is_published' => 'boolean',
-    ];
+    'event_date' => 'date',
+    'is_published' => 'boolean',
+    'photos' => 'array',
+    'files' => 'array',
+    'rundown' => 'array', // <--- CRITICAL: This makes the JSON Repeater work
+];
 
     // 2. Link to Analytics (Polymorphic)
     public function analytics(): MorphMany

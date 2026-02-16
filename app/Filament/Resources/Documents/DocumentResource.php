@@ -27,10 +27,10 @@ class DocumentResource extends Resource
         return DocumentForm::configure($schema);
     }
 
-    public static function infolist(Schema $schema): Schema
-    {
-        return DocumentInfolist::configure($schema);
-    }
+    // public static function infolist(Schema $schema): Schema
+    // {
+    //     return DocumentInfolist::configure($schema);
+    // }
 
     public static function table(Table $table): Table
     {
@@ -48,9 +48,9 @@ class DocumentResource extends Resource
     {
         return [
             'index' => ListDocuments::route('/'),
-            'create' => CreateDocument::route('/create'),
-            'view' => ViewDocument::route('/{record}'),
-            'edit' => EditDocument::route('/{record}/edit'),
+            // 'create' => CreateDocument::route('/create'),
+            // 'view' => ViewDocument::route('/{record}'),
+            // 'edit' => EditDocument::route('/{record}/edit'),
         ];
     }
 }

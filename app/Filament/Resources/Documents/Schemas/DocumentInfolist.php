@@ -10,7 +10,7 @@ class DocumentInfolist
     {
         return $schema
             ->components([
-                //
+                
             ]);
     }
 }
