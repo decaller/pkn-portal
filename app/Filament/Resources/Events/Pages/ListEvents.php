@@ -18,7 +18,7 @@ class ListEvents extends ListRecords
             CreateAction::make(),
         ];
     }
-        protected function getHeaderWidgets(): array
+    protected function getHeaderWidgets(): array
     {
         return [
             TopViewedEvents::class,

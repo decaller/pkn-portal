@@ -20,6 +20,7 @@ use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use App\Filament\Resources\News\Widgets\TopViewedNews; // <--- Import this
 use App\Filament\Resources\Events\Widgets\TopViewedEvents;
+use App\Filament\Resources\Documents\Widgets\TopViewedDocuments;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -44,6 +45,7 @@ class AdminPanelProvider extends PanelProvider
                 FilamentInfoWidget::class,
                 TopViewedNews::class,
                 TopViewedEvents::class,
+                TopViewedDocuments::class,
             ])
             ->middleware([
                 EncryptCookies::class,
