@@ -5,6 +5,7 @@ namespace App\Filament\Resources\Analytics\Pages;
 use App\Filament\Resources\Analytics\AnalyticResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
+use App\Filament\Resources\News\Widgets\TopViewedNews;
 
 class ListAnalytics extends ListRecords
 {
@@ -14,6 +15,12 @@ class ListAnalytics extends ListRecords
     {
         return [
             // CreateAction::make(),
+        ];
+    }
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            TopViewedNews::class,
         ];
     }
 }
