@@ -13,6 +13,25 @@ return new class extends Migration
     {
         Schema::create('events', function (Blueprint $table) {
             $table->id();
+            
+            // The basics
+            $table->string('title'); // "Graduation 2026"
+            
+            // THE MOST IMPORTANT COLUMN:
+            // This will be the folder name: "graduation-2026"
+            $table->string('slug')->unique(); 
+            
+            $table->text('description')->nullable();
+            $table->date('event_date');
+            
+            // Cover image for the dashboard card
+            $table->string('cover_image')->nullable();
+            
+            // Helper to quickly find where files are stored
+            // Example: "events/graduation-2026"
+            $table->string('storage_path')->nullable(); 
+            
+            $table->boolean('is_published')->default(true);
             $table->timestamps();
         });
     }

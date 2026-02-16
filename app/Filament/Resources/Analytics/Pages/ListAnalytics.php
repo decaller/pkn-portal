@@ -6,6 +6,7 @@ use App\Filament\Resources\Analytics\AnalyticResource;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 use App\Filament\Resources\News\Widgets\TopViewedNews;
+use App\Filament\Resources\Events\Widgets\TopViewedEvents;
 
 class ListAnalytics extends ListRecords
 {
@@ -21,6 +22,7 @@ class ListAnalytics extends ListRecords
     {
         return [
             TopViewedNews::class,
+            TopViewedEvents::class,
         ];
     }
 }

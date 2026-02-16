@@ -19,6 +19,7 @@ use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
 use App\Filament\Resources\News\Widgets\TopViewedNews; // <--- Import this
+use App\Filament\Resources\Events\Widgets\TopViewedEvents;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -42,6 +43,7 @@ class AdminPanelProvider extends PanelProvider
                 AccountWidget::class,
                 FilamentInfoWidget::class,
                 TopViewedNews::class,
+                TopViewedEvents::class,
             ])
             ->middleware([
                 EncryptCookies::class,
