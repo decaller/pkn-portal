@@ -12,9 +12,8 @@ use Illuminate\Support\Facades\Storage;
 
 class EventObserver
 {
-
     public function __construct(protected TikaService $tika) {}
-    
+
     /**
      * Handle the Event "created" event.
      */
@@ -64,32 +63,40 @@ class EventObserver
 
         // 2. Loop through every session in the JSON
         foreach ($event->rundown as $session) {
-            
             // Check if this session has files
-            if (!empty($session['session_files'])) {
-                
+            if (!empty($session["session_files"])) {
                 // Filament stores files as an array of paths: ['events/graduation/file.pdf']
-                foreach ($session['session_files'] as $filePath) {
-
+                foreach ($session["session_files"] as $filePath) {
                     // 1. Check if record exists in DB already
-                    if (Document::where('file_path', $filePath)->exists()) continue;
+                    if (Document::where("file_path", $filePath)->exists()) {
+                        continue;
+                    }
 
-                    $disk = 'public';
+                    $disk = "public";
 
                     // SAFETY: If the file isn't there yet, wait 500ms and try one more time
                     if (!Storage::disk($disk)->exists($filePath)) {
-                        usleep(500000); 
+                        usleep(500000);
                     }
-                    
+
+                    if (!Storage::disk($disk)->exists($filePath)) {
+                        Log::warning(
+                            "Tika skipped: file not found after retry for {$filePath}",
+                        );
+                        continue;
+                    }
+
                     // 3. THE MAGIC: Check if this file is already in Documents
                     // We use the file path as the unique ID
-                    $exists = Document::where('file_path', $filePath)->exists();
+                    $exists = Document::where("file_path", $filePath)->exists();
 
                     // 1. Get file from Storage
                     $fileContent = Storage::disk($disk)->get($filePath);
 
                     if (!$fileContent) {
-                        Log::error("Tika Error: Could not retrieve file content for {$filePath}");
+                        Log::error(
+                            "Tika Error: Could not retrieve file content for {$filePath}",
+                        );
                         continue;
                     }
 
@@ -99,21 +106,29 @@ class EventObserver
                     if (!$exists) {
                         // 4. Create the Document automatically
                         Document::create([
-                            'event_id'          => $event->id,
-                            'session_slug'      => $session['slug'] ?? Str::slug($session['title']),
-                            'title'             => $session['title'] . ' Attachment',
-                            'slug'              => Str::slug($event->title . '-' . Str::random(5)),
-                            'file_path'         => $filePath,
-                            'original_filename' => basename($filePath),
-                            
+                            "event_id" => $event->id,
+                            "session_slug" =>
+                                $session["slug"] ??
+                                Str::slug($session["title"]),
+                            "title" => $session["title"] . " Attachment",
+                            "slug" => Str::slug(
+                                $event->title . "-" . Str::random(5),
+                            ),
+                            "file_path" => $filePath,
+                            "original_filename" => basename($filePath),
+
                             // Tika Data
-                            'content'           => $extraction['content'] ?? null,
-                            'mime_type'         => $extraction['mime_type'] ?? null,
-                            'metadata'          => $extraction['metadata'] ?? [],
-                            'description'       => "Auto-extracted from Session: " . ($session['title'] ?? 'Untitled'),
+                            "content" => $extraction["content"] ?? null,
+                            "mime_type" => $extraction["mime_type"] ?? null,
+                            "metadata" => $extraction["metadata"] ?? [],
+                            "description" =>
+                                "Auto-extracted from Session: " .
+                                ($session["title"] ?? "Untitled"),
                         ]);
-                        
-                        Log::info("Auto-created document for file: {$filePath}");
+
+                        Log::info(
+                            "Auto-created document for file: {$filePath}",
+                        );
                     }
                 }
             }

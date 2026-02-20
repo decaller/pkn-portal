@@ -11,24 +11,26 @@ class TikaService
 
     public function __construct()
     {
-        // 'tika' is the service name in your docker-compose.yml
-        $this->baseUrl = 'http://tika:9998';
+        // 'tika' is the service name in compose.yaml for Docker/Sail.
+        $this->baseUrl = config("services.tika.url", "http://tika:9998");
     }
 
     public function extractText(string $fileContent): ?array
     {
         try {
             // We use the /rmeta/text endpoint to get both Content and Metadata
-            $response = Http::withBody($fileContent, 'application/octet-stream')
-                ->put("{$this->baseUrl}/rmeta/text");
+            $response = Http::withBody(
+                $fileContent,
+                "application/octet-stream",
+            )->put("{$this->baseUrl}/rmeta/text");
 
             if ($response->successful()) {
                 $data = $response->json()[0]; // Tika returns an array of metadata objects
 
                 return [
-                    'content' => $data['X-TIKA:content'] ?? null,
-                    'mime_type' => $data['Content-Type'] ?? null,
-                    'metadata' => $data,
+                    "content" => $data["X-TIKA:content"] ?? null,
+                    "mime_type" => $data["Content-Type"] ?? null,
+                    "metadata" => $data,
                 ];
             }
         } catch (\Exception $e) {

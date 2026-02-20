@@ -40,17 +40,17 @@ class DocumentResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
-        ];
+                //
+            ];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => ListDocuments::route('/'),
+            "index" => ListDocuments::route("/"),
             // 'create' => CreateDocument::route('/create'),
-            // 'view' => ViewDocument::route('/{record}'),
-            // 'edit' => EditDocument::route('/{record}/edit'),
+            "view" => ViewDocument::route("/{record}"),
+            "edit" => EditDocument::route("/{record}/edit"),
         ];
     }
 }
