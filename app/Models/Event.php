@@ -19,6 +19,7 @@ class Event extends Model
         "event_date" => "date",
         "is_published" => "boolean",
         "allow_registration" => "boolean",
+        "registration_packages" => "array",
         "photos" => "array",
         "files" => "array",
         "rundown" => "array", // <--- CRITICAL: This makes the JSON Repeater work

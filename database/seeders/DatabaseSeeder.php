@@ -20,6 +20,16 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         // User::factory(10)->create();
+        $defaultPackages = [
+            [
+                "name" => "Regular",
+                "price" => 100000,
+            ],
+            [
+                "name" => "VIP",
+                "price" => 250000,
+            ],
+        ];
 
         $admin = User::updateOrCreate(
             ["email" => "harridiilmantovid@gmail.com"],
@@ -84,6 +94,7 @@ class DatabaseSeeder extends Seeder
                 "event_date" => now()->addMonths(3)->toDateString(),
                 "is_published" => true,
                 "allow_registration" => true,
+                "registration_packages" => $defaultPackages,
             ],
         );
 
@@ -96,17 +107,25 @@ class DatabaseSeeder extends Seeder
                 "event_date" => now()->addMonths(6)->toDateString(),
                 "is_published" => true,
                 "allow_registration" => true,
+                "registration_packages" => $defaultPackages,
             ],
         );
+
+        Event::query()->update([
+            "registration_packages" => $defaultPackages,
+        ]);
 
         Event::query()
             ->where("allow_registration", true)
             ->whereDate("event_date", ">=", now()->toDateString())
             ->get()
-            ->each(function (Event $event): void {
+            ->each(function (Event $event) use ($ybit): void {
                 $registrationUrl = route(
                     "filament.user.resources.event-registrations.create",
-                    ["event_id" => $event->getKey()],
+                    [
+                        "tenant" => $ybit->slug,
+                        "event_id" => $event->getKey(),
+                    ],
                 );
 
                 News::updateOrCreate(

@@ -20,7 +20,6 @@ class EventResource extends Resource
 {
     protected static ?string $model = Event::class;
     protected static bool $isScopedToTenant = false;
-
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCalendarDateRange;
 
     public static function form(Schema $schema): Schema

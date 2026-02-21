@@ -75,6 +75,30 @@ class EventForm
                 ])
                 ->columnSpanFull(),
 
+            Section::make("Registration Packages")
+                ->description("Define package types and price per participant.")
+                ->schema([
+                    Repeater::make("registration_packages")
+                        ->schema([
+                            TextInput::make("name")
+                                ->label("Package name")
+                                ->required()
+                                ->maxLength(100)
+                                ->placeholder("e.g. Regular, VIP, Group"),
+                            TextInput::make("price")
+                                ->label("Price / participant")
+                                ->numeric()
+                                ->prefix("IDR")
+                                ->required()
+                                ->minValue(0),
+                        ])
+                        ->columns(2)
+                        ->defaultItems(0)
+                        ->addActionLabel("Add package")
+                        ->columnSpanFull(),
+                ])
+                ->columnSpanFull(),
+
             Section::make("Description")
                 ->schema([RichEditor::make("description")->columnSpanFull()])
                 ->columnSpanFull(),

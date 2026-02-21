@@ -9,6 +9,7 @@ use App\Filament\User\Widgets\LatestNewsWidget;
 use App\Filament\User\Widgets\PastEventsWidget;
 use App\Filament\User\Widgets\RegistrationStatusesWidget;
 use App\Filament\User\Widgets\WelcomeWidget;
+use App\Models\Organization;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -33,6 +34,7 @@ class UserPanelProvider extends PanelProvider
             ->path("user")
             ->login(Login::class)
             ->registration(Register::class)
+            ->tenant(Organization::class, "slug", "organization")
             ->colors([
                 "primary" => Color::Amber,
             ])
@@ -56,6 +58,10 @@ class UserPanelProvider extends PanelProvider
                 PastEventsWidget::class,
                 LatestNewsWidget::class,
             ])
+            ->renderHook(
+                "panels::scripts.after",
+                fn() => view("filament.user.log-listener"),
+            )
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

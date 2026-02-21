@@ -16,48 +16,47 @@ class EventRegistrationsTable
     {
         return $table
             ->columns([
-                TextColumn::make('event.title')
-                    ->label('Event')
+                TextColumn::make("event.title")
+                    ->label("Event")
                     ->searchable()
                     ->sortable()
-                    ->weight('bold'),
-                TextColumn::make('booker.name')
-                    ->label('Booker')
-                    ->searchable(),
-                TextColumn::make('organization.name')
-                    ->label('Organization')
-                    ->placeholder('Personal'),
-                TextColumn::make('participants_count')
-                    ->label('Participants')
+                    ->weight("bold"),
+                TextColumn::make("booker.name")->label("Booker")->searchable(),
+                TextColumn::make("organization.name")
+                    ->label("Organization")
+                    ->placeholder("Personal"),
+                TextColumn::make("package_name")
+                    ->label("Package")
+                    ->placeholder("-"),
+                TextColumn::make("participants_count")
+                    ->label("Participants")
                     ->badge(),
-                TextColumn::make('status')
-                    ->badge(),
-                TextColumn::make('payment_status')
-                    ->badge(),
-                TextColumn::make('total_amount')
-                    ->money('IDR')
-                    ->sortable(),
-                TextColumn::make('updated_at')
-                    ->since(),
+                TextColumn::make("participant_count")->label("Qty")->badge(),
+                TextColumn::make("unit_price")
+                    ->money("IDR")
+                    ->label("Unit price"),
+                TextColumn::make("status")->badge(),
+                TextColumn::make("payment_status")->badge(),
+                TextColumn::make("total_amount")->money("IDR")->sortable(),
+                TextColumn::make("updated_at")->since(),
             ])
             ->filters([
-                SelectFilter::make('status')
-                    ->options(
-                        collect(RegistrationStatus::cases())->mapWithKeys(
-                            fn ($case) => [$case->value => ucfirst(str_replace('_', ' ', $case->value))],
-                        ),
+                SelectFilter::make("status")->options(
+                    collect(RegistrationStatus::cases())->mapWithKeys(
+                        fn($case) => [
+                            $case->value => ucfirst(
+                                str_replace("_", " ", $case->value),
+                            ),
+                        ],
                     ),
-                SelectFilter::make('payment_status')
-                    ->options(
-                        collect(PaymentStatus::cases())->mapWithKeys(
-                            fn ($case) => [$case->value => ucfirst($case->value)],
-                        ),
+                ),
+                SelectFilter::make("payment_status")->options(
+                    collect(PaymentStatus::cases())->mapWithKeys(
+                        fn($case) => [$case->value => ucfirst($case->value)],
                     ),
+                ),
             ])
-            ->defaultSort('created_at', 'desc')
-            ->recordActions([
-                ViewAction::make(),
-                EditAction::make(),
-            ]);
+            ->defaultSort("created_at", "desc")
+            ->recordActions([ViewAction::make(), EditAction::make()]);
     }
 }
