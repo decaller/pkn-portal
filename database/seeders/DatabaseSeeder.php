@@ -3,6 +3,7 @@
 namespace Database\Seeders;
 
 use App\Models\Event;
+use App\Models\News;
 use App\Models\Organization;
 use App\Models\User;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -97,5 +98,28 @@ class DatabaseSeeder extends Seeder
                 "allow_registration" => true,
             ],
         );
+
+        Event::query()
+            ->where("allow_registration", true)
+            ->whereDate("event_date", ">=", now()->toDateString())
+            ->get()
+            ->each(function (Event $event): void {
+                $registrationUrl = route(
+                    "filament.user.resources.event-registrations.create",
+                    ["event_id" => $event->getKey()],
+                );
+
+                News::updateOrCreate(
+                    ["title" => "Registration Open: {$event->title}"],
+                    [
+                        "content" =>
+                            "<p>Registration is now open for <strong>{$event->title}</strong> on {$event->event_date?->format(
+                                "d M Y",
+                            )}.</p>" .
+                            "<p><a href=\"{$registrationUrl}\">Click here to register now</a>.</p>",
+                        "is_published" => true,
+                    ],
+                );
+            });
     }
 }

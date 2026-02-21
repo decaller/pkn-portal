@@ -3,5 +3,8 @@
 test("the application returns a successful response", function () {
     $response = $this->get("/");
 
-    $response->assertRedirect(route("filament.user.pages.dashboard"));
+    $response->assertOk();
+    $response->assertSee("User Login");
+    $response->assertSee("User Register");
+    $response->assertSee("Admin Login");
 });

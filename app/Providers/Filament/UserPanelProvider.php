@@ -4,6 +4,11 @@ namespace App\Providers\Filament;
 
 use App\Filament\User\Auth\Login;
 use App\Filament\User\Auth\Register;
+use App\Filament\User\Widgets\AvailableRegistrationEventsWidget;
+use App\Filament\User\Widgets\LatestNewsWidget;
+use App\Filament\User\Widgets\PastEventsWidget;
+use App\Filament\User\Widgets\RegistrationStatusesWidget;
+use App\Filament\User\Widgets\WelcomeWidget;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -12,8 +17,6 @@ use Filament\Pages\Dashboard;
 use Filament\Panel;
 use Filament\PanelProvider;
 use Filament\Support\Colors\Color;
-use Filament\Widgets\AccountWidget;
-use Filament\Widgets\FilamentInfoWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
@@ -46,7 +49,13 @@ class UserPanelProvider extends PanelProvider
                 in: app_path("Filament/User/Widgets"),
                 for: "App\Filament\User\Widgets",
             )
-            ->widgets([AccountWidget::class, FilamentInfoWidget::class])
+            ->widgets([
+                WelcomeWidget::class,
+                AvailableRegistrationEventsWidget::class,
+                RegistrationStatusesWidget::class,
+                PastEventsWidget::class,
+                LatestNewsWidget::class,
+            ])
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

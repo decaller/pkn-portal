@@ -12,7 +12,7 @@ class Organization extends Model
 {
     use HasFactory;
 
-    protected $fillable = ["name", "slug", "admin_user_id"];
+    protected $fillable = ["name", "slug", "logo", "admin_user_id"];
 
     public function admin(): BelongsTo
     {
