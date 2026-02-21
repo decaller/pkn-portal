@@ -19,8 +19,9 @@ use Filament\Tables\Table;
 class EventResource extends Resource
 {
     protected static ?string $model = Event::class;
+    protected static bool $isScopedToTenant = false;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCalendarDateRange;
 
     public static function form(Schema $schema): Schema
     {
@@ -40,18 +41,17 @@ class EventResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
-        ];
+                //
+            ];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => ListEvents::route('/'),
-            'create' => CreateEvent::route('/create'),
-            'view' => ViewEvent::route('/{record}'),
-            'edit' => EditEvent::route('/{record}/edit'),
+            "index" => ListEvents::route("/"),
+            "create" => CreateEvent::route("/create"),
+            "view" => ViewEvent::route("/{record}"),
+            "edit" => EditEvent::route("/{record}/edit"),
         ];
     }
-
 }

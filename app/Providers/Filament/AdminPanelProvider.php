@@ -21,6 +21,9 @@ use Illuminate\View\Middleware\ShareErrorsFromSession;
 use App\Filament\Resources\News\Widgets\TopViewedNews; // <--- Import this
 use App\Filament\Resources\Events\Widgets\TopViewedEvents;
 use App\Filament\Resources\Documents\Widgets\TopViewedDocuments;
+use App\Filament\Pages\Tenancy\EditOrganizationProfile;
+use App\Filament\Pages\Tenancy\RegisterOrganization;
+use App\Models\Organization;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -28,18 +31,28 @@ class AdminPanelProvider extends PanelProvider
     {
         return $panel
             ->default()
-            ->id('admin')
-            ->path('admin')
+            ->id("admin")
+            ->path("admin")
             ->login()
+            ->tenant(Organization::class, "slug", "organization")
+            ->tenantRegistration(RegisterOrganization::class)
+            ->tenantProfile(EditOrganizationProfile::class)
             ->colors([
-                'primary' => Color::Amber,
+                "primary" => Color::Amber,
             ])
-            ->discoverResources(in: app_path('Filament/Resources'), for: 'App\Filament\Resources')
-            ->discoverPages(in: app_path('Filament/Pages'), for: 'App\Filament\Pages')
-            ->pages([
-                Dashboard::class,
-            ])
-            ->discoverWidgets(in: app_path('Filament/Widgets'), for: 'App\Filament\Widgets')
+            ->discoverResources(
+                in: app_path("Filament/Resources"),
+                for: "App\Filament\Resources",
+            )
+            ->discoverPages(
+                in: app_path("Filament/Pages"),
+                for: "App\Filament\Pages",
+            )
+            ->pages([Dashboard::class])
+            ->discoverWidgets(
+                in: app_path("Filament/Widgets"),
+                for: "App\Filament\Widgets",
+            )
             ->widgets([
                 AccountWidget::class,
                 FilamentInfoWidget::class,
@@ -58,8 +71,6 @@ class AdminPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
-            ->authMiddleware([
-                Authenticate::class,
-            ]);
+            ->authMiddleware([Authenticate::class]);
     }
 }

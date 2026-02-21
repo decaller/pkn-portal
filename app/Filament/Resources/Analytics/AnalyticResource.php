@@ -19,8 +19,9 @@ use Filament\Tables\Table;
 class AnalyticResource extends Resource
 {
     protected static ?string $model = Analytic::class;
+    protected static bool $isScopedToTenant = false;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedChartBarSquare;
 
     public static function form(Schema $schema): Schema
     {
@@ -40,18 +41,17 @@ class AnalyticResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
-        ];
+                //
+            ];
     }
-    
 
     public static function getPages(): array
     {
         return [
-            'index' => ListAnalytics::route('/'),
-            'create' => CreateAnalytic::route('/create'),
-            'view' => ViewAnalytic::route('/{record}'),
-            'edit' => EditAnalytic::route('/{record}/edit'),
+            "index" => ListAnalytics::route("/"),
+            "create" => CreateAnalytic::route("/create"),
+            "view" => ViewAnalytic::route("/{record}"),
+            "edit" => EditAnalytic::route("/{record}/edit"),
         ];
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Documents\Widgets;
 
+use App\Filament\Resources\Documents\DocumentResource;
 use App\Models\Document;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget;
@@ -77,9 +78,11 @@ class TopViewedDocuments extends TableWidget
             ->paginated(false)
             ->recordUrl(
                 // Links to the slide-over/view page we set up
-                fn(Document $record): string => route(
-                    "filament.admin.resources.documents.view",
-                    ["record" => $record],
+                fn(Document $record): string => DocumentResource::getUrl(
+                    "view",
+                    [
+                        "record" => $record,
+                    ],
                 ),
             );
     }

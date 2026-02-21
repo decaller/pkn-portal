@@ -19,8 +19,9 @@ use Filament\Tables\Table;
 class NewsResource extends Resource
 {
     protected static ?string $model = News::class;
+    protected static bool $isScopedToTenant = false;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedNewspaper;
 
     public static function form(Schema $schema): Schema
     {
@@ -40,17 +41,17 @@ class NewsResource extends Resource
     public static function getRelations(): array
     {
         return [
-            //
-        ];
+                //
+            ];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => ListNews::route('/'),
-            'create' => CreateNews::route('/create'),
-            'view' => ViewNews::route('/{record}'),
-            'edit' => EditNews::route('/{record}/edit'),
+            "index" => ListNews::route("/"),
+            "create" => CreateNews::route("/create"),
+            "view" => ViewNews::route("/{record}"),
+            "edit" => EditNews::route("/{record}/edit"),
         ];
     }
 }
