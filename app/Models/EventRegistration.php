@@ -17,9 +17,6 @@ class EventRegistration extends Model
     protected $fillable = [
         "event_id",
         "organization_id",
-        "package_name",
-        "participant_count",
-        "unit_price",
         "package_breakdown",
         "booker_user_id",
         "status",
@@ -36,8 +33,6 @@ class EventRegistration extends Model
         return [
             "status" => RegistrationStatus::class,
             "payment_status" => PaymentStatus::class,
-            "participant_count" => "integer",
-            "unit_price" => "decimal:2",
             "package_breakdown" => "array",
             "total_amount" => "decimal:2",
             "verified_at" => "datetime",

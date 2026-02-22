@@ -32,6 +32,7 @@ class EventRegistrationForm
                         ->default(fn() => request()->query("event_id"))
                         ->live()
                         ->afterStateUpdated(function (Set $set): void {
+                            // Clear repeater rows and reset total only.
                             $set("package_breakdown", []);
                             $set("package_name", null);
                             $set("participant_count", 0);
@@ -108,9 +109,8 @@ class EventRegistrationForm
                             self::syncPricingSummary($state ?? [], $set);
                         }),
 
-                    Hidden::make("package_name"),
-                    Hidden::make("participant_count"),
-                    Hidden::make("unit_price"),
+                    // Top-level mirrored package fields removed.
+                    // The repeater `package_breakdown` (JSON) is the single source of truth.
 
                     Select::make("booker_user_id")
                         ->label("Booker")

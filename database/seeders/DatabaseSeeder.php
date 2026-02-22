@@ -121,6 +121,31 @@ class DatabaseSeeder extends Seeder
             ],
         );
 
+        // Past events for testing (registrations disabled to avoid validation errors)
+        Event::updateOrCreate(
+            ["slug" => "pkn-recap-2023"],
+            [
+                "title" => "PKN Recap 2023",
+                "description" => "Past recap event used for tests.",
+                "event_date" => now()->subYears(1)->toDateString(),
+                "is_published" => true,
+                "allow_registration" => false,
+                "registration_packages" => $defaultPackages,
+            ],
+        );
+
+        Event::updateOrCreate(
+            ["slug" => "pkn-mini-summit-2024"],
+            [
+                "title" => "PKN Mini Summit 2024",
+                "description" => "Past mini summit used for testing.",
+                "event_date" => now()->subMonths(8)->toDateString(),
+                "is_published" => true,
+                "allow_registration" => false,
+                "registration_packages" => $regionalPackages,
+            ],
+        );
+
         Event::query()
             ->whereNull("registration_packages")
             ->update([

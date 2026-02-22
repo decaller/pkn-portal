@@ -35,14 +35,7 @@ class EventRegistrationForm
                             Set $set,
                             $livewire,
                         ): void {
-                            // Log event changes for debugging.
-                            self::appendDebugLog(
-                                $get,
-                                $set,
-                                "Event updated: " .
-                                    ($get("event_id") ?? "null"),
-                                $livewire,
-                            );
+                            // When the event changes we refresh package rows.
                             self::refreshPackageRowsForEvent(
                                 $get,
                                 $set,
@@ -55,17 +48,7 @@ class EventRegistrationForm
                             Set $set,
                             $livewire,
                         ): void {
-                            // Log event hydration for debugging.
-                            self::appendDebugLog(
-                                $get,
-                                $set,
-                                "Hydrating event: " .
-                                    ($state ?? "null") .
-                                    " (event_id=" .
-                                    ($get("event_id") ?? "null") .
-                                    ")",
-                                $livewire,
-                            );
+                            // No debug logging in production form.
                         })
                         ->required()
                         ->searchable()
@@ -90,14 +73,7 @@ class EventRegistrationForm
                                     ?string $state,
                                     $livewire,
                                 ): void {
-                                    // Log package changes for debugging.
-                                    self::appendDebugLog(
-                                        $get,
-                                        $set,
-                                        "Package changed to: " .
-                                            ($state ?? "null"),
-                                        $livewire,
-                                    );
+                                    // Compute and set this row's unit_price = price * qty.
                                     $qty = max(
                                         1,
                                         (int) ($get("participant_count") ?? 1),
@@ -107,10 +83,7 @@ class EventRegistrationForm
                                         $state,
                                     );
                                     $set("unit_price", $price * $qty);
-                                    self::syncTotalAmount(
-                                        $get("../../package_breakdown"),
-                                        $set,
-                                    );
+                                    // Let the repeater-level callback perform the authoritative sync.
                                 })
                                 ->required(),
                             TextInput::make("participant_count")
@@ -124,13 +97,7 @@ class EventRegistrationForm
                                     Set $set,
                                     $livewire,
                                 ): void {
-                                    // Log participant count changes.
-                                    self::appendDebugLog(
-                                        $get,
-                                        $set,
-                                        "Participant count updated.",
-                                        $livewire,
-                                    );
+                                    // Update the row's unit_price when participant count changes.
                                     $package = $get("package_name");
                                     $price = self::packagePrice(
                                         $get("../../event_id"),
@@ -141,10 +108,7 @@ class EventRegistrationForm
                                         (int) ($get("participant_count") ?? 1),
                                     );
                                     $set("unit_price", $price * $qty);
-                                    self::syncTotalAmount(
-                                        $get("../../package_breakdown"),
-                                        $set,
-                                    );
+                                    // Let the repeater-level callback perform the authoritative sync.
                                 })
                                 ->required(),
                             TextInput::make("unit_price")
@@ -167,15 +131,7 @@ class EventRegistrationForm
                             Set $set,
                             $livewire,
                         ): void {
-                            // Log repeater changes for debugging.
-                            self::appendDebugLog(
-                                null,
-                                $set,
-                                "Repeater updated: " .
-                                    count($state ?? []) .
-                                    " row(s).",
-                                $livewire,
-                            );
+                            // Recompute totals using the up-to-date repeater state.
                             self::syncTotalAmount($state ?? [], $set);
                         })
                         ->afterStateHydrated(function (
@@ -184,23 +140,9 @@ class EventRegistrationForm
                             Set $set,
                             $livewire,
                         ): void {
-                            // Log repeater hydration for debugging.
-                            self::appendDebugLog(
-                                $get,
-                                $set,
-                                "Repeater hydrated.",
-                                $livewire,
-                            );
-
                             $eventId = $get("event_id");
 
                             if (!$eventId) {
-                                self::appendDebugLog(
-                                    $get,
-                                    $set,
-                                    "Repeater hydrate skipped: no event_id.",
-                                    $livewire,
-                                );
                                 return;
                             }
 
@@ -208,22 +150,14 @@ class EventRegistrationForm
                             $firstPackage = $rows[0]["package_name"] ?? null;
 
                             if ($firstPackage) {
-                                self::appendDebugLog(
-                                    $get,
-                                    $set,
-                                    "Repeater hydrate skipped: rows already set.",
-                                    $livewire,
-                                );
                                 return;
                             }
 
                             self::seedFirstPackageRow($get, $set, $livewire);
                         }),
-                    // Mirror the first row into flat columns expected by the model.
-                    Hidden::make("package_name"),
-                    Hidden::make("participant_count"),
-                    Hidden::make("unit_price"),
-                    // Booker is always the current user.
+                    // The package details are persisted in `package_breakdown` (JSON array).
+                    // No mirrored top-level `package_name`, `participant_count`, or `unit_price`
+                    // fields are necessary for the user-facing form.
                     Hidden::make("booker_user_id")->default(
                         fn() => auth()->id(),
                     ),
@@ -249,25 +183,8 @@ class EventRegistrationForm
                         ->disk("public")
                         ->visibility("public")
                         ->directory("payment-proofs")
-                        ->maxSize(4096)
-                        ->afterStateUpdated(function (
-                            Set $set,
-                            $livewire,
-                        ): void {
-                            // Log payment proof changes.
-                            self::appendDebugLog(
-                                null,
-                                $set,
-                                "Payment proof updated.",
-                                $livewire,
-                            );
-                        }),
-                    Textarea::make("debug_log")
-                        ->label("Debug log")
-                        ->rows(6)
-                        ->readOnly()
-                        ->dehydrated(false)
-                        ->columnSpanFull(),
+                        ->maxSize(4096),
+                    // Removed debug_log field from the user-facing form.
                 ])
                 ->columns(1),
         ]);
@@ -275,7 +192,6 @@ class EventRegistrationForm
 
     private static function packageOptions(?int $eventId): array
     {
-        // Build a labeled list of packages for the selected event.
         $packages = self::packagesForEvent($eventId);
 
         if ($packages === []) {
@@ -321,7 +237,6 @@ class EventRegistrationForm
 
     private static function packagesForEvent(?int $eventId): array
     {
-        // Safely load packages; return empty when event is missing.
         if (!$eventId) {
             return [];
         }
@@ -347,12 +262,6 @@ class EventRegistrationForm
         $rows = $get("package_breakdown") ?? [];
 
         if ($rows === []) {
-            self::appendDebugLog(
-                $get,
-                $set,
-                "Refresh packages skipped: no rows yet.",
-                $livewire,
-            );
             return;
         }
 
@@ -366,14 +275,6 @@ class EventRegistrationForm
                 "unit_price" => 0,
             ];
         }
-
-        self::appendDebugLog(
-            $get,
-            $set,
-            "Refreshed packages for event (reselect required): " .
-                ($eventId ?? "null"),
-            $livewire,
-        );
 
         $set("package_breakdown", $refreshed);
         self::syncTotalAmount($refreshed, $set);
@@ -389,12 +290,6 @@ class EventRegistrationForm
         $firstPackage = array_key_first($options);
 
         if (!$firstPackage) {
-            self::appendDebugLog(
-                $get,
-                $set,
-                "Seed skipped: no packages for event.",
-                $livewire,
-            );
             return;
         }
 
@@ -405,13 +300,6 @@ class EventRegistrationForm
                 "unit_price" => self::packagePrice($eventId, $firstPackage),
             ],
         ];
-
-        self::appendDebugLog(
-            $get,
-            $set,
-            "Seeded first package row.",
-            $livewire,
-        );
 
         $set("package_breakdown", $rows);
         self::syncTotalAmount($rows, $set);
@@ -429,20 +317,5 @@ class EventRegistrationForm
         }
 
         $set("total_amount", $total);
-    }
-
-    private static function appendDebugLog(
-        ?Get $get,
-        Set $set,
-        string $message,
-        $livewire = null,
-    ): void {
-        if ($livewire) {
-            $livewire->dispatch("log-data", message: $message);
-        }
-
-        $existing = $get ? $get("debug_log") : "";
-        $next = $existing === "" ? $message : $existing . "\n" . $message;
-        $set("debug_log", $next);
     }
 }
