@@ -35,7 +35,7 @@ class EventRegistrationForm
                             Set $set,
                             $livewire,
                         ): void {
-                            // When the user changes the event, reset packages to the first option.
+                            // Log event changes for debugging.
                             self::appendDebugLog(
                                 $get,
                                 $set,
@@ -43,7 +43,11 @@ class EventRegistrationForm
                                     ($get("event_id") ?? "null"),
                                 $livewire,
                             );
-                            self::seedFirstPackageRow($get, $set);
+                            self::refreshPackageRowsForEvent(
+                                $get,
+                                $set,
+                                $livewire,
+                            );
                         })
                         ->afterStateHydrated(function (
                             ?int $state,
@@ -51,7 +55,7 @@ class EventRegistrationForm
                             Set $set,
                             $livewire,
                         ): void {
-                            // When the event is prefilled (e.g., from query), seed packages once.
+                            // Log event hydration for debugging.
                             self::appendDebugLog(
                                 $get,
                                 $set,
@@ -62,27 +66,6 @@ class EventRegistrationForm
                                     ")",
                                 $livewire,
                             );
-                            $eventId = $get("event_id");
-
-                            if (!$eventId) {
-                                return;
-                            }
-
-                            // Avoid overwriting existing rows when editing a record.
-                            $rows = $get("package_breakdown") ?? [];
-                            $firstPackage = $rows[0]["package_name"] ?? null;
-
-                            if ($firstPackage) {
-                                self::appendDebugLog(
-                                    $get,
-                                    $set,
-                                    "Hydrating skipped: rows already set.",
-                                    $livewire,
-                                );
-                                return;
-                            }
-
-                            self::seedFirstPackageRow($get, $set);
                         })
                         ->required()
                         ->searchable()
@@ -107,7 +90,7 @@ class EventRegistrationForm
                                     ?string $state,
                                     $livewire,
                                 ): void {
-                                    // Update unit price when package changes, then recalc totals.
+                                    // Log package changes for debugging.
                                     self::appendDebugLog(
                                         $get,
                                         $set,
@@ -115,12 +98,16 @@ class EventRegistrationForm
                                             ($state ?? "null"),
                                         $livewire,
                                     );
+                                    $qty = max(
+                                        1,
+                                        (int) ($get("participant_count") ?? 1),
+                                    );
                                     $price = self::packagePrice(
                                         $get("../../event_id"),
                                         $state,
                                     );
-                                    $set("unit_price", $price);
-                                    self::syncPricingSummary(
+                                    $set("unit_price", $price * $qty);
+                                    self::syncTotalAmount(
                                         $get("../../package_breakdown"),
                                         $set,
                                     );
@@ -131,21 +118,30 @@ class EventRegistrationForm
                                 ->numeric()
                                 ->minValue(1)
                                 ->default(1)
-                                // Recalculate when the user finishes editing the count.
-                                ->live(onBlur: true)
+                                ->live()
                                 ->afterStateUpdated(function (
                                     Get $get,
                                     Set $set,
                                     $livewire,
                                 ): void {
-                                    // Count changes affect total amount.
+                                    // Log participant count changes.
                                     self::appendDebugLog(
                                         $get,
                                         $set,
                                         "Participant count updated.",
                                         $livewire,
                                     );
-                                    self::syncPricingSummary(
+                                    $package = $get("package_name");
+                                    $price = self::packagePrice(
+                                        $get("../../event_id"),
+                                        $package,
+                                    );
+                                    $qty = max(
+                                        1,
+                                        (int) ($get("participant_count") ?? 1),
+                                    );
+                                    $set("unit_price", $price * $qty);
+                                    self::syncTotalAmount(
                                         $get("../../package_breakdown"),
                                         $set,
                                     );
@@ -171,7 +167,7 @@ class EventRegistrationForm
                             Set $set,
                             $livewire,
                         ): void {
-                            // Recalculate totals whenever the repeater changes.
+                            // Log repeater changes for debugging.
                             self::appendDebugLog(
                                 null,
                                 $set,
@@ -180,7 +176,7 @@ class EventRegistrationForm
                                     " row(s).",
                                 $livewire,
                             );
-                            self::syncPricingSummary($state ?? [], $set);
+                            self::syncTotalAmount($state ?? [], $set);
                         })
                         ->afterStateHydrated(function (
                             ?array $state,
@@ -188,52 +184,40 @@ class EventRegistrationForm
                             Set $set,
                             $livewire,
                         ): void {
-                            // If editing a record, just sync the totals.
-                            if (!empty($state)) {
-                                self::appendDebugLog(
-                                    $get,
-                                    $set,
-                                    "Repeater hydrated with existing rows.",
-                                    $livewire,
-                                );
-                                self::syncPricingSummary($state, $set);
-                                return;
-                            }
-
-                            // For new records, seed with the first available package.
-                            $eventId = $get("event_id");
-                            $options = self::packageOptions($eventId);
-                            $firstPackage = array_key_first($options);
-
-                            if (!$firstPackage) {
-                                self::appendDebugLog(
-                                    $get,
-                                    $set,
-                                    "No packages available for event.",
-                                    $livewire,
-                                );
-                                return;
-                            }
-
-                            $initialRows = [
-                                [
-                                    "package_name" => $firstPackage,
-                                    "participant_count" => 1,
-                                    "unit_price" => self::packagePrice(
-                                        $eventId,
-                                        $firstPackage,
-                                    ),
-                                ],
-                            ];
-
-                            $set("package_breakdown", $initialRows);
+                            // Log repeater hydration for debugging.
                             self::appendDebugLog(
                                 $get,
                                 $set,
-                                "Seeded initial package row.",
+                                "Repeater hydrated.",
                                 $livewire,
                             );
-                            self::syncPricingSummary($initialRows, $set);
+
+                            $eventId = $get("event_id");
+
+                            if (!$eventId) {
+                                self::appendDebugLog(
+                                    $get,
+                                    $set,
+                                    "Repeater hydrate skipped: no event_id.",
+                                    $livewire,
+                                );
+                                return;
+                            }
+
+                            $rows = $state ?? [];
+                            $firstPackage = $rows[0]["package_name"] ?? null;
+
+                            if ($firstPackage) {
+                                self::appendDebugLog(
+                                    $get,
+                                    $set,
+                                    "Repeater hydrate skipped: rows already set.",
+                                    $livewire,
+                                );
+                                return;
+                            }
+
+                            self::seedFirstPackageRow($get, $set, $livewire);
                         }),
                     // Mirror the first row into flat columns expected by the model.
                     Hidden::make("package_name"),
@@ -270,16 +254,12 @@ class EventRegistrationForm
                             Set $set,
                             $livewire,
                         ): void {
-                            // If a file is uploaded, mark payment as submitted.
+                            // Log payment proof changes.
                             self::appendDebugLog(
                                 null,
                                 $set,
                                 "Payment proof updated.",
                                 $livewire,
-                            );
-                            $set(
-                                "payment_status",
-                                PaymentStatus::Submitted->value,
                             );
                         }),
                     Textarea::make("debug_log")
@@ -322,7 +302,6 @@ class EventRegistrationForm
         ?int $eventId,
         ?string $packageName,
     ): float {
-        // Find the price for a given package name in the selected event.
         $packages = self::packagesForEvent($eventId);
 
         if ($packages === []) {
@@ -359,58 +338,97 @@ class EventRegistrationForm
         return is_array($packages) ? $packages : [];
     }
 
-    /**
-     * @param array<int, array<string, mixed>> $rows
-     */
-    private static function syncPricingSummary(array $rows, Set $set): void
-    {
-        // Aggregate total and mirror the first row into flat columns.
-        $total = 0.0;
+    private static function refreshPackageRowsForEvent(
+        Get $get,
+        Set $set,
+        $livewire,
+    ): void {
+        $eventId = $get("event_id");
+        $rows = $get("package_breakdown") ?? [];
+
+        if ($rows === []) {
+            self::appendDebugLog(
+                $get,
+                $set,
+                "Refresh packages skipped: no rows yet.",
+                $livewire,
+            );
+            return;
+        }
+
+        $refreshed = [];
 
         foreach ($rows as $row) {
             $qty = max(1, (int) ($row["participant_count"] ?? 1));
-            $unit = (float) ($row["unit_price"] ?? 0);
-            $total += $qty * $unit;
+            $refreshed[] = [
+                "package_name" => null,
+                "participant_count" => $qty,
+                "unit_price" => 0,
+            ];
         }
-
-        $first = $rows[0] ?? [];
-
-        $set("package_name", (string) ($first["package_name"] ?? ""));
-        $set(
-            "participant_count",
-            max(0, (int) ($first["participant_count"] ?? 0)),
-        );
-        $set("unit_price", (float) ($first["unit_price"] ?? 0));
-        $set("total_amount", $total);
-    }
-
-    private static function seedFirstPackageRow(Get $get, Set $set): void
-    {
-        // Initialize the repeater with the first available package row.
-        $eventId = $get("event_id");
 
         self::appendDebugLog(
             $get,
             $set,
-            "Seeded package row from event: " . ($eventId ?? "null"),
+            "Refreshed packages for event (reselect required): " .
+                ($eventId ?? "null"),
+            $livewire,
         );
 
+        $set("package_breakdown", $refreshed);
+        self::syncTotalAmount($refreshed, $set);
+    }
+
+    private static function seedFirstPackageRow(
+        Get $get,
+        Set $set,
+        $livewire,
+    ): void {
+        $eventId = $get("event_id");
         $options = self::packageOptions($eventId);
         $firstPackage = array_key_first($options);
 
-        $rows = [];
+        if (!$firstPackage) {
+            self::appendDebugLog(
+                $get,
+                $set,
+                "Seed skipped: no packages for event.",
+                $livewire,
+            );
+            return;
+        }
 
-        if ($firstPackage !== null) {
-            $rows[] = [
+        $rows = [
+            [
                 "package_name" => $firstPackage,
                 "participant_count" => 1,
                 "unit_price" => self::packagePrice($eventId, $firstPackage),
-            ];
-        }
+            ],
+        ];
+
+        self::appendDebugLog(
+            $get,
+            $set,
+            "Seeded first package row.",
+            $livewire,
+        );
 
         $set("package_breakdown", $rows);
+        self::syncTotalAmount($rows, $set);
+    }
 
-        self::syncPricingSummary($rows, $set);
+    /**
+     * @param array<int, array<string, mixed>> $rows
+     */
+    private static function syncTotalAmount(array $rows, Set $set): void
+    {
+        $total = 0.0;
+
+        foreach ($rows as $row) {
+            $total += (float) ($row["unit_price"] ?? 0);
+        }
+
+        $set("total_amount", $total);
     }
 
     private static function appendDebugLog(

@@ -30,6 +30,16 @@ class DatabaseSeeder extends Seeder
                 "price" => 250000,
             ],
         ];
+        $regionalPackages = [
+            [
+                "name" => "Regular",
+                "price" => 75000,
+            ],
+            [
+                "name" => "VIP",
+                "price" => 200000,
+            ],
+        ];
 
         $admin = User::updateOrCreate(
             ["email" => "harridiilmantovid@gmail.com"],
@@ -107,13 +117,15 @@ class DatabaseSeeder extends Seeder
                 "event_date" => now()->addMonths(6)->toDateString(),
                 "is_published" => true,
                 "allow_registration" => true,
-                "registration_packages" => $defaultPackages,
+                "registration_packages" => $regionalPackages,
             ],
         );
 
-        Event::query()->update([
-            "registration_packages" => $defaultPackages,
-        ]);
+        Event::query()
+            ->whereNull("registration_packages")
+            ->update([
+                "registration_packages" => $defaultPackages,
+            ]);
 
         Event::query()
             ->where("allow_registration", true)
