@@ -41,7 +41,12 @@ class EventRegistrationForm
                         "Event updated: " . ($get("event_id") ?? "null"),
                         $livewire,
                     );
-                    self::refreshPackageRowsForEvent($get, $set, $livewire);
+                    self::resetPackageRowsForEvent(
+                        $get,
+                        $set,
+                        $livewire,
+                        seedWhenEmpty: false,
+                    );
                 })
                 ->afterStateHydrated(function (
                     ?int $state,
@@ -70,7 +75,13 @@ class EventRegistrationForm
                     modifyRuleUsing: fn($rule) => $rule
                         ->where("is_published", true)
                         ->where("allow_registration", true)
-                        ->whereDate("event_date", ">=", now()->toDateString()),
+                        ->where(
+                            fn($query) => $query->whereDate(
+                                "event_date",
+                                ">=",
+                                now()->toDateString(),
+                            ),
+                        ),
                 ),
             Repeater::make("package_breakdown")
                 ->label("Package participants")
@@ -239,7 +250,12 @@ class EventRegistrationForm
                         return;
                     }
 
-                    self::seedFirstPackageRow($get, $set, $livewire);
+                    self::resetPackageRowsForEvent(
+                        $get,
+                        $set,
+                        $livewire,
+                        seedWhenEmpty: true,
+                    );
                 }),
             // Mirror the first row into flat columns expected by the model.
             // Hidden::make("package_name"),
@@ -363,22 +379,38 @@ class EventRegistrationForm
         return is_array($packages) ? $packages : [];
     }
 
-    private static function refreshPackageRowsForEvent(
+    private static function resetPackageRowsForEvent(
         Get $get,
         Set $set,
         $livewire,
+        bool $seedWhenEmpty = false,
     ): void {
         $eventId = $get("event_id");
         $rows = $get("package_breakdown") ?? [];
 
         if ($rows === []) {
+            if (!$seedWhenEmpty) {
+                self::appendDebugLog(
+                    $get,
+                    $set,
+                    "Refresh packages skipped: no rows yet.",
+                    $livewire,
+                );
+                return;
+            }
+
+            $rows = [
+                [
+                    "participant_count" => 1,
+                ],
+            ];
+
             self::appendDebugLog(
                 $get,
                 $set,
-                "Refresh packages skipped: no rows yet.",
+                "Seeded first package row.",
                 $livewire,
             );
-            return;
         }
 
         $refreshed = [];
@@ -402,44 +434,6 @@ class EventRegistrationForm
 
         $set("package_breakdown", $refreshed);
         self::syncTotalAmount($refreshed, $set, $livewire);
-    }
-
-    private static function seedFirstPackageRow(
-        Get $get,
-        Set $set,
-        $livewire,
-    ): void {
-        $eventId = $get("event_id");
-        $options = self::packageOptions($eventId);
-        $firstPackage = array_key_first($options);
-
-        if (!$firstPackage) {
-            self::appendDebugLog(
-                $get,
-                $set,
-                "Seed skipped: no packages for event.",
-                $livewire,
-            );
-            return;
-        }
-
-        $rows = [
-            [
-                "package_name" => $firstPackage,
-                "participant_count" => 1,
-                "unit_price" => self::packagePrice($eventId, $firstPackage),
-            ],
-        ];
-
-        self::appendDebugLog(
-            $get,
-            $set,
-            "Seeded first package row.",
-            $livewire,
-        );
-
-        $set("package_breakdown", $rows);
-        self::syncTotalAmount($rows, $set, $livewire);
     }
 
     /**
