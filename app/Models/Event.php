@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\EventType;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -17,6 +18,7 @@ class Event extends Model
 
     protected $casts = [
         "event_date" => "date",
+        "event_type" => EventType::class,
         "is_published" => "boolean",
         "allow_registration" => "boolean",
         "registration_packages" => "array",

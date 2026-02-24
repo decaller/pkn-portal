@@ -4,6 +4,7 @@ namespace App\Filament\User\Resources\Events;
 
 use App\Filament\User\Resources\Events\Pages\ListEvents;
 use App\Filament\User\Resources\Events\Pages\ViewEvent;
+use App\Filament\User\Resources\Events\Schemas\EventForm;
 use App\Filament\User\Resources\Events\Schemas\EventInfolist;
 use App\Filament\User\Resources\Events\Tables\EventsTable;
 use App\Models\Event;
@@ -22,11 +23,11 @@ class EventResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCalendarDateRange;
 
-    protected static ?string $navigationLabel = 'Past events';
+    protected static ?string $navigationLabel = "Past events";
 
     public static function form(Schema $schema): Schema
     {
-        return $schema;
+        return EventForm::configure($schema);
     }
 
     public static function infolist(Schema $schema): Schema
@@ -42,15 +43,15 @@ class EventResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
-            ->whereDate('event_date', '<=', now())
-            ->where('is_published', true);
+            ->whereDate("event_date", "<=", now())
+            ->where("is_published", true);
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => ListEvents::route('/'),
-            'view' => ViewEvent::route('/{record}'),
+            "index" => ListEvents::route("/"),
+            "view" => ViewEvent::route("/{record}"),
         ];
     }
 }

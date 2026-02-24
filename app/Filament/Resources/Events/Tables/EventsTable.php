@@ -2,6 +2,7 @@
 
 namespace App\Filament\Resources\Events\Tables;
 
+use App\Enums\EventType;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -32,6 +33,27 @@ class EventsTable
                     ->date("d M Y") // Example: 16 Feb 2026
                     ->sortable()
                     ->label("Event Date"),
+
+                TextColumn::make("event_type")
+                    ->label("Type")
+                    ->badge()
+                    ->formatStateUsing(
+                        fn(
+                            EventType|string|null $state,
+                        ): string => $state instanceof EventType
+                            ? $state->getLabel()
+                            : EventType::tryFrom(
+                                    (string) $state,
+                                )?->getLabel() ?? "-",
+                    )
+                    ->color(
+                        fn(
+                            EventType|string|null $state,
+                        ): string|array|null => $state instanceof EventType
+                            ? $state->getColor()
+                            : EventType::tryFrom((string) $state)?->getColor(),
+                    )
+                    ->sortable(),
 
                 // 4. Quick Publish Toggle
                 // This lets you click to publish/unpublish directly from the list!

@@ -2,11 +2,13 @@
 
 namespace App\Filament\Resources\Events\Schemas;
 
+use App\Enums\EventType;
 use Filament\Schemas\Schema;
 use Filament\Schemas\Components\Section;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Toggle;
 use Filament\Forms\Components\RichEditor;
 use Illuminate\Support\Str;
@@ -57,6 +59,13 @@ class EventForm
                                 : [],
                         )
                         ->displayFormat("d/m/Y"),
+
+                    Select::make("event_type")
+                        ->label("Event Type")
+                        ->options(EventType::class)
+                        ->default(EventType::Offline->value)
+                        ->required()
+                        ->native(false),
 
                     Toggle::make("allow_registration")
                         ->label("Allow user registration")

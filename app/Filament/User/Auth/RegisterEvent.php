@@ -16,8 +16,9 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
 use Filament\Support\Enums\Width;
-
+use Filament\Forms\Components\Checkbox;
 use App\Filament\User\Resources\EventRegistrations\Schemas\EventRegistrationForm;
+use Filament\Schemas\Components\Section;
 
 class RegisterEvent extends BaseRegister
 {
@@ -26,7 +27,19 @@ class RegisterEvent extends BaseRegister
     {
         return $schema
             ->components([
-                ...EventRegistrationForm::schema(),
+                Checkbox::make("is_registering_for_event")
+                    ->label("I also want to register for an event")
+                    ->default(false) // Set to true if you want it checked by default
+                    ->live(), // MUST have ->live() to update the page instantly when clicked
+
+                // 2. Wrap your event schema in a Group
+                Section::make()
+                    ->schema(EventRegistrationForm::schema())
+                    // 3. Make the entire group visible ONLY if the checkbox is true
+                    ->visible(
+                        fn(Get $get) => $get("is_registering_for_event") ===
+                            true,
+                    ),
                 TextInput::make("name")
                     ->label("Full Name")
                     ->required()
