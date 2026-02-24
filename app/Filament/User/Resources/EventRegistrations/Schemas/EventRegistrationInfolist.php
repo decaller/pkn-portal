@@ -64,8 +64,23 @@ class EventRegistrationInfolist
                             TextEntry::make("issued_at")
                                 ->label("Issued")
                                 ->dateTime(),
+                            TextEntry::make("id")
+                                ->label("PDF")
+                                ->formatStateUsing(
+                                    fn(): string => "Download PDF",
+                                )
+                                ->badge()
+                                ->color("success")
+                                ->icon("heroicon-o-arrow-down-tray")
+                                ->url(
+                                    fn($record): string => route(
+                                        "invoices.download",
+                                        ["invoice" => $record],
+                                    ),
+                                )
+                                ->openUrlInNewTab(),
                         ])
-                        ->columns(5)
+                        ->columns(6)
                         ->columnSpanFull(),
                 ])
                 ->columnSpanFull(),
