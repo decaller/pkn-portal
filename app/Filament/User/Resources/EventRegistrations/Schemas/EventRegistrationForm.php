@@ -284,12 +284,12 @@ class EventRegistrationForm
                                 $livewire,
                             );
                         }),
-                    Textarea::make("debug_log")
-                        ->label("Debug log")
-                        ->rows(6)
-                        ->readOnly()
-                        ->dehydrated(false)
-                        ->columnSpanFull(),
+                    // Textarea::make("debug_log")
+                    //     ->label("Debug log")
+                    //     ->rows(6)
+                    //     ->readOnly()
+                    //     ->dehydrated(false)
+                    //     ->columnSpanFull(),
                 ])
                 ->columns(1),
         ]);

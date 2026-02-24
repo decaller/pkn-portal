@@ -104,16 +104,16 @@ class Register extends BaseRegister
                     ->minLength(8)
                     ->dehydrateStateUsing(fn($state) => Hash::make($state))
                     ->same("passwordConfirmation"),
-                TextInput::make("passwordConfirmation")
-                    ->label(
-                        __(
-                            "filament-panels::auth/pages/register.form.password_confirmation.label",
-                        ),
-                    )
-                    ->password()
-                    ->revealable(filament()->arePasswordsRevealable())
-                    ->required()
-                    ->dehydrated(false),
+                // TextInput::make("passwordConfirmation")
+                //     ->label(
+                //         __(
+                //             "filament-panels::auth/pages/register.form.password_confirmation.label",
+                //         ),
+                //     )
+                //     ->password()
+                //     ->revealable(filament()->arePasswordsRevealable())
+                //     ->required()
+                //     ->dehydrated(false),
             ])
             ->statePath("data");
     }
