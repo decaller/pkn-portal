@@ -7,6 +7,7 @@ use App\Enums\RegistrationStatus;
 use DomainException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Model;
 
@@ -65,6 +66,16 @@ class EventRegistration extends Model
             RegistrationParticipant::class,
             "registration_id",
         );
+    }
+
+    public function invoices(): HasMany
+    {
+        return $this->hasMany(Invoice::class)->orderByDesc("version");
+    }
+
+    public function latestInvoice(): HasOne
+    {
+        return $this->hasOne(Invoice::class)->latestOfMany("version");
     }
 
     public function isPaidOrAwaitingVerification(): bool

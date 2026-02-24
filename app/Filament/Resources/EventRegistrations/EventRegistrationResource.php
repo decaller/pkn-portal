@@ -42,7 +42,7 @@ class EventRegistrationResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
-            ->with(["event", "organization", "booker", "verifier"])
+            ->with(["event", "organization", "booker", "verifier", "invoices"])
             ->withCount("participants");
     }
 

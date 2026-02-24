@@ -46,10 +46,9 @@ class EventRegistrationResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->where(
-            "booker_user_id",
-            auth()->id(),
-        );
+        return parent::getEloquentQuery()
+            ->with(["event", "organization", "invoices"])
+            ->where("booker_user_id", auth()->id());
     }
 
     public static function mutateFormDataBeforeCreate(array $data): array
