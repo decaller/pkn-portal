@@ -18,16 +18,15 @@ use Filament\Schemas\Schema;
 
 class EventRegistrationForm
 {
-    // User-facing registration form (tenant-scoped) with auto pricing logic.
-    public static function configure(Schema $schema): Schema
+    public static function schema(): array
     {
-        return $schema->components([
+        return [
             Section::make("Registration")
                 ->columnSpanFull()
                 ->schema([
                     Select::make("event_id")
-                        ->relationship("event", "title")
-                        // Allow preselecting an event from a dashboard link.
+                        // ->relationship("event", "title")
+                        ->options(Event::pluck("title", "id"))
                         ->default(fn() => request()->query("event_id"))
                         ->live()
                         ->afterStateUpdated(function (
@@ -292,7 +291,13 @@ class EventRegistrationForm
                     //     ->columnSpanFull(),
                 ])
                 ->columns(1),
-        ]);
+        ];
+    }
+    // User-facing registration form (tenant-scoped) with auto pricing logic.
+    public static function configure(Schema $schema): Schema
+    {
+        // HOW DO I CALL IT BACK?
+        return $schema->components(self::schema());
     }
 
     private static function packageOptions(?int $eventId): array
@@ -398,7 +403,7 @@ class EventRegistrationForm
         );
 
         $set("package_breakdown", $refreshed);
-        self::syncTotalAmount($refreshed, $set,$livewire);
+        self::syncTotalAmount($refreshed, $set, $livewire);
     }
 
     private static function seedFirstPackageRow(
@@ -436,22 +441,24 @@ class EventRegistrationForm
         );
 
         $set("package_breakdown", $rows);
-        self::syncTotalAmount($rows, $set,$livewire,);
+        self::syncTotalAmount($rows, $set, $livewire);
     }
 
     /**
      * @param array<int, array<string, mixed>> $rows
      */
-    private static function syncTotalAmount(array $rows, Set $set, $livewire): void
-    {
+    private static function syncTotalAmount(
+        array $rows,
+        Set $set,
+        $livewire,
+    ): void {
         $total = 0.0;
 
         self::appendDebugLog(
             null,
             $set,
-            "Syncing total amount with data : " .
-                json_encode($rows),
-                $livewire,
+            "Syncing total amount with data : " . json_encode($rows),
+            $livewire,
         );
 
         foreach ($rows as $row) {
