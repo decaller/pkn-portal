@@ -27,7 +27,7 @@ class EventRegistrationResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTicket;
 
-    protected static ?string $navigationLabel = 'My registrations';
+    protected static ?string $navigationLabel = "My registrations";
 
     public static function form(Schema $schema): Schema
     {
@@ -46,14 +46,28 @@ class EventRegistrationResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->where('booker_user_id', auth()->id());
+        return parent::getEloquentQuery()->where(
+            "booker_user_id",
+            auth()->id(),
+        );
     }
 
     public static function mutateFormDataBeforeCreate(array $data): array
     {
-        $data['booker_user_id'] = auth()->id();
-        $data['status'] = RegistrationStatus::Draft;
-        $data['payment_status'] = PaymentStatus::Unpaid;
+        $rows = is_array($data["package_breakdown"] ?? null)
+            ? $data["package_breakdown"]
+            : [];
+
+        $data["total_amount"] = array_reduce(
+            $rows,
+            fn(float $carry, mixed $row): float => $carry +
+                (float) (is_array($row) ? $row["unit_price"] ?? 0 : 0),
+            0.0,
+        );
+
+        $data["booker_user_id"] = auth()->id();
+        $data["status"] = RegistrationStatus::Draft;
+        $data["payment_status"] = PaymentStatus::Unpaid;
 
         return $data;
     }
@@ -61,10 +75,10 @@ class EventRegistrationResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => ListEventRegistrations::route('/'),
-            'create' => CreateEventRegistration::route('/create'),
-            'view' => ViewEventRegistration::route('/{record}'),
-            'edit' => EditEventRegistration::route('/{record}/edit'),
+            "index" => ListEventRegistrations::route("/"),
+            "create" => CreateEventRegistration::route("/create"),
+            "view" => ViewEventRegistration::route("/{record}"),
+            "edit" => EditEventRegistration::route("/{record}/edit"),
         ];
     }
 }

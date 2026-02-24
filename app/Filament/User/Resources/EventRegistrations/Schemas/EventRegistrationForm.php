@@ -273,6 +273,7 @@ class EventRegistrationForm
                 ->readOnly()
                 ->required()
                 ->default(0)
+                ->dehydrated()
                 ->disabled(),
             // User-facing registrations always start as draft + unpaid.
             Hidden::make("status")->default(RegistrationStatus::Draft->value),
