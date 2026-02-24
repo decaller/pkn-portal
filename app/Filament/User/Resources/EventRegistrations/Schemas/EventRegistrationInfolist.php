@@ -24,25 +24,26 @@ class EventRegistrationInfolist
                     TextEntry::make("total_amount")->money("IDR"),
                     TextEntry::make("notes")->placeholder("-"),
                     TextEntry::make("created_at")->dateTime(),
+                    TextEntry::make("payment_proof_path")
+                        ->label("Payment proof")
+                        ->placeholder("-")
+                        ->formatStateUsing(
+                            fn(?string $state): string => $state
+                                ? "View proof"
+                                : "-",
+                        )
+                        ->url(
+                            fn($record): ?string => $record->payment_proof_path
+                                ? asset(
+                                    "storage/" . $record->payment_proof_path,
+                                )
+                                : null,
+                        )
+                        ->openUrlInNewTab(),
                 ])
 
                 ->columns(2),
-            Section::make("Payment")->schema([
-                TextEntry::make("payment_proof_path")
-                    ->label("Payment proof")
-                    ->placeholder("-")
-                    ->formatStateUsing(
-                        fn(?string $state): string => $state
-                            ? "View proof"
-                            : "-",
-                    )
-                    ->url(
-                        fn($record): ?string => $record->payment_proof_path
-                            ? asset("storage/" . $record->payment_proof_path)
-                            : null,
-                    )
-                    ->openUrlInNewTab(),
-            ]),
+            Section::make("Participant")->schema([]),
 
             Section::make("Invoices")
                 ->schema([
