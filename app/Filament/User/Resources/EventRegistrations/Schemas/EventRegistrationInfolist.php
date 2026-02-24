@@ -53,9 +53,9 @@ class EventRegistrationInfolist
                             TextEntry::make("invoice_number")
                                 ->label("Invoice #")
                                 ->weight("bold"),
-                            TextEntry::make("version")
-                                ->label("Version")
-                                ->badge(),
+                            // TextEntry::make("version")
+                            //     ->label("Version")
+                            //     ->badge(),
                             TextEntry::make("status")
                                 ->badge()
                                 ->formatStateUsing(
@@ -99,7 +99,7 @@ class EventRegistrationInfolist
                                 )
                                 ->openUrlInNewTab(),
                         ])
-                        ->columns(6)
+                        ->columns(5)
                         ->columnSpanFull(),
                 ])
                 ->columnSpanFull(),

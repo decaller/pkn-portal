@@ -2,6 +2,8 @@
 
 namespace App\Policies;
 
+use App\Enums\PaymentStatus;
+use App\Enums\RegistrationStatus;
 use App\Models\EventRegistration;
 use App\Models\User;
 
@@ -46,6 +48,13 @@ class EventRegistrationPolicy
         User $user,
         EventRegistration $eventRegistration,
     ): bool {
+        if (
+            $eventRegistration->status === RegistrationStatus::Paid ||
+            $eventRegistration->payment_status === PaymentStatus::Verified
+        ) {
+            return false;
+        }
+
         return $this->view($user, $eventRegistration);
     }
 

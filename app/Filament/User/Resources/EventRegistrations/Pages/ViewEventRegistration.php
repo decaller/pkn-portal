@@ -3,6 +3,7 @@
 namespace App\Filament\User\Resources\EventRegistrations\Pages;
 
 use App\Enums\PaymentStatus;
+use App\Enums\RegistrationStatus;
 use App\Filament\User\Resources\EventRegistrations\EventRegistrationResource;
 use Filament\Actions\Action;
 use Filament\Actions\EditAction;
@@ -44,7 +45,12 @@ class ViewEventRegistration extends ViewRecord
                         ]),
                     );
                 }),
-            EditAction::make(),
+            EditAction::make()->visible(
+                fn(): bool => !(
+                    $this->record->status === RegistrationStatus::Paid ||
+                    $this->record->payment_status === PaymentStatus::Verified
+                ),
+            ),
         ];
     }
 }
