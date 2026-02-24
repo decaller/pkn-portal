@@ -91,6 +91,7 @@
         <div class="links">
             <a class="btn primary" href="{{ route('filament.user.auth.login') }}">User Login</a>
             <a class="btn" href="{{ route('filament.user.auth.register') }}">User Register</a>
+            <a class="btn" href="{{ route('registerevent') }}">Event Register</a>
             <a class="btn" href="{{ route('filament.admin.auth.login') }}">Admin Login</a>
         </div>
     </main>

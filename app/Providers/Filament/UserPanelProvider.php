@@ -30,25 +30,25 @@ class UserPanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
         return $panel
-            ->id("user")
-            ->path("user")
+            ->id('user')
+            ->path('user')
             ->login(Login::class)
             ->registration(Register::class)
-            ->tenant(Organization::class, "slug", "organization")
+            ->tenant(Organization::class, 'slug', 'organization')
             ->colors([
-                "primary" => Color::Amber,
+                'primary' => Color::Amber,
             ])
             ->discoverResources(
-                in: app_path("Filament/User/Resources"),
+                in: app_path('Filament/User/Resources'),
                 for: "App\Filament\User\Resources",
             )
             ->discoverPages(
-                in: app_path("Filament/User/Pages"),
+                in: app_path('Filament/User/Pages'),
                 for: "App\Filament\User\Pages",
             )
             ->pages([Dashboard::class])
             ->discoverWidgets(
-                in: app_path("Filament/User/Widgets"),
+                in: app_path('Filament/User/Widgets'),
                 for: "App\Filament\User\Widgets",
             )
             ->widgets([
@@ -59,8 +59,8 @@ class UserPanelProvider extends PanelProvider
                 LatestNewsWidget::class,
             ])
             ->renderHook(
-                "panels::scripts.after",
-                fn() => view("filament.user.log-listener"),
+                'panels::scripts.after',
+                fn () => view('filament.user.log-listener'),
             )
             ->middleware([
                 EncryptCookies::class,
