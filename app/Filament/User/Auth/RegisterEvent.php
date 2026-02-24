@@ -29,8 +29,8 @@ class RegisterEvent extends BaseRegister
             ->components([
                 Checkbox::make("is_registering_for_event")
                     ->label("I also want to register for an event")
-                    ->default(false) // Set to true if you want it checked by default
-                    ->live(), // MUST have ->live() to update the page instantly when clicked
+                    ->default(true)
+                    ->live(),
 
                 // 2. Wrap your event schema in a Group
                 Section::make()

@@ -263,21 +263,21 @@ class EventRegistrationForm
             Hidden::make("payment_status")->default(
                 PaymentStatus::Unpaid->value,
             ),
-            FileUpload::make("payment_proof_path")
-                ->label("Payment proof")
-                ->disk("public")
-                ->visibility("public")
-                ->directory("payment-proofs")
-                ->maxSize(4096)
-                ->afterStateUpdated(function (Set $set, $livewire): void {
-                    // Log payment proof changes.
-                    self::appendDebugLog(
-                        null,
-                        $set,
-                        "Payment proof updated.",
-                        $livewire,
-                    );
-                }),
+            // FileUpload::make("payment_proof_path")
+            //     ->label("Payment proof")
+            //     ->disk("public")
+            //     ->visibility("public")
+            //     ->directory("payment-proofs")
+            //     ->maxSize(4096)
+            //     ->afterStateUpdated(function (Set $set, $livewire): void {
+            //         // Log payment proof changes.
+            //         self::appendDebugLog(
+            //             null,
+            //             $set,
+            //             "Payment proof updated.",
+            //             $livewire,
+            //         );
+            //     }),
             // Textarea::make("debug_log")
             //     ->label("Debug log")
             //     ->rows(6)
