@@ -13,7 +13,18 @@ class ViewNews extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            EditAction::make(),
+            \Filament\Actions\Action::make('share_twitter')
+                ->label('Share on X')
+                ->icon('heroicon-o-share')
+                ->color('info')
+                ->url(fn (): string => 'https://twitter.com/intent/tweet?text=' . urlencode($this->record->title) . '&url=' . urlencode(request()->url()))
+                ->openUrlInNewTab(),
+            \Filament\Actions\Action::make('share_whatsapp')
+                ->label('Share on WhatsApp')
+                ->icon('heroicon-o-chat-bubble-oval-left')
+                ->color('success')
+                ->url(fn (): string => 'https://api.whatsapp.com/send?text=' . urlencode($this->record->title . ' ' . request()->url()))
+                ->openUrlInNewTab(),
         ];
     }
 }

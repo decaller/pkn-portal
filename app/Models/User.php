@@ -72,6 +72,16 @@ class User extends Authenticatable implements FilamentUser, HasTenants
         return $this->hasMany(EventRegistration::class, 'booker_user_id');
     }
 
+    public function testimonials(): HasMany
+    {
+        return $this->hasMany(Testimonial::class);
+    }
+
+    public function surveyResponses(): HasMany
+    {
+        return $this->hasMany(SurveyResponse::class);
+    }
+
     public function canAccessTenant(Model $tenant): bool
     {
         if (! $tenant instanceof Organization) {

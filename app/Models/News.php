@@ -17,7 +17,14 @@ class News extends Model
         'content',
         'thumbnail',
         'is_published',
+        'event_id',
     ];
+
+    public function event(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(Event::class);
+    }
+
     // This allows $news->analytics
     public function analytics(): MorphMany
     {

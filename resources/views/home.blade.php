@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -15,7 +16,9 @@
             --border: #e2e8f0;
         }
 
-        * { box-sizing: border-box; }
+        * {
+            box-sizing: border-box;
+        }
 
         body {
             margin: 0;
@@ -83,6 +86,7 @@
         }
     </style>
 </head>
+
 <body>
     <main class="card">
         <h1>{{ config('app.name', 'PKN Portal') }}</h1>
@@ -92,7 +96,9 @@
             <a class="btn primary" href="{{ route('filament.user.auth.login') }}">User Login</a>
             <a class="btn" href="{{ route('filament.user.auth.register') }}">User Register</a>
             <a class="btn" href="{{ route('filament.admin.auth.login') }}">Admin Login</a>
+            <a class="btn" href="{{ url('/public') }}">Public Panel</a>
         </div>
     </main>
 </body>
+
 </html>

@@ -30,6 +30,16 @@ class EventRegistrationResource extends Resource
 
     protected static ?string $navigationLabel = 'User registrations';
 
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::where('payment_status', \App\Enums\PaymentStatus::Submitted)->count() ?: null;
+    }
+
+    public static function getNavigationBadgeColor(): string|array|null
+    {
+        return 'warning';
+    }
+
     public static function form(Schema $schema): Schema
     {
         return EventRegistrationForm::configure($schema);

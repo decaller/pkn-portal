@@ -39,6 +39,14 @@ class NewsForm
                         Toggle::make('is_published')
                             ->label('Visible to Parents')
                             ->default(true),
+
+                        \Filament\Forms\Components\Select::make('event_id')
+                            ->label('Related Event')
+                            ->relationship('event', 'title')
+                            ->searchable()
+                            ->preload()
+                            ->nullable()
+                            ->helperText('Link this news to a specific event to drive registrations.'),
                     ])->columnSpan(1),
             ]);
     }

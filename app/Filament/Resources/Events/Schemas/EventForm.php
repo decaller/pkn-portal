@@ -80,16 +80,47 @@ class EventForm
                         ->minValue(1)
                         ->placeholder('Leave blank for unlimited spots')
                         ->helperText('Maximum number of participants allowed to register.'),
+
+                    TextInput::make('place')
+                        ->label('Event Place/Location')
+                        ->maxLength(255),
+
+                    \Filament\Forms\Components\Select::make('survey_template_id')
+                        ->label('Survey Template')
+                        ->relationship('surveyTemplate', 'name')
+                        ->preload()
+                        ->placeholder('Select a survey template')
+                        ->nullable(),
                 ])
                 ->columnSpan(2),
 
-            Section::make('Media')
+            Section::make('Promotional Image')
                 ->schema([
                     FileUpload::make('cover_image')
                         ->image()
                         ->imageResizeMode('cover')
                         ->imageResizeTargetWidth('1200')
                         ->directory('event-covers'), // Cover image goes in a generic folder
+                ])
+                ->columnSpanFull(),
+
+            Section::make('Additional Documents')
+                ->schema([
+                    FileUpload::make('proposal')
+                        ->label('Event Proposal')
+                        ->acceptedFileTypes(['application/pdf', 'image/*'])
+                        ->directory('event-proposals')
+                        ->downloadable()
+                        ->openable(),
+                        
+                    FileUpload::make('documentation')
+                        ->label('Event Documentation')
+                        ->multiple()
+                        ->directory('event-documentation')
+                        ->reorderable()
+                        ->downloadable()
+                        ->openable()
+                        ->panelLayout('grid'),
                 ])
                 ->columnSpanFull(),
 
@@ -128,99 +159,74 @@ class EventForm
             Section::make('Event Rundown')
                 ->description('Add sessions, speakers, and materials.')
                 ->schema([
-                    Repeater::make('rundown') // Matches the 'rundown' column in DB
-                        ->schema([
-                            // Session Title
-                            TextInput::make('title')
-                                ->required()
-                                ->placeholder('e.g. Opening Ceremony')
-                                ->columnSpanFull()
-                                ->live(onBlur: true)
-                                ->afterStateUpdated(function (
-                                    $state,
-                                    $set,
-                                    $get,
-                                ) {
-                                    // 1. Get the main Event Title from the parent form
-                                    $eventTitle =
-                                        $get('../../title') ?? 'event';
-
-                                    // 2. Combine Event Title + Session Title + Random Suffix
-                                    $combinedSlug =
-                                        Str::slug($eventTitle).
-                                        '-'.
-                                        Str::slug($state).
-                                        '-'.
-                                        Str::lower(Str::random(4));
-
-                                    // 3. Set the slug field in the current repeater row
-                                    $set('slug', $combinedSlug);
-                                }),
-                            TextInput::make('slug')
-                                ->disabled() // Keep it disabled so users don't break the folder link
-                                ->dehydrated() // Ensures it still gets saved to the DB
-                                ->required()
-                                ->unique(ignoreRecord: true)
-                                ->label('Session ID (Auto-generated)'),
-
-                            TextInput::make('speaker')
-                                ->required()
-                                ->placeholder('e.g. Speaker Name')
-                                ->columnSpanFull(),
-
-                            // Session Details
-                            RichEditor::make('description')
-                                ->toolbarButtons([
-                                    'bold',
-                                    'italic',
-                                    'link',
-                                    'bulletList',
-                                ])
-                                ->columnSpanFull(),
-
-                            // Session Files (PDFs/PPTs)
-                            FileUpload::make('session_files')
-                                ->label('Materials')
-                                ->multiple()
-                                ->disk('public')
-                                ->visibility('public')
-                                ->openable()
-                                // Save to: events/graduation-2026/sessions/
-                                ->directory(
-                                    fn ($get) => 'events/'.
-                                        ($get('../../slug') ?? 'draft').
-                                        '/sessions',
-                                )
-                                ->preserveFilenames()
-                                ->reorderable()
-                                ->downloadable(),
-
-                            // External Link
-                            Repeater::make('links')
-                                ->label('External Resources')
+                    \Filament\Forms\Components\Builder::make('rundown') // Matches the 'rundown' column in DB
+                        ->blocks([
+                            \Filament\Forms\Components\Builder\Block::make('simple')
+                                ->label('Simple Session')
                                 ->schema([
-                                    TextInput::make('url')
-                                        ->label('URL')
-                                        ->url()
-                                        ->required(),
+                                    TextInput::make('title')->required()->columnSpanFull(),
+                                    DatePicker::make('date')->required(),
+                                    TextInput::make('place'),
+                                    TextInput::make('start_time')->required(),
+                                    TextInput::make('end_time')->required(),
+                                    
+                                ])->columns(2),
 
-                                    TextInput::make('label')
-                                        ->label('Label')
-                                        ->placeholder('e.g. Watch on YouTube')
-                                        ->required(),
-                                ])
-                                ->columns(2) // Make the inner items sit in a row (Compact!)
-                                ->defaultItems(0) // Start empty
-                                ->addActionLabel('Add Link'),
+                            \Filament\Forms\Components\Builder\Block::make('advanced')
+                                ->label('Advanced Session')
+                                ->schema([
+                                    TextInput::make('title')->required()->columnSpanFull(),
+                                    DatePicker::make('date')->required(),
+                                    TextInput::make('place'),
+                                    \Filament\Forms\Components\TimePicker::make('start_time')->required(),
+                                    \Filament\Forms\Components\TimePicker::make('end_time')->required(),
+                                    
+                                    
+                                    TextInput::make('speaker')
+                                        ->placeholder('e.g. Speaker Name')
+                                        ->columnSpanFull(),
+                                    
+                                    RichEditor::make('description')
+                                        ->toolbarButtons([
+                                            'bold',
+                                            'italic',
+                                            'link',
+                                            'bulletList',
+                                        ])
+                                        ->columnSpanFull(),
+                                    
+                                    FileUpload::make('session_files')
+                                        ->label('Materials')
+                                        ->multiple()
+                                        ->disk('public')
+                                        ->visibility('public')
+                                        ->openable()
+                                        ->directory(fn (Get $get) => 'events/'.($get('../../slug') ?? $get('../../../slug') ?? $get('../../../../slug') ?? 'draft').'/sessions')
+                                        ->preserveFilenames()
+                                        ->reorderable()
+                                        ->downloadable()
+                                        ->columnSpanFull(),
+                                    
+                                    Repeater::make('links')
+                                        ->label('External Resources')
+                                        ->schema([
+                                            TextInput::make('url')
+                                                ->label('URL')
+                                                ->url()
+                                                ->required(),
+                                            TextInput::make('label')
+                                                ->label('Label')
+                                                ->placeholder('e.g. Watch on YouTube')
+                                                ->required(),
+                                        ])
+                                        ->columns(2)
+                                        ->defaultItems(0)
+                                        ->addActionLabel('Add Link')
+                                        ->columnSpanFull(),
+                                ])->columns(2),
                         ])
-                        ->itemLabel(
-                            fn (array $state): ?string => $state['title'] ??
-                                null,
-                        ) // Show title on the collapsed bar
-                        ->collapsible() // Allow collapsing to save space
-                        ->cloneable() // Allow duplicating sessions easily
                         ->columnSpanFull()
-                        ->addActionLabel('Add Session'),
+                        ->addActionLabel('Add Session Block'),
                 ])
                 ->columnSpanFull(),
         ]);

@@ -26,9 +26,14 @@ class TikaService
 
             if ($response->successful()) {
                 $data = $response->json()[0]; // Tika returns an array of metadata objects
+                
+                $content = $data["X-TIKA:content"] ?? null;
+                if ($content) {
+                    $content = preg_replace("/\n{3,}/", "\n\n", trim($content));
+                }
 
                 return [
-                    "content" => $data["X-TIKA:content"] ?? null,
+                    "content" => $content,
                     "mime_type" => $data["Content-Type"] ?? null,
                     "metadata" => $data,
                 ];

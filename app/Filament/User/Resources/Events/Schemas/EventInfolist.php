@@ -23,6 +23,13 @@ class EventInfolist
                                 TextEntry::make('title')->weight('bold')->size('lg'),
                                 TextEntry::make('description')->markdown()->prose(),
                                 TextEntry::make('event_date')->date('d M Y')->icon('heroicon-m-calendar-days'),
+                                TextEntry::make('event_type')
+                                    ->badge()
+                                    ->color('primary')
+                                    ->icon('heroicon-m-tag'),
+                                TextEntry::make('place')
+                                    ->icon('heroicon-m-map-pin')
+                                    ->visible(fn ($state) => filled($state)),
                                 TextEntry::make('capacity')
                                     ->label('Availability')
                                     ->icon('heroicon-m-user-group')
@@ -42,13 +49,25 @@ class EventInfolist
                     ])->columnSpan(['md' => 1]),
 
                     Group::make([
-                        Section::make('Media')
+                        Section::make('Promotional Image')
                             ->schema([
                                 ImageEntry::make('cover_image')->hiddenLabel(),
                                 ImageEntry::make('photos')
                                     ->hiddenLabel()
                                     ->stacked()
                                     ->circular(),
+                            ]),
+                        Section::make('Additional Documents')
+                            ->schema([
+                                TextEntry::make('proposal')
+                                    ->label('Event Proposal')
+                                    ->formatStateUsing(fn () => 'View Proposal')
+                                    ->url(fn ($record) => $record->proposal ? asset('storage/' . $record->proposal) : null)
+                                    ->openUrlInNewTab()
+                                    ->icon('heroicon-m-document-text')
+                                    ->badge()
+                                    ->color('primary')
+                                    ->visible(fn ($record) => filled($record->proposal)),
                             ]),
                     ])->columnSpan(['md' => 1]),
                 ])
@@ -59,19 +78,47 @@ class EventInfolist
                         RepeatableEntry::make('rundown')
                             ->hiddenLabel()
                             ->schema([
-                                TextEntry::make('title')
+                                TextEntry::make('data.title')
+                                    ->label('Session Title')
                                     ->weight('bold')
-                                    ->size('lg'),
-                                TextEntry::make('speaker')
+                                    ->size('lg')
+                                    ->columnSpanFull(),
+                                TextEntry::make('data.date')
+                                    ->label('Date')
+                                    ->date('d M Y')
+                                    ->icon('heroicon-m-calendar')
+                                    ->visible(fn ($state) => filled($state)),
+                                TextEntry::make('data.place')
+                                    ->label('Location')
+                                    ->icon('heroicon-m-map-pin')
+                                    ->visible(fn ($state) => filled($state)),
+                                TextEntry::make('data.start_time')
+                                    ->label('Start')
+                                    ->icon('heroicon-m-clock')
+                                    ->visible(fn ($state) => filled($state)),
+                                TextEntry::make('data.end_time')
+                                    ->label('End')
+                                    ->icon('heroicon-m-clock')
+                                    ->visible(fn ($state) => filled($state)),
+                                TextEntry::make('data.speaker')
+                                    ->label('Speaker')
                                     ->icon('heroicon-m-user')
                                     ->badge()
-                                    ->color('info'),
-                                TextEntry::make('description')
+                                    ->color('info')
+                                    ->visible(fn ($state) => filled($state)),
+                                TextEntry::make('data.description')
+                                    ->label('Description')
                                     ->html()
                                     ->prose()
                                     ->columnSpanFull()
                                     ->visible(fn ($state) => filled($state)),
-                                RepeatableEntry::make('links')
+                                \Filament\Infolists\Components\ViewEntry::make('data.session_files')
+                                    ->label('Files & Materials')
+                                    ->view('filament.infolists.components.file-list')
+                                    ->columnSpanFull()
+                                    ->visible(fn ($state) => filled($state)),
+                                RepeatableEntry::make('data.links')
+                                    ->label('External Resources')
                                     ->schema([
                                         TextEntry::make('label')->label('Resource'),
                                         TextEntry::make('url')->label('URL')->url(fn ($state) => $state, true)->color('primary'),
@@ -84,6 +131,79 @@ class EventInfolist
                     ])
                     ->visible(fn ($record) => filled($record->rundown))
                     ->columnSpanFull(),
+                    
+                Section::make('Event Documentation')
+                    ->schema([
+                        \Filament\Infolists\Components\ViewEntry::make('documentation')
+                            ->hiddenLabel()
+                            ->view('filament.infolists.components.file-list')
+                    ])
+                    ->columnSpanFull()
+                    ->visible(fn ($record) => filled($record->documentation)),
+                    
+                Section::make('Testimonials')
+                    ->schema([
+                        RepeatableEntry::make('approvedTestimonials')
+                            ->hiddenLabel()
+                            ->schema([
+                                TextEntry::make('author')
+                                    ->getStateUsing(fn ($record) => $record->user ? $record->user->name : $record->guest_name)
+                                    ->label('Participant')
+                                    ->weight('bold')
+                                    ->icon('heroicon-m-user'),
+                                TextEntry::make('rating')
+                                    ->badge()
+                                    ->color('warning')
+                                    ->icon('heroicon-m-star'),
+                                TextEntry::make('content')
+                                    ->hiddenLabel()
+                                    ->prose()
+                                    ->columnSpanFull(),
+                            ])
+                            ->columns(2)
+                            ->grid(2),
+                    ])
+                    ->columnSpanFull()
+                    ->visible(fn ($record) => $record->approvedTestimonials()->exists()),
+                    
+                Section::make('What People Say About Us')
+                    ->schema([
+                        RepeatableEntry::make('previous_testimonials') // State-driven component
+                            ->hiddenLabel()
+                            ->state(function (\App\Models\Event $record) {
+                                return \App\Models\Testimonial::with(['user', 'event'])
+                                    ->where('event_id', '!=', $record->id)
+                                    ->where('is_approved', true)
+                                    ->where('rating', '>=', 4)
+                                    ->inRandomOrder()
+                                    ->limit(4)
+                                    ->get();
+                            })
+                            ->schema([
+                                TextEntry::make('event.title')
+                                    ->label('From Event')
+                                    ->icon('heroicon-m-calendar')
+                                    ->color('primary')
+                                    ->columnSpanFull(),
+                                TextEntry::make('author')
+                                    ->label('Participant')
+                                    ->getStateUsing(fn ($record) => $record->user ? $record->user->name : $record->guest_name)
+                                    ->weight('bold')
+                                    ->icon('heroicon-m-user'),
+                                TextEntry::make('rating')
+                                    ->badge()
+                                    ->color('warning')
+                                    ->icon('heroicon-m-star'),
+                                TextEntry::make('content')
+                                    ->hiddenLabel()
+                                    ->prose()
+                                    ->columnSpanFull(),
+                            ])
+                            ->columns(2)
+                            ->grid(2),
+                    ])
+                    ->columnSpanFull()
+                    ->visible(fn ($record) => $record->allow_registration && $record->event_date >= now()->startOfDay()),
             ]);
     }
 }

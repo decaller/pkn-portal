@@ -13,7 +13,13 @@ class ViewDocument extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            EditAction::make(),
+            \Filament\Actions\Action::make('view_event')
+                ->label('View Related Event')
+                ->icon('heroicon-o-link')
+                ->color('info')
+                ->url(fn (): string => \App\Filament\User\Resources\Events\EventResource::getUrl('view', ['record' => $this->record->event_id]))
+                ->visible(fn (): bool => $this->record->event_id !== null),
+            // EditAction::make(),
         ];
     }
 }

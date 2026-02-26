@@ -53,6 +53,21 @@ class Event extends Model
         return $this->hasMany(EventRegistration::class);
     }
 
+    public function surveyTemplate(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(SurveyTemplate::class);
+    }
+
+    public function testimonials(): HasMany
+    {
+        return $this->hasMany(Testimonial::class);
+    }
+
+    public function approvedTestimonials(): HasMany
+    {
+        return $this->hasMany(Testimonial::class)->where('is_approved', true);
+    }
+
     // 3. Helper: Get the full MinIO path
     public function getStoragePath(): string
     {

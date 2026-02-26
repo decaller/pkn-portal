@@ -2,7 +2,7 @@
 
 namespace App\Filament\User\Resources\Documents;
 
-use App\Filament\Resources\Documents\Schemas\DocumentInfolist;
+use App\Filament\User\Resources\Documents\Schemas\DocumentInfolist;
 use App\Filament\Resources\Documents\Tables\DocumentsTable;
 // No form needed
 use App\Filament\User\Resources\Documents\Pages\ListDocuments;
