@@ -14,6 +14,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use UnitEnum;
 
 class EventResource extends Resource
 {
@@ -23,7 +24,9 @@ class EventResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCalendarDateRange;
 
-    protected static ?string $navigationLabel = "Events";
+    protected static string|UnitEnum|null $navigationGroup = 'Events';
+
+    protected static ?string $navigationLabel = 'Events';
 
     public static function form(Schema $schema): Schema
     {
@@ -43,15 +46,15 @@ class EventResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
-            ->where("is_published", true)
-            ->orderBy("event_date", "desc");
+            ->where('is_published', true)
+            ->orderBy('event_date', 'desc');
     }
 
     public static function getPages(): array
     {
         return [
-            "index" => ListEvents::route("/"),
-            "view" => ViewEvent::route("/{record}"),
+            'index' => ListEvents::route('/'),
+            'view' => ViewEvent::route('/{record}'),
         ];
     }
 }

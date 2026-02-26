@@ -15,12 +15,17 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class EventResource extends Resource
 {
     protected static ?string $model = Event::class;
+
     protected static bool $isScopedToTenant = false;
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCalendarDateRange;
+
+    protected static string|UnitEnum|null $navigationGroup = 'Event Management';
 
     public static function form(Schema $schema): Schema
     {
@@ -40,17 +45,17 @@ class EventResource extends Resource
     public static function getRelations(): array
     {
         return [
-                //
-            ];
+            //
+        ];
     }
 
     public static function getPages(): array
     {
         return [
-            "index" => ListEvents::route("/"),
-            "create" => CreateEvent::route("/create"),
-            "view" => ViewEvent::route("/{record}"),
-            "edit" => EditEvent::route("/{record}/edit"),
+            'index' => ListEvents::route('/'),
+            'create' => CreateEvent::route('/create'),
+            'view' => ViewEvent::route('/{record}'),
+            'edit' => EditEvent::route('/{record}/edit'),
         ];
     }
 }

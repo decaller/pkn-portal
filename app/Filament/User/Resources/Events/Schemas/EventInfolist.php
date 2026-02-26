@@ -23,6 +23,21 @@ class EventInfolist
                                 TextEntry::make('title')->weight('bold')->size('lg'),
                                 TextEntry::make('description')->markdown()->prose(),
                                 TextEntry::make('event_date')->date('d M Y')->icon('heroicon-m-calendar-days'),
+                                TextEntry::make('capacity')
+                                    ->label('Availability')
+                                    ->icon('heroicon-m-user-group')
+                                    ->state(function (\App\Models\Event $event) {
+                                        if (is_null($event->max_capacity)) {
+                                            return 'Unlimited Spots';
+                                        }
+                                        $available = $event->availableSpots();
+
+                                        return $available > 0
+                                            ? "{$available} spots remaining out of {$event->max_capacity}"
+                                            : "Sold Out ({$event->max_capacity} capacity reached)";
+                                    })
+                                    ->badge()
+                                    ->color(fn (\App\Models\Event $event) => $event->isFull() ? 'danger' : 'success'),
                             ]),
                     ])->columnSpan(['md' => 2]),
 

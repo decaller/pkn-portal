@@ -11,42 +11,63 @@ class EventRegistrationInfolist
     public static function configure(Schema $schema): Schema
     {
         return $schema->components([
-            // Section::make("Registration details")
-            //     ->schema([
-            //         TextEntry::make("event.title")->label("Event"),
-            //         TextEntry::make("booker.name")->label("Booker"),
-            //         TextEntry::make("organization.name")
-            //             ->label("Organization")
-            //             ->placeholder("Personal registration"),
-            //         TextEntry::make("package_name")
-            //             ->label("Package")
-            //             ->placeholder("-"),
-            //         TextEntry::make("participant_count")->label(
-            //             "Participant qty",
-            //         ),
-            //         TextEntry::make("unit_price")
-            //             ->label("Unit price")
-            //             ->money("IDR"),
-            //         TextEntry::make("status")->badge(),
-            //         TextEntry::make("payment_status")->badge(),
-            //         TextEntry::make("total_amount")->money("IDR"),
-            //         TextEntry::make("participants_count")->label(
-            //             "Participants",
-            //         ),
-            //         TextEntry::make("payment_proof_path")->placeholder("-"),
-            //         TextEntry::make("verified_at")
-            //             ->dateTime()
-            //             ->placeholder("-"),
-            //         TextEntry::make("verifier.name")
-            //             ->label("Verified by")
-            //             ->placeholder("-"),
-            //         TextEntry::make("notes")
-            //             ->placeholder("-")
-            //             ->columnSpanFull(),
-            //         TextEntry::make("created_at")->dateTime(),
-            //         TextEntry::make("updated_at")->dateTime(),
-            //     ])
-            //     ->columns(2),
+            Section::make('Payment Context')
+                ->schema([
+                    TextEntry::make('booker.name')->label('Booker Name')->weight('bold'),
+                    TextEntry::make('organization.name')->label('Organization')->placeholder('Personal Registration'),
+                    TextEntry::make('status')
+                        ->badge()
+                        ->color(fn ($state) => match ($state) {
+                            \App\Enums\RegistrationStatus::Draft => 'gray',
+                            \App\Enums\RegistrationStatus::PendingPayment => 'warning',
+                            \App\Enums\RegistrationStatus::Paid => 'success',
+                            \App\Enums\RegistrationStatus::Closed => 'info',
+                            \App\Enums\RegistrationStatus::Cancelled => 'danger',
+                            default => 'primary',
+                        }),
+                    TextEntry::make('payment_status')
+                        ->badge()
+                        ->color(fn ($state) => match ($state) {
+                            \App\Enums\PaymentStatus::Unpaid => 'danger',
+                            \App\Enums\PaymentStatus::Submitted => 'warning',
+                            \App\Enums\PaymentStatus::Verified => 'success',
+                            \App\Enums\PaymentStatus::Rejected => 'danger',
+                            default => 'primary',
+                        }),
+                    TextEntry::make('total_amount')->money('IDR')->weight('bold')->size('lg'),
+                    TextEntry::make('verified_at')->dateTime()->placeholder('Unverified'),
+                    TextEntry::make('verifier.name')->label('Verified By')->placeholder('-'),
+                ])
+                ->columns(3),
+
+            Section::make('Event & Packages')
+                ->schema([
+                    TextEntry::make('event.title')->label('Event')->url(fn ($record) => \App\Filament\Resources\Events\EventResource::getUrl('edit', ['record' => $record->event_id])),
+                    TextEntry::make('participants_count')->label('Total Participants'),
+                ])
+                ->columns(2),
+
+            Section::make('Payment Proof')
+                ->schema([
+                    \Filament\Infolists\Components\ImageEntry::make('payment_proof_path')
+                        ->label('Payment Document / Receipt')
+                        ->hiddenLabel()
+                        ->placeholder('No payment proof uploaded yet.')
+                        ->columnSpanFull()
+                        ->size(400)
+                        ->visible(fn ($record) => !$record->payment_proof_path || !str_ends_with(strtolower((string) $record->payment_proof_path), '.pdf')),
+                        
+                    \Filament\Infolists\Components\TextEntry::make('payment_proof_pdf')
+                        ->label('Payment Document / Receipt')
+                        ->hiddenLabel()
+                        ->state('View PDF Document')
+                        ->url(fn ($record) => $record->payment_proof_path ? asset('storage/' . $record->payment_proof_path) : null)
+                        ->openUrlInNewTab()
+                        ->icon('heroicon-o-document-text')
+                        ->badge()
+                        ->color('success')
+                        ->visible(fn ($record) => $record->payment_proof_path && str_ends_with(strtolower((string) $record->payment_proof_path), '.pdf')),
+                ]),
         ]);
     }
 }

@@ -9,8 +9,8 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
-use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
@@ -21,13 +21,13 @@ class EventRegistrationForm
     public static function schema(): array
     {
         return [
-            Select::make("event_id")
+            Select::make('event_id')
                 ->options(
-                    fn(): array => self::availableEventsQuery()
-                        ->pluck("title", "id")
+                    fn (): array => self::availableEventsQuery()
+                        ->pluck('title', 'id')
                         ->all(),
                 )
-                ->default(fn() => request()->query("event_id"))
+                ->default(fn () => request()->query('event_id'))
                 ->live()
                 ->afterStateUpdated(function (
                     Get $get,
@@ -38,7 +38,7 @@ class EventRegistrationForm
                     self::appendDebugLog(
                         $get,
                         $set,
-                        "Event updated: " . ($get("event_id") ?? "null"),
+                        'Event updated: '.($get('event_id') ?? 'null'),
                         $livewire,
                     );
                     self::resetPackageRowsForEvent(
@@ -58,11 +58,11 @@ class EventRegistrationForm
                     self::appendDebugLog(
                         $get,
                         $set,
-                        "Hydrating event: " .
-                            ($state ?? "null") .
-                            " (event_id=" .
-                            ($get("event_id") ?? "null") .
-                            ")",
+                        'Hydrating event: '.
+                            ($state ?? 'null').
+                            ' (event_id='.
+                            ($get('event_id') ?? 'null').
+                            ')',
                         $livewire,
                     );
                 })
@@ -71,27 +71,27 @@ class EventRegistrationForm
                 ->preload()
                 ->exists(
                     table: Event::class,
-                    column: "id",
-                    modifyRuleUsing: fn($rule) => $rule
-                        ->where("is_published", true)
-                        ->where("allow_registration", true)
+                    column: 'id',
+                    modifyRuleUsing: fn ($rule) => $rule
+                        ->where('is_published', true)
+                        ->where('allow_registration', true)
                         ->where(
-                            fn($query) => $query->whereDate(
-                                "event_date",
-                                ">=",
+                            fn ($query) => $query->whereDate(
+                                'event_date',
+                                '>=',
                                 now()->toDateString(),
                             ),
                         ),
                 ),
-            Repeater::make("package_breakdown")
-                ->label("Package participants")
+            Repeater::make('package_breakdown')
+                ->label('Package participants')
                 ->columnSpanFull()
                 ->schema([
-                    Select::make("package_name")
-                        ->label("Package")
+                    Select::make('package_name')
+                        ->label('Package')
                         ->options(
-                            fn(Get $get): array => self::packageOptions(
-                                $get("../../event_id"),
+                            fn (Get $get): array => self::packageOptions(
+                                $get('../../event_id'),
                             ),
                         )
                         ->searchable()
@@ -107,27 +107,27 @@ class EventRegistrationForm
                             self::appendDebugLog(
                                 $get,
                                 $set,
-                                "Package changed to: " . ($state ?? "null"),
+                                'Package changed to: '.($state ?? 'null'),
                                 $livewire,
                             );
                             $qty = max(
                                 1,
-                                (int) ($get("participant_count") ?? 1),
+                                (int) ($get('participant_count') ?? 1),
                             );
                             $price = self::packagePrice(
-                                $get("../../event_id"),
+                                $get('../../event_id'),
                                 $state,
                             );
-                            $set("unit_price", $price * $qty);
+                            $set('unit_price', $price * $qty);
                             self::syncTotalAmount(
-                                $get("../../package_breakdown"),
+                                $get('../../package_breakdown'),
                                 $set,
                                 $livewire,
                             );
                         })
                         ->required(),
-                    TextInput::make("participant_count")
-                        ->label("Participants")
+                    TextInput::make('participant_count')
+                        ->label('Participants')
                         ->numeric()
                         ->minValue(1)
                         ->default(1)
@@ -141,30 +141,78 @@ class EventRegistrationForm
                             self::appendDebugLog(
                                 $get,
                                 $set,
-                                "Participant count updated.",
+                                'Participant count updated.',
                                 $livewire,
                             );
-                            $package = $get("package_name");
+                            $package = $get('package_name');
                             $price = self::packagePrice(
-                                $get("../../event_id"),
+                                $get('../../event_id'),
                                 $package,
                             );
                             $qty = max(
                                 1,
-                                (int) ($get("participant_count") ?? 1),
+                                (int) ($get('participant_count') ?? 1),
                             );
-                            $set("unit_price", $price * $qty);
+                            $set('unit_price', $price * $qty);
                             self::syncTotalAmount(
-                                $get("../../package_breakdown"),
+                                $get('../../package_breakdown'),
                                 $set,
                                 $livewire,
                             );
                         })
+                        ->rules([
+                            function (Get $get) {
+                                return function (string $attribute, $value, \Closure $fail) use ($get) {
+                                    $eventId = $get('../../event_id');
+                                    $packageName = $get('package_name');
+                                    $requested = (int) $value;
+
+                                    if (! $eventId || ! $packageName) {
+                                        return;
+                                    }
+
+                                    $packages = self::packagesForEvent($eventId);
+                                    $maxQuota = null;
+
+                                    foreach ($packages as $pkg) {
+                                        if (($pkg['name'] ?? '') === $packageName && isset($pkg['max_quota']) && is_numeric($pkg['max_quota'])) {
+                                            $maxQuota = (int) $pkg['max_quota'];
+                                            break;
+                                        }
+                                    }
+
+                                    if ($maxQuota !== null) {
+                                        // Calculate how many of this package have already been bought for this event
+                                        $bought = \App\Models\EventRegistration::where('event_id', $eventId)
+                                            ->whereIn('payment_status', [\App\Enums\PaymentStatus::Submitted, \App\Enums\PaymentStatus::Verified])
+                                            ->orWhere('status', \App\Enums\RegistrationStatus::Paid)
+                                            ->get()
+                                            ->sum(function ($reg) use ($packageName) {
+                                                $breakdown = $reg->package_breakdown ?? [];
+                                                $qty = 0;
+                                                foreach ($breakdown as $row) {
+                                                    if (($row['package_name'] ?? '') === $packageName) {
+                                                        $qty += (int) ($row['participant_count'] ?? 0);
+                                                    }
+                                                }
+
+                                                return $qty;
+                                            });
+
+                                        $available = max(0, $maxQuota - $bought);
+
+                                        if ($requested > $available) {
+                                            $fail("Only {$available} spots remaining for the {$packageName} package.");
+                                        }
+                                    }
+                                };
+                            },
+                        ])
                         ->required(),
-                    TextInput::make("unit_price")
-                        ->label("Unit price")
+                    TextInput::make('unit_price')
+                        ->label('Unit price')
                         ->numeric()
-                        ->prefix("IDR")
+                        ->prefix('IDR')
                         ->default(0)
                         // Price is derived from the package, not directly editable.
                         ->disabled()
@@ -192,7 +240,7 @@ class EventRegistrationForm
                         ->required(),
                 ])
                 ->columns(3)
-                ->addActionLabel("Add package row")
+                ->addActionLabel('Add package row')
                 // Keep totals in sync when rows are added/removed.
                 ->live()
                 // ->afterStateUpdated(function (
@@ -221,32 +269,34 @@ class EventRegistrationForm
                     self::appendDebugLog(
                         $get,
                         $set,
-                        "Repeater hydrated.",
+                        'Repeater hydrated.',
                         $livewire,
                     );
 
-                    $eventId = $get("event_id");
+                    $eventId = $get('event_id');
 
-                    if (!$eventId) {
+                    if (! $eventId) {
                         self::appendDebugLog(
                             $get,
                             $set,
-                            "Repeater hydrate skipped: no event_id.",
+                            'Repeater hydrate skipped: no event_id.',
                             $livewire,
                         );
+
                         return;
                     }
 
                     $rows = $state ?? [];
-                    $firstPackage = $rows[0]["package_name"] ?? null;
+                    $firstPackage = $rows[0]['package_name'] ?? null;
 
                     if ($firstPackage) {
                         self::appendDebugLog(
                             $get,
                             $set,
-                            "Repeater hydrate skipped: rows already set.",
+                            'Repeater hydrate skipped: rows already set.',
                             $livewire,
                         );
+
                         return;
                     }
 
@@ -262,22 +312,22 @@ class EventRegistrationForm
             // Hidden::make("participant_count"),
             // Hidden::make("unit_price"),
             // Booker is always the current user.
-            Hidden::make("booker_user_id")->default(fn() => auth()->id()),
+            Hidden::make('booker_user_id')->default(fn () => auth()->id()),
             // Organization is always the current tenant.
-            Hidden::make("organization_id")->default(
-                fn() => filament()->getTenant()?->getKey(),
+            Hidden::make('organization_id')->default(
+                fn () => filament()->getTenant()?->getKey(),
             ),
-            TextInput::make("total_amount")
+            TextInput::make('total_amount')
                 ->numeric()
-                ->prefix("IDR")
+                ->prefix('IDR')
                 ->readOnly()
                 ->required()
                 ->default(0)
                 ->dehydrated()
                 ->disabled(),
             // User-facing registrations always start as draft + unpaid.
-            Hidden::make("status")->default(RegistrationStatus::Draft->value),
-            Hidden::make("payment_status")->default(
+            Hidden::make('status')->default(RegistrationStatus::Draft->value),
+            Hidden::make('payment_status')->default(
                 PaymentStatus::Unpaid->value,
             ),
             // FileUpload::make("payment_proof_path")
@@ -303,12 +353,13 @@ class EventRegistrationForm
             //     ->columnSpanFull(),
         ];
     }
+
     // User-facing registration form (tenant-scoped) with auto pricing logic.
     public static function configure(Schema $schema): Schema
     {
         // HOW DO I CALL IT BACK?
         return $schema->components(
-            Section::make("Registration")
+            Section::make('Registration')
                 ->columnSpanFull()
                 ->schema(self::schema())
                 ->columns(1),
@@ -321,23 +372,35 @@ class EventRegistrationForm
         $packages = self::packagesForEvent($eventId);
 
         if ($packages === []) {
-            return ["General" => "General (IDR 0)"];
+            return ['General' => 'General (IDR 0)'];
         }
 
         $options = [];
 
         foreach ($packages as $package) {
-            $name = (string) ($package["name"] ?? "General");
-            $price = (float) ($package["price"] ?? 0);
+            $name = (string) ($package['name'] ?? 'General');
+            $price = (float) ($package['price'] ?? 0);
 
             $options[$name] = sprintf(
-                "%s (IDR %s)",
+                '%s (IDR %s)',
                 $name,
-                number_format($price, 0, ",", "."),
+                number_format($price, 0, ',', '.'),
             );
         }
 
         return $options;
+    }
+
+    private static function packageMaxQuota(?int $eventId, ?string $packageName): ?int
+    {
+        $packages = self::packagesForEvent($eventId);
+        foreach ($packages as $package) {
+            if ((string) ($package['name'] ?? '') === (string) $packageName && isset($package['max_quota']) && is_numeric($package['max_quota'])) {
+                return (int) $package['max_quota'];
+            }
+        }
+
+        return null;
     }
 
     private static function packagePrice(
@@ -351,11 +414,11 @@ class EventRegistrationForm
         }
 
         foreach ($packages as $package) {
-            if ((string) ($package["name"] ?? "") !== (string) $packageName) {
+            if ((string) ($package['name'] ?? '') !== (string) $packageName) {
                 continue;
             }
 
-            return (float) ($package["price"] ?? 0);
+            return (float) ($package['price'] ?? 0);
         }
 
         return 0;
@@ -364,14 +427,14 @@ class EventRegistrationForm
     private static function packagesForEvent(?int $eventId): array
     {
         // Safely load packages; return empty when event is missing.
-        if (!$eventId) {
+        if (! $eventId) {
             return [];
         }
 
         /** @var Event|null $event */
         $event = self::availableEventsQuery()->find($eventId);
 
-        if (!$event) {
+        if (! $event) {
             return [];
         }
 
@@ -386,30 +449,31 @@ class EventRegistrationForm
         $livewire,
         bool $seedWhenEmpty = false,
     ): void {
-        $eventId = $get("event_id");
-        $rows = $get("package_breakdown") ?? [];
+        $eventId = $get('event_id');
+        $rows = $get('package_breakdown') ?? [];
 
         if ($rows === []) {
-            if (!$seedWhenEmpty) {
+            if (! $seedWhenEmpty) {
                 self::appendDebugLog(
                     $get,
                     $set,
-                    "Refresh packages skipped: no rows yet.",
+                    'Refresh packages skipped: no rows yet.',
                     $livewire,
                 );
+
                 return;
             }
 
             $rows = [
                 [
-                    "participant_count" => 1,
+                    'participant_count' => 1,
                 ],
             ];
 
             self::appendDebugLog(
                 $get,
                 $set,
-                "Seeded first package row.",
+                'Seeded first package row.',
                 $livewire,
             );
         }
@@ -417,28 +481,28 @@ class EventRegistrationForm
         $refreshed = [];
 
         foreach ($rows as $row) {
-            $qty = max(1, (int) ($row["participant_count"] ?? 1));
+            $qty = max(1, (int) ($row['participant_count'] ?? 1));
             $refreshed[] = [
-                "package_name" => null,
-                "participant_count" => $qty,
-                "unit_price" => 0,
+                'package_name' => null,
+                'participant_count' => $qty,
+                'unit_price' => 0,
             ];
         }
 
         self::appendDebugLog(
             $get,
             $set,
-            "Refreshed packages for event (reselect required): " .
-                ($eventId ?? "null"),
+            'Refreshed packages for event (reselect required): '.
+                ($eventId ?? 'null'),
             $livewire,
         );
 
-        $set("package_breakdown", $refreshed);
+        $set('package_breakdown', $refreshed);
         self::syncTotalAmount($refreshed, $set, $livewire);
     }
 
     /**
-     * @param array<int, array<string, mixed>> $rows
+     * @param  array<int, array<string, mixed>>  $rows
      */
     private static function syncTotalAmount(
         array $rows,
@@ -450,20 +514,20 @@ class EventRegistrationForm
         self::appendDebugLog(
             null,
             $set,
-            "Syncing total amount with data : " . json_encode($rows),
+            'Syncing total amount with data : '.json_encode($rows),
             $livewire,
         );
 
         foreach ($rows as $row) {
-            $total += (float) ($row["unit_price"] ?? 0);
+            $total += (float) ($row['unit_price'] ?? 0);
         }
 
-        $set("../../total_amount", $total);
+        $set('../../total_amount', $total);
 
         self::appendDebugLog(
             null,
             $set,
-            "Total amount synced: " . $total,
+            'Total amount synced: '.$total,
             $livewire,
         );
     }
@@ -475,20 +539,20 @@ class EventRegistrationForm
         $livewire = null,
     ): void {
         if ($livewire) {
-            $livewire->dispatch("log-data", message: $message);
+            $livewire->dispatch('log-data', message: $message);
         }
 
-        $existing = $get ? $get("debug_log") : "";
-        $next = $existing === "" ? $message : $existing . "\n" . $message;
-        $set("debug_log", $next);
+        $existing = $get ? $get('debug_log') : '';
+        $next = $existing === '' ? $message : $existing."\n".$message;
+        $set('debug_log', $next);
     }
 
     private static function availableEventsQuery()
     {
         return Event::query()
-            ->where("is_published", true)
-            ->where("allow_registration", true)
-            ->whereDate("event_date", ">=", now()->toDateString())
-            ->orderBy("event_date");
+            ->where('is_published', true)
+            ->where('allow_registration', true)
+            ->whereDate('event_date', '>=', now()->toDateString())
+            ->orderBy('event_date');
     }
 }

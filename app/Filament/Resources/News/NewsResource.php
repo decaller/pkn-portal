@@ -15,13 +15,17 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class NewsResource extends Resource
 {
     protected static ?string $model = News::class;
+
     protected static bool $isScopedToTenant = false;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedNewspaper;
+
+    protected static string|UnitEnum|null $navigationGroup = 'Content Management';
 
     public static function form(Schema $schema): Schema
     {
@@ -41,17 +45,17 @@ class NewsResource extends Resource
     public static function getRelations(): array
     {
         return [
-                //
-            ];
+            //
+        ];
     }
 
     public static function getPages(): array
     {
         return [
-            "index" => ListNews::route("/"),
-            "create" => CreateNews::route("/create"),
-            "view" => ViewNews::route("/{record}"),
-            "edit" => EditNews::route("/{record}/edit"),
+            'index' => ListNews::route('/'),
+            'create' => CreateNews::route('/create'),
+            'view' => ViewNews::route('/{record}'),
+            'edit' => EditNews::route('/{record}/edit'),
         ];
     }
 }

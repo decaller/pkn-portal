@@ -17,27 +17,26 @@ class Event extends Model
     protected $guarded = [];
 
     protected $casts = [
-        "event_date" => "date",
-        "event_type" => EventType::class,
-        "is_published" => "boolean",
-        "allow_registration" => "boolean",
-        "registration_packages" => "array",
-        "photos" => "array",
-        "files" => "array",
-        "rundown" => "array", // <--- CRITICAL: This makes the JSON Repeater work
+        'event_date' => 'date',
+        'event_type' => EventType::class,
+        'is_published' => 'boolean',
+        'allow_registration' => 'boolean',
+        'registration_packages' => 'array',
+        'photos' => 'array',
+        'files' => 'array',
+        'rundown' => 'array', // <--- CRITICAL: This makes the JSON Repeater work
     ];
 
     protected static function booted(): void
     {
         static::saving(function (Event $event): void {
-            if (!$event->allow_registration || !$event->event_date) {
+            if (! $event->allow_registration || ! $event->event_date) {
                 return;
             }
 
             if ($event->event_date->isBefore(now()->startOfDay())) {
                 throw ValidationException::withMessages([
-                    "event_date" =>
-                        "Event date cannot be in the past when registration is enabled.",
+                    'event_date' => 'Event date cannot be in the past when registration is enabled.',
                 ]);
             }
         });
@@ -46,7 +45,7 @@ class Event extends Model
     // 2. Link to Analytics (Polymorphic)
     public function analytics(): MorphMany
     {
-        return $this->morphMany(Analytic::class, "trackable");
+        return $this->morphMany(Analytic::class, 'trackable');
     }
 
     public function registrations(): HasMany
@@ -55,9 +54,39 @@ class Event extends Model
     }
 
     // 3. Helper: Get the full MinIO path
-    // Usage: $event->getStoragePath() -> "events/graduation-2026"
     public function getStoragePath(): string
     {
-        return "events/" . $this->slug;
+        return 'events/'.$this->slug;
+    }
+
+    public function getApprovedParticipantsCount(): int
+    {
+        // Total participants inside EventRegistrations that are either Submitted, Verified, or Paid.
+        return $this->registrations()
+            ->whereIn('payment_status', [\App\Enums\PaymentStatus::Submitted, \App\Enums\PaymentStatus::Verified])
+            ->orWhere('status', \App\Enums\RegistrationStatus::Paid)
+            ->withCount('participants')
+            ->get()
+            ->sum('participants_count');
+    }
+
+    public function availableSpots(): ?int
+    {
+        if (is_null($this->max_capacity)) {
+            return null; // Unlimited
+        }
+
+        $takenSpots = $this->getApprovedParticipantsCount();
+
+        return max(0, $this->max_capacity - $takenSpots);
+    }
+
+    public function isFull(): bool
+    {
+        if (is_null($this->max_capacity)) {
+            return false;
+        }
+
+        return $this->availableSpots() === 0;
     }
 }

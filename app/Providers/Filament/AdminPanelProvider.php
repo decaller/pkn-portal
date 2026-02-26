@@ -2,6 +2,9 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Pages\Tenancy\EditOrganizationProfile;
+use App\Filament\Pages\Tenancy\RegisterOrganization;
+use App\Models\Organization;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -15,15 +18,10 @@ use Filament\Widgets\FilamentInfoWidget;
 use Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse;
 use Illuminate\Cookie\Middleware\EncryptCookies;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
+// <--- Import this
 use Illuminate\Routing\Middleware\SubstituteBindings;
 use Illuminate\Session\Middleware\StartSession;
 use Illuminate\View\Middleware\ShareErrorsFromSession;
-use App\Filament\Resources\News\Widgets\TopViewedNews; // <--- Import this
-use App\Filament\Resources\Events\Widgets\TopViewedEvents;
-use App\Filament\Resources\Documents\Widgets\TopViewedDocuments;
-use App\Filament\Pages\Tenancy\EditOrganizationProfile;
-use App\Filament\Pages\Tenancy\RegisterOrganization;
-use App\Models\Organization;
 
 class AdminPanelProvider extends PanelProvider
 {
@@ -31,34 +29,32 @@ class AdminPanelProvider extends PanelProvider
     {
         return $panel
             ->default()
-            ->id("admin")
-            ->path("admin")
+            ->id('admin')
+            ->path('admin')
+            ->brandName('PKN Admin Panel')
             ->login()
-            ->tenant(Organization::class, "slug", "organization")
+            ->tenant(Organization::class, 'slug', 'organization')
             ->tenantRegistration(RegisterOrganization::class)
             ->tenantProfile(EditOrganizationProfile::class)
             ->colors([
-                "primary" => Color::Amber,
+                'primary' => Color::Amber,
             ])
             ->discoverResources(
-                in: app_path("Filament/Resources"),
+                in: app_path('Filament/Resources'),
                 for: "App\Filament\Resources",
             )
             ->discoverPages(
-                in: app_path("Filament/Pages"),
+                in: app_path('Filament/Pages'),
                 for: "App\Filament\Pages",
             )
             ->pages([Dashboard::class])
             ->discoverWidgets(
-                in: app_path("Filament/Widgets"),
+                in: app_path('Filament/Widgets'),
                 for: "App\Filament\Widgets",
             )
             ->widgets([
                 AccountWidget::class,
                 FilamentInfoWidget::class,
-                TopViewedNews::class,
-                TopViewedEvents::class,
-                TopViewedDocuments::class,
             ])
             ->middleware([
                 EncryptCookies::class,

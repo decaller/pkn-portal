@@ -12,23 +12,25 @@ class EditOrganizationProfile extends EditTenantProfile
 {
     public static function getLabel(): string
     {
-        return "Organization profile";
+        return 'Organization profile';
     }
 
     public function form(Schema $schema): Schema
     {
         return $schema->components([
-            TextInput::make("name")->required()->maxLength(255),
-            TextInput::make("slug")
+            TextInput::make('name')->required()->maxLength(255),
+            TextInput::make('slug')
                 ->required()
                 ->alphaDash()
                 ->maxLength(255)
-                ->unique(Organization::class, "slug", ignoreRecord: true),
-            FileUpload::make("logo")
+                ->unique(Organization::class, 'slug', ignoreRecord: true),
+            FileUpload::make('logo')
                 ->image()
-                ->disk("public")
-                ->visibility("public")
-                ->directory("organization-logos")
+                ->imageResizeMode('cover')
+                ->imageResizeTargetWidth('1200')
+                ->disk('public')
+                ->visibility('public')
+                ->directory('organization-logos')
                 ->imageEditor(),
         ]);
     }

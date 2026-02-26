@@ -16,9 +16,9 @@ class OrganizationForm
     public static function configure(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make("Organization details")
+            Section::make('Organization details')
                 ->schema([
-                    TextInput::make("name")
+                    TextInput::make('name')
                         ->required()
                         ->maxLength(255)
                         ->live(onBlur: true)
@@ -27,50 +27,52 @@ class OrganizationForm
                             $set,
                             ?string $operation,
                         ): void {
-                            if ($operation !== "create") {
+                            if ($operation !== 'create') {
                                 return;
                             }
 
-                            $set("slug", Str::slug((string) $state));
+                            $set('slug', Str::slug((string) $state));
                         }),
-                    TextInput::make("slug")
+                    TextInput::make('slug')
                         ->required()
                         ->alphaDash()
                         ->maxLength(255)
                         ->unique(
                             Organization::class,
-                            "slug",
+                            'slug',
                             ignoreRecord: true,
                         ),
-                    FileUpload::make("logo")
+                    FileUpload::make('logo')
                         ->image()
-                        ->disk("public")
-                        ->visibility("public")
-                        ->directory("organization-logos")
+                        ->imageResizeMode('cover')
+                        ->imageResizeTargetWidth('1200')
+                        ->disk('public')
+                        ->visibility('public')
+                        ->directory('organization-logos')
                         ->imageEditor(),
-                    Select::make("admin_user_id")
-                        ->label("Organization admin")
-                        ->relationship("admin", "name")
+                    Select::make('admin_user_id')
+                        ->label('Organization admin')
+                        ->relationship('admin', 'name')
                         ->searchable()
                         ->preload()
                         ->required(),
                 ])
                 ->columns(2),
-            Section::make("Members")
+            Section::make('Members')
                 ->description(
-                    "Users attached to this organization. Selected admin will always be included as admin.",
+                    'Users attached to this organization. Selected admin will always be included as admin.',
                 )
                 ->schema([
-                    Select::make("users")
+                    Select::make('users')
                         ->multiple()
-                        ->relationship("users", "name")
+                        ->relationship('users', 'name')
                         ->getOptionLabelFromRecordUsing(
-                            fn(User $record): string => $record->name .
-                                " (" .
-                                ($record->phone_number ?: "no phone") .
-                                ")",
+                            fn (User $record): string => $record->name.
+                                ' ('.
+                                ($record->phone_number ?: 'no phone').
+                                ')',
                         )
-                        ->searchable(["name", "phone_number", "email"])
+                        ->searchable(['name', 'phone_number', 'email'])
                         ->preload(),
                 ]),
         ]);

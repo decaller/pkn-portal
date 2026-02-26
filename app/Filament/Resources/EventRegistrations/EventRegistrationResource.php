@@ -16,13 +16,19 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use UnitEnum;
 
 class EventRegistrationResource extends Resource
 {
     protected static ?string $model = EventRegistration::class;
+
     protected static bool $isScopedToTenant = false;
+
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTicket;
-    protected static ?string $navigationLabel = "User registrations";
+
+    protected static string|UnitEnum|null $navigationGroup = 'Event Management';
+
+    protected static ?string $navigationLabel = 'User registrations';
 
     public static function form(Schema $schema): Schema
     {
@@ -42,17 +48,17 @@ class EventRegistrationResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
-            ->with(["event", "organization", "booker", "verifier", "invoices"])
-            ->withCount("participants");
+            ->with(['event', 'organization', 'booker', 'verifier', 'invoices'])
+            ->withCount('participants');
     }
 
     public static function getPages(): array
     {
         return [
-            "index" => ListEventRegistrations::route("/"),
-            "create" => CreateEventRegistration::route("/create"),
-            "view" => ViewEventRegistration::route("/{record}"),
-            "edit" => EditEventRegistration::route("/{record}/edit"),
+            'index' => ListEventRegistrations::route('/'),
+            'create' => CreateEventRegistration::route('/create'),
+            'view' => ViewEventRegistration::route('/{record}'),
+            'edit' => EditEventRegistration::route('/{record}/edit'),
         ];
     }
 }

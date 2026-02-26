@@ -85,6 +85,11 @@ class InvoicesTable
                             ->success()
                             ->send();
                     }),
+                Action::make('download')
+                    ->label('Download PDF')
+                    ->icon('heroicon-o-document-arrow-down')
+                    ->url(fn (\App\Models\Invoice $record): string => route('invoices.download', $record))
+                    ->openUrlInNewTab(),
                 ViewAction::make(),
             ]);
     }

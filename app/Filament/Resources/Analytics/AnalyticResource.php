@@ -15,13 +15,17 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
+use UnitEnum;
 
 class AnalyticResource extends Resource
 {
     protected static ?string $model = Analytic::class;
+
     protected static bool $isScopedToTenant = false;
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedChartBarSquare;
+
+    protected static string|UnitEnum|null $navigationGroup = 'Analytics';
 
     public static function form(Schema $schema): Schema
     {
@@ -41,17 +45,17 @@ class AnalyticResource extends Resource
     public static function getRelations(): array
     {
         return [
-                //
-            ];
+            //
+        ];
     }
 
     public static function getPages(): array
     {
         return [
-            "index" => ListAnalytics::route("/"),
-            "create" => CreateAnalytic::route("/create"),
-            "view" => ViewAnalytic::route("/{record}"),
-            "edit" => EditAnalytic::route("/{record}/edit"),
+            'index' => ListAnalytics::route('/'),
+            'create' => CreateAnalytic::route('/create'),
+            'view' => ViewAnalytic::route('/{record}'),
+            'edit' => EditAnalytic::route('/{record}/edit'),
         ];
     }
 }

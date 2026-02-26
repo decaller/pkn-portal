@@ -33,6 +33,7 @@ class UserPanelProvider extends PanelProvider
         return $panel
             ->id('user')
             ->path('user')
+            ->brandName('PKN User Panel')
             ->login(Login::class)
             ->registration(RegisterEvent::class)
             ->tenant(Organization::class, 'slug', 'organization')

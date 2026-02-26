@@ -13,6 +13,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use UnitEnum;
 
 class InvoiceResource extends Resource
 {
@@ -22,7 +23,9 @@ class InvoiceResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentText;
 
-    protected static ?string $navigationLabel = "Invoices";
+    protected static string|UnitEnum|null $navigationGroup = 'Event Management';
+
+    protected static ?string $navigationLabel = 'Invoices';
 
     public static function form(Schema $schema): Schema
     {
@@ -42,18 +45,18 @@ class InvoiceResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()->with([
-            "registration.event",
-            "registration.organization",
-            "registration.booker",
-            "items",
+            'registration.event',
+            'registration.organization',
+            'registration.booker',
+            'items',
         ]);
     }
 
     public static function getPages(): array
     {
         return [
-            "index" => ListInvoices::route("/"),
-            "view" => ViewInvoice::route("/{record}"),
+            'index' => ListInvoices::route('/'),
+            'view' => ViewInvoice::route('/{record}'),
         ];
     }
 }

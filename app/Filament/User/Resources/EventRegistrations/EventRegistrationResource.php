@@ -18,6 +18,7 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
+use UnitEnum;
 
 class EventRegistrationResource extends Resource
 {
@@ -27,7 +28,9 @@ class EventRegistrationResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTicket;
 
-    protected static ?string $navigationLabel = "My registrations";
+    protected static string|UnitEnum|null $navigationGroup = 'Events';
+
+    protected static ?string $navigationLabel = 'My registrations';
 
     public static function form(Schema $schema): Schema
     {
@@ -49,29 +52,29 @@ class EventRegistrationResource extends Resource
         $userId = auth()->id();
 
         return parent::getEloquentQuery()
-            ->with(["event", "organization", "invoices", "participants", "booker"])
+            ->with(['event', 'organization', 'invoices', 'participants', 'booker'])
             ->where(function (Builder $query) use ($userId): void {
-                $query->where("booker_user_id", $userId)
-                    ->orWhereHas("participants", fn (Builder $q) => $q->where("user_id", $userId));
+                $query->where('booker_user_id', $userId)
+                    ->orWhereHas('participants', fn (Builder $q) => $q->where('user_id', $userId));
             });
     }
 
     public static function mutateFormDataBeforeCreate(array $data): array
     {
-        $rows = is_array($data["package_breakdown"] ?? null)
-            ? $data["package_breakdown"]
+        $rows = is_array($data['package_breakdown'] ?? null)
+            ? $data['package_breakdown']
             : [];
 
-        $data["total_amount"] = array_reduce(
+        $data['total_amount'] = array_reduce(
             $rows,
-            fn(float $carry, mixed $row): float => $carry +
-                (float) (is_array($row) ? $row["unit_price"] ?? 0 : 0),
+            fn (float $carry, mixed $row): float => $carry +
+                (float) (is_array($row) ? $row['unit_price'] ?? 0 : 0),
             0.0,
         );
 
-        $data["booker_user_id"] = auth()->id();
-        $data["status"] = RegistrationStatus::Draft;
-        $data["payment_status"] = PaymentStatus::Unpaid;
+        $data['booker_user_id'] = auth()->id();
+        $data['status'] = RegistrationStatus::Draft;
+        $data['payment_status'] = PaymentStatus::Unpaid;
 
         return $data;
     }
@@ -79,10 +82,10 @@ class EventRegistrationResource extends Resource
     public static function getPages(): array
     {
         return [
-            "index" => ListEventRegistrations::route("/"),
-            "create" => CreateEventRegistration::route("/create"),
-            "view" => ViewEventRegistration::route("/{record}"),
-            "edit" => EditEventRegistration::route("/{record}/edit"),
+            'index' => ListEventRegistrations::route('/'),
+            'create' => CreateEventRegistration::route('/create'),
+            'view' => ViewEventRegistration::route('/{record}'),
+            'edit' => EditEventRegistration::route('/{record}/edit'),
         ];
     }
 }

@@ -15,32 +15,34 @@ class RegisterOrganization extends RegisterTenant
 {
     public static function getLabel(): string
     {
-        return "Create organization";
+        return 'Create organization';
     }
 
     public function form(Schema $schema): Schema
     {
         return $schema->components([
-            TextInput::make("name")
+            TextInput::make('name')
                 ->required()
                 ->maxLength(255)
                 ->live(onBlur: true)
                 ->afterStateUpdated(
-                    fn($state, $set) => $set(
-                        "slug",
+                    fn ($state, $set) => $set(
+                        'slug',
                         Str::slug((string) $state),
                     ),
                 ),
-            TextInput::make("slug")
+            TextInput::make('slug')
                 ->required()
                 ->alphaDash()
                 ->maxLength(255)
-                ->unique(Organization::class, "slug"),
-            FileUpload::make("logo")
+                ->unique(Organization::class, 'slug'),
+            FileUpload::make('logo')
                 ->image()
-                ->disk("public")
-                ->visibility("public")
-                ->directory("organization-logos")
+                ->imageResizeMode('cover')
+                ->imageResizeTargetWidth('1200')
+                ->disk('public')
+                ->visibility('public')
+                ->directory('organization-logos')
                 ->imageEditor(),
         ]);
     }
@@ -48,14 +50,14 @@ class RegisterOrganization extends RegisterTenant
     protected function handleRegistration(array $data): Model
     {
         $organization = Organization::create([
-            "name" => $data["name"],
-            "slug" => $data["slug"],
-            "logo" => $data["logo"] ?? null,
-            "admin_user_id" => Auth::id(),
+            'name' => $data['name'],
+            'slug' => $data['slug'],
+            'logo' => $data['logo'] ?? null,
+            'admin_user_id' => Auth::id(),
         ]);
 
         $organization->users()->syncWithoutDetaching([
-            Auth::id() => ["role" => "admin"],
+            Auth::id() => ['role' => 'admin'],
         ]);
 
         return $organization;

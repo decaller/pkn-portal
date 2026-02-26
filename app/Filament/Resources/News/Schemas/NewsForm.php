@@ -2,11 +2,11 @@
 
 namespace App\Filament\Resources\News\Schemas;
 
-use Filament\Schemas\Components\Section;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
+use Filament\Schemas\Components\Section;
 use Filament\Schemas\Schema;
 
 class NewsForm
@@ -21,7 +21,7 @@ class NewsForm
                         TextInput::make('title')
                             ->required()
                             ->maxLength(255),
-                        
+
                         RichEditor::make('content')
                             ->required()
                             ->columnSpanFull(),
@@ -31,9 +31,11 @@ class NewsForm
                     ->schema([
                         FileUpload::make('thumbnail')
                             ->image()
+                            ->imageResizeMode('cover')
+                            ->imageResizeTargetWidth('1200')
                             ->directory('news-thumbnails')
                             ->imageEditor(),
-                        
+
                         Toggle::make('is_published')
                             ->label('Visible to Parents')
                             ->default(true),
