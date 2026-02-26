@@ -31,6 +31,7 @@ class NewsForm
                     ->schema([
                         FileUpload::make('thumbnail')
                             ->image()
+                            ->disk('public')
                             ->imageResizeMode('cover')
                             ->imageResizeTargetWidth('1200')
                             ->directory('news-thumbnails')

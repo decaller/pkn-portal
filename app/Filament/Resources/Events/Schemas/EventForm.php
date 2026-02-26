@@ -46,19 +46,24 @@ class EventForm
                     DatePicker::make('event_date')
                         ->required()
                         ->native(false)
+                        ->live(onBlur: true)
                         ->minDate(
-                            fn (Get $get): ?\Illuminate\Support\Carbon => $get(
-                                'allow_registration',
-                            )
+                            fn (Get $get, string $operation): ?\Illuminate\Support\Carbon => $get('allow_registration') && $operation === 'create'
                                 ? now()->startOfDay()
                                 : null,
                         )
                         ->rules(
-                            fn (Get $get): array => $get('allow_registration')
+                            fn (Get $get, string $operation): array => $get('allow_registration') && $operation === 'create'
                                 ? ['after_or_equal:today']
                                 : [],
                         )
                         ->displayFormat('d/m/Y'),
+                        
+                    TextInput::make('duration_days')
+                        ->label('Duration (Days)')
+                        ->numeric()
+                        ->minValue(1)
+                        ->placeholder('Optional total days'),
 
                     Select::make('event_type')
                         ->label('Event Type')
@@ -83,7 +88,26 @@ class EventForm
 
                     TextInput::make('place')
                         ->label('Event Place/Location')
+                        ->live(onBlur: true)
                         ->maxLength(255),
+                        
+                    TextInput::make('city')
+                        ->label('City')
+                        ->maxLength(255),
+                        
+                    TextInput::make('province')
+                        ->label('Province')
+                        ->maxLength(255),
+                        
+                    TextInput::make('nation')
+                        ->label('Nation')
+                        ->maxLength(255),
+                        
+                    TextInput::make('google_maps_url')
+                        ->label('Google Maps URL')
+                        ->url()
+                        ->maxLength(255)
+                        ->columnSpanFull(),
 
                     \Filament\Forms\Components\Select::make('survey_template_id')
                         ->label('Survey Template')
@@ -91,6 +115,18 @@ class EventForm
                         ->preload()
                         ->placeholder('Select a survey template')
                         ->nullable(),
+                        
+                    \Filament\Forms\Components\TagsInput::make('tags')
+                        ->placeholder('Add tags...')
+                        ->suggestions(
+                            fn () => \App\Models\Event::pluck('tags')
+                                ->flatten()
+                                ->filter()
+                                ->unique()
+                                ->values()
+                                ->toArray()
+                        )
+                        ->columnSpanFull(),
                 ])
                 ->columnSpan(2),
 
@@ -98,6 +134,7 @@ class EventForm
                 ->schema([
                     FileUpload::make('cover_image')
                         ->image()
+                        ->disk('public')
                         ->imageResizeMode('cover')
                         ->imageResizeTargetWidth('1200')
                         ->directory('event-covers'), // Cover image goes in a generic folder
@@ -108,6 +145,7 @@ class EventForm
                 ->schema([
                     FileUpload::make('proposal')
                         ->label('Event Proposal')
+                        ->disk('public')
                         ->acceptedFileTypes(['application/pdf', 'image/*'])
                         ->directory('event-proposals')
                         ->downloadable()
@@ -115,6 +153,7 @@ class EventForm
                         
                     FileUpload::make('documentation')
                         ->label('Event Documentation')
+                        ->disk('public')
                         ->multiple()
                         ->directory('event-documentation')
                         ->reorderable()
@@ -165,8 +204,11 @@ class EventForm
                                 ->label('Simple Session')
                                 ->schema([
                                     TextInput::make('title')->required()->columnSpanFull(),
-                                    DatePicker::make('date')->required(),
-                                    TextInput::make('place'),
+                                    DatePicker::make('date')
+                                        ->default(fn (Get $get) => $get('../../event_date'))
+                                        ->required(),
+                                    TextInput::make('place')
+                                        ->default(fn (Get $get) => $get('../../place')),
                                     TextInput::make('start_time')->required(),
                                     TextInput::make('end_time')->required(),
                                     
@@ -176,10 +218,13 @@ class EventForm
                                 ->label('Advanced Session')
                                 ->schema([
                                     TextInput::make('title')->required()->columnSpanFull(),
-                                    DatePicker::make('date')->required(),
-                                    TextInput::make('place'),
-                                    \Filament\Forms\Components\TimePicker::make('start_time')->required(),
-                                    \Filament\Forms\Components\TimePicker::make('end_time')->required(),
+                                    DatePicker::make('date')
+                                        ->default(fn (Get $get) => $get('../../event_date'))
+                                        ->required(),
+                                    TextInput::make('place')
+                                        ->default(fn (Get $get) => $get('../../place')),
+                                    TextInput::make('start_time')->required(),
+                                    TextInput::make('end_time')->required(),
                                     
                                     
                                     TextInput::make('speaker')

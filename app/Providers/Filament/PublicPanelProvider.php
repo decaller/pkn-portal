@@ -25,11 +25,10 @@ class PublicPanelProvider extends PanelProvider
     {
         return $panel
             ->id('public')
-            ->path('') // Root path
+            ->path('public')
             ->colors([
                 'primary' => Color::Amber,
             ])
-            ->topNavigation() // Public usually works better with top nav
             ->discoverResources(in: app_path('Filament/Public/Resources'), for: 'App\Filament\Public\Resources')
             ->discoverPages(in: app_path('Filament/Public/Pages'), for: 'App\Filament\Public\Pages')
             ->pages([
@@ -37,7 +36,8 @@ class PublicPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Public/Widgets'), for: 'App\Filament\Public\Widgets')
             ->widgets([
-                //
+                \App\Filament\User\Widgets\LatestNewsWidget::class,
+                \App\Filament\User\Widgets\AvailableRegistrationEventsWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,
@@ -49,6 +49,9 @@ class PublicPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+            ])
+            ->authMiddleware([
+                // Disable authentication for public visitors
             ]);
     }
 }

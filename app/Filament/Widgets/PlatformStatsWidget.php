@@ -21,8 +21,7 @@ class PlatformStatsWidget extends BaseWidget
             ->where('event_date', '>=', now())
             ->count();
 
-        $pendingRegistrations = EventRegistration::where('organization_id', $tenant?->id)
-            ->where('payment_status', \App\Enums\PaymentStatus::Submitted)
+        $pendingRegistrations = EventRegistration::where('payment_status', \App\Enums\PaymentStatus::Submitted)
             ->count();
 
         $totalUsers = $tenant ? $tenant->users()->count() : User::count();

@@ -29,24 +29,34 @@ class AvailableRegistrationEventsWidget extends TableWidget
                     ->whereDate("event_date", ">=", now()->toDateString())
                     ->orderBy("event_date"),
             )
-            ->columns([
-                TextColumn::make("title")->label("Event")->weight("bold"),
-                TextColumn::make("event_date")
-                    ->label("Date")
-                    ->date("d M Y")
-                    ->sortable(),
+            ->contentGrid([
+                'md' => 2,
+                'xl' => 3,
             ])
-            ->recordUrl(fn(Event $record): string => EventResource::getUrl("view", [
-                "record" => $record->getKey(),
-            ]))
+            ->columns([
+                \Filament\Tables\Columns\Layout\Stack::make([
+                    \Filament\Tables\Columns\ImageColumn::make('cover_image')
+                        ->height('150px')
+                        ->width('100%')
+                        ->extraImgAttributes([
+                            'class' => 'object-cover rounded-xl w-full',
+                        ]),
+                    \Filament\Tables\Columns\Layout\Stack::make([
+                        TextColumn::make("title")->label("Event")->weight("bold")->size('lg'),
+                        TextColumn::make("event_date")
+                            ->label("Date")
+                            ->date("d M Y")
+                            ->icon('heroicon-m-calendar')
+                            ->color('gray')
+                            ->size('sm'),
+                    ])->space(1)->extraAttributes(['class' => 'pt-4']),
+                ])->space(0),
+            ])
+            ->recordUrl(fn(Event $record): string => "/user/events/" . $record->getKey())
             ->recordActions([
                 ViewAction::make(),
                 Action::make("register")->icon("heroicon-o-ticket")->url(
-                    fn(
-                        Event $record,
-                    ): string => EventRegistrationResource::getUrl("create", [
-                        "event_id" => $record->getKey(),
-                    ]),
+                    fn(Event $record): string => "/user/register?event_id=" . $record->getKey()
                 ),
             ])
             ->defaultSort("event_date", "asc")

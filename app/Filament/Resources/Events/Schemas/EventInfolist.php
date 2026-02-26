@@ -30,6 +30,28 @@ class EventInfolist
                                 TextEntry::make('place')
                                     ->icon('heroicon-m-map-pin')
                                     ->visible(fn ($state) => filled($state)),
+                                TextEntry::make('city')->visible(fn ($state) => filled($state)),
+                                TextEntry::make('province')->visible(fn ($state) => filled($state)),
+                                TextEntry::make('nation')->visible(fn ($state) => filled($state)),
+                                TextEntry::make('google_maps_url')
+                                    ->label('Map URL')
+                                    ->url(fn ($state) => $state, true)
+                                    ->color('primary')
+                                    ->icon('heroicon-m-map')
+                                    ->visible(fn ($state) => filled($state)),
+                                TextEntry::make('duration_days')
+                                    ->label('Duration')
+                                    ->icon('heroicon-m-clock')
+                                    ->formatStateUsing(fn ($state) => "{$state} Days")
+                                    ->visible(fn ($state) => filled($state)),
+                                TextEntry::make('allow_registration')
+                                    ->badge()
+                                    ->color(fn ($state) => $state ? 'success' : 'danger')
+                                    ->formatStateUsing(fn ($state) => $state ? 'Open' : 'Closed'),
+                                TextEntry::make('tags')
+                                    ->badge()
+                                    ->separator(',')
+                                    ->columnSpanFull(),
                                 TextEntry::make('capacity')
                                     ->label('Availability')
                                     ->icon('heroicon-m-user-group')
@@ -112,9 +134,21 @@ class EventInfolist
                                     ->prose()
                                     ->columnSpanFull()
                                     ->visible(fn ($state) => filled($state)),
-                                \Filament\Infolists\Components\ViewEntry::make('data.session_files')
+                                RepeatableEntry::make('data.session_files')
                                     ->label('Files & Materials')
-                                    ->view('filament.infolists.components.file-list')
+                                    ->getStateUsing(function ($state) {
+                                        if (!is_array($state)) return [];
+                                        return array_map(fn($file) => ['file_path' => $file], $state);
+                                    })
+                                    ->schema([
+                                        TextEntry::make('file_path')
+                                            ->hiddenLabel()
+                                            ->formatStateUsing(fn ($state) => basename($state))
+                                            ->icon('heroicon-o-document-text')
+                                            ->url(fn ($state) => asset('storage/' . $state))
+                                            ->openUrlInNewTab(),
+                                    ])
+                                    ->grid(2)
                                     ->columnSpanFull()
                                     ->visible(fn ($state) => filled($state)),
                                 RepeatableEntry::make('data.links')
@@ -134,9 +168,22 @@ class EventInfolist
                     
                 Section::make('Event Documentation')
                     ->schema([
-                        \Filament\Infolists\Components\ViewEntry::make('documentation')
+                        RepeatableEntry::make('documentation')
                             ->hiddenLabel()
-                            ->view('filament.infolists.components.file-list')
+                            ->getStateUsing(function ($record) {
+                                $docs = $record->documentation;
+                                if (!is_array($docs)) return [];
+                                return array_map(fn($file) => ['file_path' => $file], $docs);
+                            })
+                            ->schema([
+                                TextEntry::make('file_path')
+                                    ->hiddenLabel()
+                                    ->formatStateUsing(fn ($state) => basename($state))
+                                    ->icon('heroicon-o-document-text')
+                                    ->url(fn ($state) => asset('storage/' . $state))
+                                    ->openUrlInNewTab(),
+                            ])
+                            ->grid(2)
                     ])
                     ->columnSpanFull()
                     ->visible(fn ($record) => filled($record->documentation)),

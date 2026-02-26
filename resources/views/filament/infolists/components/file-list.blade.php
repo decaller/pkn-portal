@@ -1,10 +1,9 @@
-<div class="flex flex-wrap gap-2" x-data="{ open: false, url: '', ext: '' }">
+<div class="space-y-3" x-data="{ open: false, url: '', ext: '' }">
     @foreach ((array) $getState() as $file)
         @php
             if (empty($file))
                 continue;
 
-            // Check if string is a URL or a file path
             if (str_starts_with($file, 'http')) {
                 $fileUrl = $file;
                 $ext = 'link';
@@ -21,17 +20,33 @@
                 ? 'https://view.officeapps.live.com/op/view.aspx?src=' . urlencode($fileUrl)
                 : $fileUrl;
         @endphp
-        <button type="button" x-on:click="open = true; url = '{{ $viewerUrl }}'; ext = '{{ $ext }}'"
-            class="inline-flex items-center justify-center space-x-1 rounded-full bg-primary-50 px-3 py-1 text-sm font-medium text-primary-600 hover:bg-primary-100 dark:bg-primary-900/50 dark:text-primary-400 dark:hover:bg-primary-900 ring-1 ring-inset ring-primary-600/20 transition duration-200">
-            @if($isImage)
-                <x-heroicon-m-photo class="w-4 h-4" />
-            @elseif($isPdf)
-                <x-heroicon-m-document-text class="w-4 h-4" />
-            @else
-                <x-heroicon-m-document-arrow-down class="w-4 h-4" />
-            @endif
-            <span>{{ basename($file) }}</span>
-        </button>
+        <div
+            class="flex items-center justify-between p-3 rounded-xl border border-gray-200 dark:border-white/10 bg-white dark:bg-gray-900 shadow-sm transition hover:shadow-md">
+            <div class="flex items-center space-x-3 overflow-hidden">
+                <div class="p-2 rounded-lg bg-primary-50 dark:bg-primary-900/50 text-primary-600 dark:text-primary-400">
+                    @if($isImage)
+                        <x-heroicon-o-photo class="w-5 h-5 shrink-0" />
+                    @elseif($isPdf)
+                        <x-heroicon-o-document-text class="w-5 h-5 shrink-0" />
+                    @else
+                        <x-heroicon-o-document class="w-5 h-5 shrink-0" />
+                    @endif
+                </div>
+                <span class="text-sm font-medium text-gray-700 dark:text-gray-200 truncate">{{ basename($file) }}</span>
+            </div>
+            <div class="flex items-center space-x-2 shrink-0">
+                <button type="button" x-on:click="open = true; url = '{{ $viewerUrl }}'; ext = '{{ $ext }}'"
+                    class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-primary-600 bg-primary-50 rounded-lg hover:bg-primary-100 transition dark:bg-primary-900/50 dark:text-primary-400 dark:hover:bg-primary-900">
+                    <x-heroicon-m-eye class="w-4 h-4 mr-1.5" />
+                    Preview
+                </button>
+                <a href="{{ $fileUrl }}" download
+                    class="inline-flex items-center px-3 py-1.5 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition dark:bg-white/5 dark:text-gray-300 dark:hover:bg-white/10">
+                    <x-heroicon-m-arrow-down-tray class="w-4 h-4 mr-1.5" />
+                    Download
+                </a>
+            </div>
+        </div>
     @endforeach
 
     <template x-teleport="body">

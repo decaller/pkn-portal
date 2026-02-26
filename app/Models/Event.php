@@ -24,7 +24,9 @@ class Event extends Model
         'registration_packages' => 'array',
         'photos' => 'array',
         'files' => 'array',
+        'documentation' => 'array',
         'rundown' => 'array', // <--- CRITICAL: This makes the JSON Repeater work
+        'tags' => 'array',
     ];
 
     protected static function booted(): void
@@ -34,7 +36,8 @@ class Event extends Model
                 return;
             }
 
-            if ($event->event_date->isBefore(now()->startOfDay())) {
+            if (($event->isDirty('event_date') || $event->isDirty('allow_registration')) 
+                && $event->event_date->isBefore(now()->startOfDay())) {
                 throw ValidationException::withMessages([
                     'event_date' => 'Event date cannot be in the past when registration is enabled.',
                 ]);

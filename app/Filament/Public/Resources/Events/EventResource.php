@@ -30,7 +30,7 @@ class EventResource extends Resource
 
     public static function table(Table $table): Table
     {
-        return \App\Filament\User\Resources\Events\Tables\EventsTable::configure($table);
+        return \App\Filament\Public\Resources\Events\Tables\EventsTable::configure($table);
     }
 
     public static function getRelations(): array
