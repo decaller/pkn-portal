@@ -3,7 +3,10 @@
 namespace App\Filament\User\Resources\Events\Tables;
 
 use App\Enums\EventType;
+use App\Filament\User\Resources\EventRegistrations\EventRegistrationResource;
+use App\Models\Event;
 use Filament\Actions\ViewAction;
+use Filament\Actions\Action;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -43,6 +46,16 @@ class EventsTable
                 TextColumn::make("description")->limit(80)->label("Summary"),
             ])
             ->defaultSort("event_date", "desc")
-            ->recordActions([ViewAction::make()]);
+            ->recordActions([
+                ViewAction::make(),
+                Action::make("register")
+                    ->label("Register")
+                    ->icon("heroicon-o-ticket")
+                    ->color("success")
+                    ->visible(fn(Event $record): bool => $record->allow_registration && $record->event_date >= now()->toDateString())
+                    ->url(fn(Event $record): string => EventRegistrationResource::getUrl("create", [
+                        "event_id" => $record->getKey(),
+                    ])),
+            ]);
     }
 }

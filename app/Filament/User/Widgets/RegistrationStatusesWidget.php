@@ -40,6 +40,6 @@ class RegistrationStatusesWidget extends TableWidget
             )
             ->defaultSort("created_at", "desc")
             ->paginated(false)
-            ->emptyStateHeading("You have no event registrations yet.");
+            ->emptyStateHeading("You have not registering any event by yourself yet.");
     }
 }

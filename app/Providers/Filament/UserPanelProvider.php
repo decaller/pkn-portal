@@ -6,9 +6,8 @@ use App\Filament\User\Auth\Login;
 use App\Filament\User\Auth\Register;
 use App\Filament\User\Auth\RegisterEvent;
 use App\Filament\User\Widgets\AvailableRegistrationEventsWidget;
+use App\Filament\User\Widgets\EventRegistrationsTableWidget;
 use App\Filament\User\Widgets\LatestNewsWidget;
-use App\Filament\User\Widgets\PastEventsWidget;
-use App\Filament\User\Widgets\RegistrationStatusesWidget;
 use App\Filament\User\Widgets\WelcomeWidget;
 use App\Models\Organization;
 use Filament\Http\Middleware\Authenticate;
@@ -55,8 +54,7 @@ class UserPanelProvider extends PanelProvider
             ->widgets([
                 WelcomeWidget::class,
                 AvailableRegistrationEventsWidget::class,
-                RegistrationStatusesWidget::class,
-                PastEventsWidget::class,
+                EventRegistrationsTableWidget::class,
                 LatestNewsWidget::class,
             ])
             ->renderHook(

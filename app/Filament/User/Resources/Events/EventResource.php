@@ -23,7 +23,7 @@ class EventResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCalendarDateRange;
 
-    protected static ?string $navigationLabel = "Past events";
+    protected static ?string $navigationLabel = "Events";
 
     public static function form(Schema $schema): Schema
     {
@@ -43,8 +43,8 @@ class EventResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()
-            ->whereDate("event_date", "<=", now())
-            ->where("is_published", true);
+            ->where("is_published", true)
+            ->orderBy("event_date", "desc");
     }
 
     public static function getPages(): array

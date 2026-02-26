@@ -29,6 +29,11 @@ class EventRegistrationPolicy
             return true;
         }
 
+        // Allow participants to view the registration
+        if ($eventRegistration->participants()->where("user_id", $user->getKey())->exists()) {
+            return true;
+        }
+
         if (!$eventRegistration->organization_id) {
             return false;
         }
@@ -55,7 +60,8 @@ class EventRegistrationPolicy
             return false;
         }
 
-        return $this->view($user, $eventRegistration);
+        // Only the booker can edit, not participants
+        return $eventRegistration->booker_user_id === $user->getKey();
     }
 
     public function delete(
@@ -84,5 +90,29 @@ class EventRegistrationPolicy
         EventRegistration $eventRegistration,
     ): bool {
         return $user->isMainAdmin();
+    }
+
+    public function viewInvoice(
+        User $user,
+        EventRegistration $eventRegistration,
+    ): bool {
+        // Only the booker can view invoices, not participants
+        return $eventRegistration->booker_user_id === $user->getKey();
+    }
+
+    public function updatePayment(
+        User $user,
+        EventRegistration $eventRegistration,
+    ): bool {
+        // Only the booker can update payment, not participants
+        return $eventRegistration->booker_user_id === $user->getKey();
+    }
+
+    public function manageParticipants(
+        User $user,
+        EventRegistration $eventRegistration,
+    ): bool {
+        // Only the booker can manage participants, not participants
+        return $eventRegistration->booker_user_id === $user->getKey();
     }
 }

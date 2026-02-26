@@ -5,7 +5,6 @@ namespace App\Filament\User\Resources\EventRegistrations;
 use App\Enums\PaymentStatus;
 use App\Enums\RegistrationStatus;
 use App\Filament\User\Resources\EventRegistrations\Pages\CreateEventRegistration;
-use App\Filament\User\Resources\EventRegistrations\Pages\EditEventRegistration;
 use App\Filament\User\Resources\EventRegistrations\Pages\ListEventRegistrations;
 use App\Filament\User\Resources\EventRegistrations\Pages\ViewEventRegistration;
 use App\Filament\User\Resources\EventRegistrations\Schemas\EventRegistrationForm;
@@ -46,9 +45,14 @@ class EventRegistrationResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
+        $userId = auth()->id();
+
         return parent::getEloquentQuery()
-            ->with(["event", "organization", "invoices"])
-            ->where("booker_user_id", auth()->id());
+            ->with(["event", "organization", "invoices", "participants", "booker"])
+            ->where(function (Builder $query) use ($userId): void {
+                $query->where("booker_user_id", $userId)
+                    ->orWhereHas("participants", fn (Builder $q) => $q->where("user_id", $userId));
+            });
     }
 
     public static function mutateFormDataBeforeCreate(array $data): array
@@ -77,7 +81,6 @@ class EventRegistrationResource extends Resource
             "index" => ListEventRegistrations::route("/"),
             "create" => CreateEventRegistration::route("/create"),
             "view" => ViewEventRegistration::route("/{record}"),
-            "edit" => EditEventRegistration::route("/{record}/edit"),
         ];
     }
 }

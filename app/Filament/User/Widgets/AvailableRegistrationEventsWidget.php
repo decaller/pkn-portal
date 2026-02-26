@@ -3,11 +3,13 @@
 namespace App\Filament\User\Widgets;
 
 use App\Filament\User\Resources\EventRegistrations\EventRegistrationResource;
+use App\Filament\User\Resources\Events\EventResource;
 use App\Models\Event;
 use Filament\Actions\Action;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget;
+use Filament\Actions\ViewAction;
 
 class AvailableRegistrationEventsWidget extends TableWidget
 {
@@ -34,7 +36,11 @@ class AvailableRegistrationEventsWidget extends TableWidget
                     ->date("d M Y")
                     ->sortable(),
             ])
+            ->recordUrl(fn(Event $record): string => EventResource::getUrl("view", [
+                "record" => $record->getKey(),
+            ]))
             ->recordActions([
+                ViewAction::make(),
                 Action::make("register")->icon("heroicon-o-ticket")->url(
                     fn(
                         Event $record,
