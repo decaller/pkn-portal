@@ -16,7 +16,7 @@ class EventInfolist
     {
         return $schema
             ->components([
-                Grid::make(['default' => 1, 'md' => 3])->schema([
+                Grid::make(['default' => 1, 'md' => 2])->schema([
                     Group::make([
                         Section::make('Event Guidelines')
                             ->schema([
@@ -39,7 +39,7 @@ class EventInfolist
                                     ->badge()
                                     ->color(fn (\App\Models\Event $event) => $event->isFull() ? 'danger' : 'success'),
                             ]),
-                    ])->columnSpan(['md' => 2]),
+                    ])->columnSpan(['md' => 1]),
 
                     Group::make([
                         Section::make('Media')
@@ -50,20 +50,40 @@ class EventInfolist
                                     ->stacked()
                                     ->circular(),
                             ]),
-                        Section::make('Rundown')
-                            ->schema([
-                                RepeatableEntry::make('rundown')
-                                    ->hiddenLabel()
-                                    ->schema([
-                                        Grid::make(2)->schema([
-                                            TextEntry::make('start_time')->label('Start')->icon('heroicon-m-clock'),
-                                            TextEntry::make('activity')->label('Activity'),
-                                        ]),
-                                    ]),
-                            ])
-                            ->visible(fn ($record) => filled($record->rundown)),
                     ])->columnSpan(['md' => 1]),
-                ]),
+                ])
+                ->columnSpanFull(),
+
+                Section::make('Sessions & Rundown')
+                    ->schema([
+                        RepeatableEntry::make('rundown')
+                            ->hiddenLabel()
+                            ->schema([
+                                TextEntry::make('title')
+                                    ->weight('bold')
+                                    ->size('lg'),
+                                TextEntry::make('speaker')
+                                    ->icon('heroicon-m-user')
+                                    ->badge()
+                                    ->color('info'),
+                                TextEntry::make('description')
+                                    ->html()
+                                    ->prose()
+                                    ->columnSpanFull()
+                                    ->visible(fn ($state) => filled($state)),
+                                RepeatableEntry::make('links')
+                                    ->schema([
+                                        TextEntry::make('label')->label('Resource'),
+                                        TextEntry::make('url')->label('URL')->url(fn ($state) => $state, true)->color('primary'),
+                                    ])
+                                    ->columns(2)
+                                    ->columnSpanFull()
+                                    ->visible(fn ($state) => filled($state)),
+                            ])
+                            ->columns(2),
+                    ])
+                    ->visible(fn ($record) => filled($record->rundown))
+                    ->columnSpanFull(),
             ]);
     }
 }

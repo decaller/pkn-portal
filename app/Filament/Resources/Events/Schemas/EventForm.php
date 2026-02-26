@@ -188,10 +188,11 @@ class EventForm
                                 // Save to: events/graduation-2026/sessions/
                                 ->directory(
                                     fn ($get) => 'events/'.
-                                        $get('../../slug').
+                                        ($get('../../slug') ?? 'draft').
                                         '/sessions',
                                 )
                                 ->preserveFilenames()
+                                ->reorderable()
                                 ->downloadable(),
 
                             // External Link
@@ -201,8 +202,7 @@ class EventForm
                                     TextInput::make('url')
                                         ->label('URL')
                                         ->url()
-                                        ->required()
-                                        ->prefix('https://'),
+                                        ->required(),
 
                                     TextInput::make('label')
                                         ->label('Label')
