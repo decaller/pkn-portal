@@ -55,17 +55,14 @@ class EventRegistrationInfolist
                         ->placeholder('No payment proof uploaded yet.')
                         ->columnSpanFull()
                         ->size(400)
-                        ->visible(fn ($record) => !$record->payment_proof_path || !str_ends_with(strtolower((string) $record->payment_proof_path), '.pdf')),
-                        
-                    \Filament\Infolists\Components\TextEntry::make('payment_proof_pdf')
+                        ->visible(fn ($record) => ! $record->payment_proof_path || ! str_ends_with(strtolower((string) $record->payment_proof_path), '.pdf')),
+
+                    \Filament\Infolists\Components\ViewEntry::make('payment_proof_pdf')
+                        ->statePath('payment_proof_path')
                         ->label('Payment Document / Receipt')
                         ->hiddenLabel()
-                        ->state('View PDF Document')
-                        ->url(fn ($record) => $record->payment_proof_path ? asset('storage/' . $record->payment_proof_path) : null)
-                        ->openUrlInNewTab()
-                        ->icon('heroicon-o-document-text')
-                        ->badge()
-                        ->color('success')
+                        ->view('filament.components.pdf-viewer')
+                        ->columnSpanFull()
                         ->visible(fn ($record) => $record->payment_proof_path && str_ends_with(strtolower((string) $record->payment_proof_path), '.pdf')),
                 ]),
         ]);
