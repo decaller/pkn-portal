@@ -89,7 +89,17 @@ class EventRegistration extends Model
 
     public function canRemoveParticipants(): bool
     {
-        return !$this->isPaidOrAwaitingVerification();
+        // Can edit if not paid and not awaiting verification
+        if (!$this->isPaidOrAwaitingVerification()) {
+            return true;
+        }
+
+        // Allow editing if status is PendingPayment (payment verification in progress)
+        if ($this->status === RegistrationStatus::PendingPayment) {
+            return true;
+        }
+
+        return false;
     }
 
     public function submitPaymentProof(string $proofPath): void

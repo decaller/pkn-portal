@@ -3,6 +3,7 @@
 namespace App\Filament\User\Resources\EventRegistrations\Pages;
 
 use App\Enums\PaymentStatus;
+use App\Enums\RegistrationStatus;
 use App\Filament\User\Resources\EventRegistrations\EventRegistrationResource;
 use App\Models\User;
 use Filament\Actions\Action;
@@ -24,6 +25,14 @@ class ViewEventRegistration extends ViewRecord
 
     protected function getHeaderActions(): array
     {
+        $status = $this->record->status;
+        $isDraft = $status === RegistrationStatus::Draft;
+        $isPendingPayment = $status === RegistrationStatus::PendingPayment;
+        $isPaid = $status === RegistrationStatus::Paid;
+        $isEditable = $isDraft;
+        $canManage = auth()->user()->can("manageParticipants", $this->record);
+        $canUpdatePayment = auth()->user()->can("updatePayment", $this->record);
+
         return [
             Action::make("view_event")
                 ->label("View Event")
@@ -33,11 +42,23 @@ class ViewEventRegistration extends ViewRecord
                     "tenant" => $this->record->organization?->slug ?? "personal",
                     "record" => $this->record->event_id,
                 ])),
+            Action::make("edit_registration")
+                ->label("Edit Registration")
+                ->icon("heroicon-o-pencil")
+                ->color("primary")
+                ->visible(fn(): bool => $isEditable && $canManage)
+                ->url(fn(): string => EventRegistrationResource::getUrl("edit", [
+                    "record" => $this->record,
+                ])),
             Action::make("edit_participants")
                 ->label("Edit Participants")
                 ->icon("heroicon-o-users")
                 ->color("warning")
-                ->visible(fn(): bool => auth()->user()->can("manageParticipants", $this->record))
+                ->visible(fn(): bool => $canManage && in_array($status, [
+                    RegistrationStatus::Draft,
+                    RegistrationStatus::PendingPayment,
+                    RegistrationStatus::Paid,
+                ]))
                 ->fillForm(fn(): array => [
                     "packages" => $this->packageEntriesForForm(),
                 ])
@@ -222,7 +243,11 @@ class ViewEventRegistration extends ViewRecord
                 ->color("success")
                 ->visible(
                     fn(): bool =>
-                        auth()->user()->can("updatePayment", $this->record) &&
+                        $canUpdatePayment &&
+                        in_array($status, [
+                            RegistrationStatus::Draft,
+                            RegistrationStatus::PendingPayment,
+                        ]) &&
                         $this->record->payment_status !== PaymentStatus::Verified,
                 )
                 ->form([

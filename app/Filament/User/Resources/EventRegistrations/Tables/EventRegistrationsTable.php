@@ -2,6 +2,8 @@
 
 namespace App\Filament\User\Resources\EventRegistrations\Tables;
 
+use App\Enums\PaymentStatus;
+use App\Enums\RegistrationStatus;
 use App\Filament\User\Resources\EventRegistrations\EventRegistrationResource;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
@@ -26,10 +28,14 @@ class EventRegistrationsTable
                 TextColumn::make("organization.name")
                     ->label("Organization")
                     ->placeholder("Personal"),
-                TextColumn::make("status")->badge(),
-                TextColumn::make("payment_status")->badge(),
-                // TextColumn::make("total_amount")->money("IDR")->sortable(),
-                // TextColumn::make("updated_at")->since(),
+                TextColumn::make("status")
+                    ->badge()
+                    ->formatStateUsing(fn(RegistrationStatus|string|null $state): string => $state instanceof RegistrationStatus ? $state->getLabel() : RegistrationStatus::tryFrom((string) $state)?->getLabel() ?? '-')
+                    ->color(fn(RegistrationStatus|string|null $state): string => $state instanceof RegistrationStatus ? $state->getColor() : RegistrationStatus::tryFrom((string) $state)?->getColor() ?? 'gray'),
+                TextColumn::make("payment_status")
+                    ->badge()
+                    ->formatStateUsing(fn(PaymentStatus|string|null $state): string => $state instanceof PaymentStatus ? $state->getLabel() : PaymentStatus::tryFrom((string) $state)?->getLabel() ?? '-')
+                    ->color(fn(PaymentStatus|string|null $state): string => $state instanceof PaymentStatus ? $state->getColor() : PaymentStatus::tryFrom((string) $state)?->getColor() ?? 'gray'),
             ])
             ->defaultSort("created_at", "desc")
             ->recordActions([

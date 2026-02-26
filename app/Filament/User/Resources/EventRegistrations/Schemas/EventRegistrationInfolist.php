@@ -3,6 +3,8 @@
 namespace App\Filament\User\Resources\EventRegistrations\Schemas;
 
 use App\Enums\InvoiceStatus;
+use App\Enums\PaymentStatus;
+use App\Enums\RegistrationStatus;
 use App\Models\RegistrationParticipant;
 use App\Models\User;
 use Filament\Actions\Action;
@@ -30,11 +32,16 @@ class EventRegistrationInfolist
                     TextEntry::make("organization.name")
                         ->label("Organization")
                         ->placeholder("Personal registration"),
-                    TextEntry::make("status"),
-                    TextEntry::make("payment_status"),
-                    TextEntry::make("total_amount")->money("IDR"),
-                    TextEntry::make("notes")->placeholder("-"),
                     TextEntry::make("created_at")->dateTime(),
+                    TextEntry::make("status")
+                        ->badge()
+                        ->formatStateUsing(fn(RegistrationStatus|string|null $state): string => $state instanceof RegistrationStatus ? $state->getLabel() : RegistrationStatus::tryFrom((string) $state)?->getLabel() ?? '-')
+                        ->color(fn(RegistrationStatus|string|null $state): string => $state instanceof RegistrationStatus ? $state->getColor() : RegistrationStatus::tryFrom((string) $state)?->getColor() ?? 'gray'),
+                    TextEntry::make("payment_status")
+                        ->badge()
+                        ->formatStateUsing(fn(PaymentStatus|string|null $state): string => $state instanceof PaymentStatus ? $state->getLabel() : PaymentStatus::tryFrom((string) $state)?->getLabel() ?? '-')
+                        ->color(fn(PaymentStatus|string|null $state): string => $state instanceof PaymentStatus ? $state->getColor() : PaymentStatus::tryFrom((string) $state)?->getColor() ?? 'gray'),
+                    
                     TextEntry::make("payment_proof_path")
                         ->label("Payment proof")
                         ->placeholder("-")
@@ -51,9 +58,17 @@ class EventRegistrationInfolist
                                 : null,
                         )
                         ->openUrlInNewTab(),
+                        TextEntry::make("total_amount")->money("IDR"),
+                    TextEntry::make("notes")->placeholder("-"),
                 ])
-                ->columns(2)
-                ->columnSpanFull(),
+                ->columns(2),
+            Section::make("How to Pay")
+            ->schema([
+                TextEntry::make("payment_instructions")
+                ->label("")
+                ->markdown()
+                ->state("**Please transfer payment to the following account:**\n\n- **Bank:** Bank Central Asia (BCA)\n- **Account Number:** 1234567890\n- **Account Name:** PT Kita Bisa\n\nPlease include your registration number as the transfer description.\n\nAfter making the transfer, please upload the payment proof above.") ])
+            ,
 
             Section::make("Participants")
                 ->schema([
@@ -76,7 +91,7 @@ class EventRegistrationInfolist
                                         ->requiresConfirmation()
                                         ->modalHeading("Reset participant password")
                                         ->modalDescription("This will generate a new random password for this participant and copy their full credentials to your clipboard.")
-                                        ->visible(fn($record): bool => auth()->user()->can("manageParticipants", $record->registration))
+                                        ->visible(fn($record): bool => $record->registration && auth()->user()->can("manageParticipants", $record->registration))
                                         ->action(function (RegistrationParticipant $record, $livewire): void {
                                             $user = $record->user;
 
@@ -120,7 +135,7 @@ class EventRegistrationInfolist
                                         ->label("Edit details")
                                         ->icon("heroicon-o-pencil-square")
                                         ->color("info")
-                                        ->visible(fn($record): bool => auth()->user()->can("manageParticipants", $record->registration))
+                                        ->visible(fn($record): bool => $record->registration && auth()->user()->can("manageParticipants", $record->registration))
                                         ->fillForm(function (RegistrationParticipant $record): array {
                                             $user = $record->user;
                                             return [
@@ -170,7 +185,7 @@ class EventRegistrationInfolist
                                         ->icon("heroicon-o-trash")
                                         ->color("danger")
                                         ->requiresConfirmation()
-                                        ->visible(fn($record): bool => auth()->user()->can("manageParticipants", $record->registration))
+                                        ->visible(fn($record): bool => $record->registration && auth()->user()->can("manageParticipants", $record->registration))
                                         ->modalHeading("Remove participant")
                                         ->modalDescription("Are you sure you want to remove this participant from the event? This cannot be undone.")
                                         ->action(function (RegistrationParticipant $record): void {
@@ -187,8 +202,7 @@ class EventRegistrationInfolist
                                 ->iconPosition("after")
                                 ->button()
                                 ->color("gray")
-                                ->size("sm")
-                                ->visible(fn($record): bool => auth()->user()->can("manageParticipants", $record)),
+                                ->size("sm"),
                                     ]),
                         ])
                         ->columns(4)

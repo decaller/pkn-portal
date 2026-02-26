@@ -113,6 +113,18 @@ class EventRegistrationPolicy
         EventRegistration $eventRegistration,
     ): bool {
         // Only the booker can manage participants, not participants
-        return $eventRegistration->booker_user_id === $user->getKey();
+        if ($eventRegistration->booker_user_id !== $user->getKey()) {
+            return false;
+        }
+
+        // Cannot manage participants if registration is closed or cancelled
+        if (in_array($eventRegistration->status, [
+            RegistrationStatus::Closed,
+            RegistrationStatus::Cancelled,
+        ])) {
+            return false;
+        }
+
+        return true;
     }
 }

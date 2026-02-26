@@ -9,7 +9,7 @@ use Filament\Widgets\TableWidget;
 
 class LatestNewsWidget extends TableWidget
 {
-    protected int|string|array $columnSpan = 1;
+    protected int|string|array $columnSpan = 2;
 
     protected static ?int $sort = 6;
 
