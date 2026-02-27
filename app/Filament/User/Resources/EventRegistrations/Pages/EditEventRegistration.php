@@ -16,8 +16,8 @@ class EditEventRegistration extends EditRecord
 
     protected function getRedirectUrl(): string
     {
-        return static::getResource()::getUrl("view", [
-            "record" => $this->record,
+        return static::getResource()::getUrl('view', [
+            'record' => $this->record,
         ]);
     }
 }

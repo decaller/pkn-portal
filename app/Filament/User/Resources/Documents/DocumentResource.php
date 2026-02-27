@@ -29,15 +29,14 @@ class DocumentResource extends Resource
         return false;
     }
 
-
     public static function form(Schema $schema): Schema
     {
-        return \App\Filament\Shared\Schemas\DocumentForm::configure($schema);
+        return AppFilamentSharedSchemasDocumentForm::configure($schema);
     }
 
     public static function infolist(Schema $schema): Schema
     {
-        return \App\Filament\Shared\Schemas\DocumentInfolist::configure($schema);
+        return AppFilamentSharedSchemasDocumentInfolist::configure($schema);
     }
 
     public static function table(Table $table): Table

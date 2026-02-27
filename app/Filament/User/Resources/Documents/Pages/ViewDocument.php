@@ -17,7 +17,7 @@ class ViewDocument extends ViewRecord
                 ->label('View Related Event')
                 ->icon('heroicon-o-link')
                 ->color('info')
-                ->url(fn (): string => \App\Filament\User\Resources\Events\EventResource::getUrl('view', ['record' => $this->record->event_id]))
+                ->url(fn (): string => AppFilamentSERRESOURCESventsventResource::getUrl('view', ['record' => $this->record->event_id]))
                 ->visible(fn (): bool => $this->record->event_id !== null),
             // EditAction::make(),
         ];

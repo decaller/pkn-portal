@@ -40,8 +40,8 @@ class AdminPanelProvider extends PanelProvider
                 'primary' => Color::Amber,
             ])
             ->discoverResources(
-                in: app_path('Filament/Resources'),
-                for: "App\Filament\Resources",
+                in: app_path('Filament/Admin/Resources'),
+                for: "App\Filament\Admin\Resources",
             )
             ->discoverPages(
                 in: app_path('Filament/Pages'),
@@ -49,14 +49,14 @@ class AdminPanelProvider extends PanelProvider
             )
             ->pages([Dashboard::class])
             ->discoverWidgets(
-                in: app_path('Filament/Widgets'),
-                for: "App\Filament\Widgets",
+                in: app_path('Filament/Admin/Widgets'),
+                for: "App\Filament\Admin\Widgets",
             )
             ->widgets([
                 AccountWidget::class,
                 FilamentInfoWidget::class,
-                \App\Filament\Widgets\LatestEventsWidget::class,
-                \App\Filament\Widgets\LatestEventRegistrationsWidget::class,
+                \App\Filament\Admin\Widgets\LatestEventsWidget::class,
+                \App\Filament\Admin\Widgets\LatestEventRegistrationsWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,

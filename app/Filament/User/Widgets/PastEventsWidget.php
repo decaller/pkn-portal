@@ -14,28 +14,28 @@ class PastEventsWidget extends TableWidget
 
     protected static ?int $sort = 5;
 
-    protected static ?string $heading = "Past events";
+    protected static ?string $heading = 'Past events';
 
     public function table(Table $table): Table
     {
         return $table
             ->query(
                 Event::query()
-                    ->where("is_published", true)
-                    ->whereDate("event_date", "<", now()->toDateString())
-                    ->latest("event_date")
+                    ->where('is_published', true)
+                    ->whereDate('event_date', '<', now()->toDateString())
+                    ->latest('event_date')
                     ->limit(5),
             )
             ->columns([
-                TextColumn::make("title")->weight("bold")->limit(40),
-                TextColumn::make("event_date")->date("d M Y")->sortable(),
+                TextColumn::make('title')->weight('bold')->limit(40),
+                TextColumn::make('event_date')->date('d M Y')->sortable(),
             ])
             ->recordUrl(
-                fn(Event $record): string => EventResource::getUrl("view", [
-                    "record" => $record,
+                fn (Event $record): string => EventResource::getUrl('view', [
+                    'record' => $record,
                 ]),
             )
             ->paginated(false)
-            ->emptyStateHeading("No past events.");
+            ->emptyStateHeading('No past events.');
     }
 }

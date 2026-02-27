@@ -25,12 +25,12 @@ class EventResource extends Resource
 
     public static function infolist(Schema $schema): Schema
     {
-        return \App\Filament\Shared\Schemas\EventInfolist::configure($schema);
+        return AppFilamentSharedSchemasventInfolist::configure($schema);
     }
 
     public static function table(Table $table): Table
     {
-        return \App\Filament\Public\Resources\Events\Tables\EventsTable::configure($table);
+        return AppFilamentPublicResourcesventsTablesventsTable::configure($table);
     }
 
     public static function getRelations(): array

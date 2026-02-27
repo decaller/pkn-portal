@@ -2,8 +2,8 @@
 
 namespace App\Filament\User\Widgets;
 
-use App\Filament\User\Resources\EventRegistrations\Tables\EventRegistrationsTable;
 use App\Filament\User\Resources\EventRegistrations\EventRegistrationResource;
+use App\Filament\User\Resources\EventRegistrations\Tables\EventRegistrationsTable;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
 
@@ -15,7 +15,7 @@ class EventRegistrationsTableWidget extends BaseWidget
 
     protected function getTableHeading(): ?string
     {
-        return "My Event Registrations";
+        return 'My Event Registrations';
     }
 
     public function table(Table $table): Table

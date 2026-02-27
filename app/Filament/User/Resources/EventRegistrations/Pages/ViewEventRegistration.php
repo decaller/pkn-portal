@@ -30,54 +30,54 @@ class ViewEventRegistration extends ViewRecord
         $isPendingPayment = $status === RegistrationStatus::PendingPayment;
         $isPaid = $status === RegistrationStatus::Paid;
         $isEditable = $isDraft;
-        $canManage = auth()->user()->can("manageParticipants", $this->record);
-        $canUpdatePayment = auth()->user()->can("updatePayment", $this->record);
+        $canManage = auth()->user()->can('manageParticipants', $this->record);
+        $canUpdatePayment = auth()->user()->can('updatePayment', $this->record);
 
         return [
-            Action::make("view_event")
-                ->label("View Event")
-                ->icon("heroicon-o-calendar")
-                ->color("info")
-                ->url(fn(): string => route("filament.user.resources.events.view", [
-                    "tenant" => $this->record->organization?->slug ?? "personal",
-                    "record" => $this->record->event_id,
+            Action::make('view_event')
+                ->label('View Event')
+                ->icon('heroicon-o-calendar')
+                ->color('info')
+                ->url(fn (): string => route('filament.user.resources.events.view', [
+                    'tenant' => $this->record->organization?->slug ?? 'personal',
+                    'record' => $this->record->event_id,
                 ])),
-            Action::make("edit_registration")
-                ->label("Edit Registration")
-                ->icon("heroicon-o-pencil")
-                ->color("primary")
-                ->visible(fn(): bool => $isEditable && $canManage)
-                ->url(fn(): string => EventRegistrationResource::getUrl("edit", [
-                    "record" => $this->record,
+            Action::make('edit_registration')
+                ->label('Edit Registration')
+                ->icon('heroicon-o-pencil')
+                ->color('primary')
+                ->visible(fn (): bool => $isEditable && $canManage)
+                ->url(fn (): string => EventRegistrationResource::getUrl('edit', [
+                    'record' => $this->record,
                 ])),
-            Action::make("edit_participants")
-                ->label("Edit Participants")
-                ->icon("heroicon-o-users")
-                ->color("warning")
-                ->visible(fn(): bool => $canManage && in_array($status, [
+            Action::make('edit_participants')
+                ->label('Edit Participants')
+                ->icon('heroicon-o-users')
+                ->color('warning')
+                ->visible(fn (): bool => $canManage && in_array($status, [
                     RegistrationStatus::Draft,
                     RegistrationStatus::PendingPayment,
                     RegistrationStatus::Paid,
                 ]))
-                ->fillForm(fn(): array => [
-                    "packages" => $this->packageEntriesForForm(),
+                ->fillForm(fn (): array => [
+                    'packages' => $this->packageEntriesForForm(),
                 ])
                 ->form([
-                    Repeater::make("packages")
-                        ->label("Packages")
+                    Repeater::make('packages')
+                        ->label('Packages')
                         ->schema([
-                            TextInput::make("package_name")
-                                ->label("Package")
+                            TextInput::make('package_name')
+                                ->label('Package')
                                 ->disabled()
                                 ->dehydrated(),
-                            Repeater::make("participants")
-                                ->label("Participants")
+                            Repeater::make('participants')
+                                ->label('Participants')
                                 ->schema([
-                                    Select::make("user_id")
-                                        ->label("Select from organization")
-                                        ->options(fn(Get $get): array => $this->organizationUserOptionsExcluding(
-                                            $get("../../../../packages"),
-                                            $get("user_id"),
+                                    Select::make('user_id')
+                                        ->label('Select from organization')
+                                        ->options(fn (Get $get): array => $this->organizationUserOptionsExcluding(
+                                            $get('../../../../packages'),
+                                            $get('user_id'),
                                         ))
                                         ->searchable()
                                         ->nullable()
@@ -86,25 +86,26 @@ class ViewEventRegistration extends ViewRecord
                                             ?int $state,
                                             Set $set,
                                         ): void {
-                                            if (!$state) {
-                                                $set("full_name", null);
-                                                $set("phone", null);
+                                            if (! $state) {
+                                                $set('full_name', null);
+                                                $set('phone', null);
+
                                                 return;
                                             }
 
                                             $user = User::find($state);
                                             if ($user) {
-                                                $set("full_name", $user->name);
-                                                $set("phone", $user->phone_number ?? "");
+                                                $set('full_name', $user->name);
+                                                $set('phone', $user->phone_number ?? '');
                                             }
                                         }),
-                                    TextInput::make("full_name")
-                                        ->label("Full name")
-                                        ->disabled(fn(Get $get): bool => (bool) $get("user_id"))
+                                    TextInput::make('full_name')
+                                        ->label('Full name')
+                                        ->disabled(fn (Get $get): bool => (bool) $get('user_id'))
                                         ->dehydrated(),
-                                    TextInput::make("phone")
-                                        ->label("Phone number")
-                                        ->disabled(fn(Get $get): bool => (bool) $get("user_id"))
+                                    TextInput::make('phone')
+                                        ->label('Phone number')
+                                        ->disabled(fn (Get $get): bool => (bool) $get('user_id'))
                                         ->dehydrated(),
                                 ])
                                 ->columns(3)
@@ -121,8 +122,8 @@ class ViewEventRegistration extends ViewRecord
                 ->action(function (array $data): void {
                     $this->ensureRegistrationEditable();
 
-                    $packages = is_array($data["packages"] ?? null)
-                        ? array_values($data["packages"])
+                    $packages = is_array($data['packages'] ?? null)
+                        ? array_values($data['packages'])
                         : [];
 
                     $seenUserIds = [];
@@ -130,36 +131,36 @@ class ViewEventRegistration extends ViewRecord
 
                     // Validate all entries across all packages
                     foreach ($packages as $pkgIndex => $package) {
-                        $participants = is_array($package["participants"] ?? null)
-                            ? array_values($package["participants"])
+                        $participants = is_array($package['participants'] ?? null)
+                            ? array_values($package['participants'])
                             : [];
 
                         foreach ($participants as $pIndex => $entry) {
-                            $userId = $entry["user_id"] ? (int) $entry["user_id"] : null;
-                            $fullName = trim((string) ($entry["full_name"] ?? ""));
-                            $phone = $this->normalizePhone($entry["phone"] ?? "");
+                            $userId = $entry['user_id'] ? (int) $entry['user_id'] : null;
+                            $fullName = trim((string) ($entry['full_name'] ?? ''));
+                            $phone = $this->normalizePhone($entry['phone'] ?? '');
 
                             if ($userId) {
                                 if (isset($seenUserIds[$userId])) {
                                     throw ValidationException::withMessages([
-                                        "packages.{$pkgIndex}.participants.{$pIndex}.user_id" => "This participant has already been selected in another slot.",
+                                        "packages.{$pkgIndex}.participants.{$pIndex}.user_id" => 'This participant has already been selected in another slot.',
                                     ]);
                                 }
                                 $seenUserIds[$userId] = true;
                             } else {
                                 // New user — name required
-                                if ($fullName === "") {
+                                if ($fullName === '') {
                                     // Empty slot — skip (no participant for this slot)
                                     continue;
                                 }
 
-                                if ($phone === "") {
+                                if ($phone === '') {
                                     throw ValidationException::withMessages([
-                                        "packages.{$pkgIndex}.participants.{$pIndex}.phone" => "Phone number is required when adding a new participant.",
+                                        "packages.{$pkgIndex}.participants.{$pIndex}.phone" => 'Phone number is required when adding a new participant.',
                                     ]);
                                 }
 
-                                if (User::query()->where("phone_number", $phone)->exists()) {
+                                if (User::query()->where('phone_number', $phone)->exists()) {
                                     throw ValidationException::withMessages([
                                         "packages.{$pkgIndex}.participants.{$pIndex}.phone" => "Phone number {$phone} is already registered. Please select the user from the organization list instead.",
                                     ]);
@@ -180,70 +181,69 @@ class ViewEventRegistration extends ViewRecord
                         $this->record->participants()->delete();
 
                         foreach ($packages as $package) {
-                            $participants = is_array($package["participants"] ?? null)
-                                ? array_values($package["participants"])
+                            $participants = is_array($package['participants'] ?? null)
+                                ? array_values($package['participants'])
                                 : [];
 
                             foreach ($participants as $entry) {
-                                $userId = $entry["user_id"] ? (int) $entry["user_id"] : null;
-                                $fullName = trim((string) ($entry["full_name"] ?? ""));
-                                $phone = $this->normalizePhone($entry["phone"] ?? "");
+                                $userId = $entry['user_id'] ? (int) $entry['user_id'] : null;
+                                $fullName = trim((string) ($entry['full_name'] ?? ''));
+                                $phone = $this->normalizePhone($entry['phone'] ?? '');
 
                                 if ($userId) {
                                     $user = User::find($userId);
-                                    if (!$user) {
+                                    if (! $user) {
                                         continue;
                                     }
                                 } else {
-                                    if ($fullName === "") {
+                                    if ($fullName === '') {
                                         // Empty slot — skip
                                         continue;
                                     }
 
                                     $user = User::create([
-                                        "name" => $fullName,
-                                        "email" => Str::uuid() . "@participant.local",
-                                        "phone_number" => $phone ?: null,
-                                        "password" => Str::random(40),
+                                        'name' => $fullName,
+                                        'email' => Str::uuid().'@participant.local',
+                                        'phone_number' => $phone ?: null,
+                                        'password' => Str::random(40),
                                     ]);
 
                                     if ($this->record->organization) {
                                         $this->record->organization
                                             ->users()
                                             ->syncWithoutDetaching([
-                                                $user->getKey() => ["role" => "member"],
+                                                $user->getKey() => ['role' => 'member'],
                                             ]);
                                     }
                                 }
 
                                 $this->record->participants()->create([
-                                    "user_id" => $user->getKey(),
-                                    "name" => $user->name,
-                                    "email" => $user->email,
-                                    "phone" => $user->phone_number,
+                                    'user_id' => $user->getKey(),
+                                    'name' => $user->name,
+                                    'email' => $user->email,
+                                    'phone' => $user->phone_number,
                                 ]);
                             }
                         }
                     });
 
                     Notification::make()
-                        ->title("Participants updated.")
+                        ->title('Participants updated.')
                         ->success()
                         ->send();
 
                     $this->redirect(
-                        static::getResource()::getUrl("view", [
-                            "record" => $this->record,
+                        static::getResource()::getUrl('view', [
+                            'record' => $this->record,
                         ]),
                     );
                 }),
-            Action::make("upload_payment_proof")
-                ->label("Upload Payment")
-                ->icon("heroicon-o-arrow-up-tray")
-                ->color("success")
+            Action::make('upload_payment_proof')
+                ->label('Upload Payment')
+                ->icon('heroicon-o-arrow-up-tray')
+                ->color('success')
                 ->visible(
-                    fn(): bool =>
-                        $canUpdatePayment &&
+                    fn (): bool => $canUpdatePayment &&
                         in_array($status, [
                             RegistrationStatus::Draft,
                             RegistrationStatus::PendingPayment,
@@ -251,22 +251,22 @@ class ViewEventRegistration extends ViewRecord
                         $this->record->payment_status !== PaymentStatus::Verified,
                 )
                 ->form([
-                    FileUpload::make("payment_proof_path")
-                        ->label("Payment proof")
-                        ->disk("public")
-                        ->visibility("public")
-                        ->directory("payment-proofs")
+                    FileUpload::make('payment_proof_path')
+                        ->label('Payment proof')
+                        ->disk('public')
+                        ->visibility('public')
+                        ->directory('payment-proofs')
                         ->maxSize(4096)
                         ->required(),
                 ])
                 ->action(function (array $data): void {
                     $this->record->submitPaymentProof(
-                        $data["payment_proof_path"],
+                        $data['payment_proof_path'],
                     );
 
                     $this->redirect(
-                        static::getResource()::getUrl("view", [
-                            "record" => $this->record,
+                        static::getResource()::getUrl('view', [
+                            'record' => $this->record,
                         ]),
                     );
                 }),
@@ -287,8 +287,8 @@ class ViewEventRegistration extends ViewRecord
         if ($rows === []) {
             $rows = [
                 [
-                    "package_name" => "General",
-                    "participant_count" => 1,
+                    'package_name' => 'General',
+                    'participant_count' => 1,
                 ],
             ];
         }
@@ -296,15 +296,15 @@ class ViewEventRegistration extends ViewRecord
         // Load existing participants (ordered by creation)
         $existingParticipants = $this->record
             ->participants()
-            ->with("user")
+            ->with('user')
             ->get();
 
         $participantIndex = 0;
         $packages = [];
 
         foreach ($rows as $row) {
-            $packageName = (string) ($row["package_name"] ?? "General");
-            $quota = max(1, (int) ($row["participant_count"] ?? 1));
+            $packageName = (string) ($row['package_name'] ?? 'General');
+            $quota = max(1, (int) ($row['participant_count'] ?? 1));
 
             $participantEntries = [];
 
@@ -314,22 +314,22 @@ class ViewEventRegistration extends ViewRecord
 
                 if ($participant && $participant->user_id) {
                     $participantEntries[] = [
-                        "user_id" => $participant->user_id,
-                        "full_name" => $participant->name ?? $participant->user?->name ?? "",
-                        "phone" => $participant->phone ?? $participant->user?->phone_number ?? "",
+                        'user_id' => $participant->user_id,
+                        'full_name' => $participant->name ?? $participant->user?->name ?? '',
+                        'phone' => $participant->phone ?? $participant->user?->phone_number ?? '',
                     ];
                 } else {
                     $participantEntries[] = [
-                        "user_id" => null,
-                        "full_name" => $participant?->name ?? "",
-                        "phone" => $participant?->phone ?? "",
+                        'user_id' => null,
+                        'full_name' => $participant?->name ?? '',
+                        'phone' => $participant?->phone ?? '',
                     ];
                 }
             }
 
             $packages[] = [
-                "package_name" => $packageName,
-                "participants" => $participantEntries,
+                'package_name' => $packageName,
+                'participants' => $participantEntries,
             ];
         }
 
@@ -341,19 +341,19 @@ class ViewEventRegistration extends ViewRecord
      * across all packages, except the current slot's own selection.
      *
      * @param  array|null  $allPackages  All outer repeater entries (from Get)
-     * @param  mixed       $currentUserId  The user_id of the current entry
+     * @param  mixed  $currentUserId  The user_id of the current entry
      */
     private function organizationUserOptionsExcluding(?array $allPackages, mixed $currentUserId): array
     {
-        if (!$this->record->organization) {
+        if (! $this->record->organization) {
             return [];
         }
 
         // Collect all user IDs already selected across all packages/slots
         $selectedIds = [];
         foreach ((array) $allPackages as $package) {
-            foreach ((array) ($package["participants"] ?? []) as $entry) {
-                $uid = $entry["user_id"] ?? null;
+            foreach ((array) ($package['participants'] ?? []) as $entry) {
+                $uid = $entry['user_id'] ?? null;
                 if ($uid && (int) $uid !== (int) $currentUserId) {
                     $selectedIds[] = (int) $uid;
                 }
@@ -362,9 +362,9 @@ class ViewEventRegistration extends ViewRecord
 
         return $this->record->organization
             ->users()
-            ->whereNotIn("users.id", $selectedIds)
-            ->orderBy("name")
-            ->pluck("name", "users.id")
+            ->whereNotIn('users.id', $selectedIds)
+            ->orderBy('name')
+            ->pluck('name', 'users.id')
             ->all();
     }
 
@@ -375,8 +375,7 @@ class ViewEventRegistration extends ViewRecord
         }
 
         throw ValidationException::withMessages([
-            "participants" =>
-                "Participants cannot be modified after payment has been submitted.",
+            'participants' => 'Participants cannot be modified after payment has been submitted.',
         ]);
     }
 

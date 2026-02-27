@@ -13,13 +13,13 @@ class LatestNewsWidget extends TableWidget
 
     protected static ?int $sort = 6;
 
-    protected static ?string $heading = "Latest news";
+    protected static ?string $heading = 'Latest news';
 
     public function table(Table $table): Table
     {
         return $table
             ->query(
-                News::query()->where("is_published", true)->latest()->limit(5),
+                News::query()->where('is_published', true)->latest()->limit(5),
             )
             ->contentGrid([
                 'md' => 2,
@@ -34,17 +34,17 @@ class LatestNewsWidget extends TableWidget
                             'class' => 'object-cover rounded-xl w-full',
                         ]),
                     \Filament\Tables\Columns\Layout\Stack::make([
-                        TextColumn::make("title")->weight("bold")->limit(45)->size('lg'),
-                        TextColumn::make("created_at")
+                        TextColumn::make('title')->weight('bold')->limit(45)->size('lg'),
+                        TextColumn::make('created_at')
                             ->since()
-                            ->label("Published")
+                            ->label('Published')
                             ->color('gray')
                             ->size('sm'),
                     ])->space(1)->extraAttributes(['class' => 'pt-4']),
                 ])->space(0),
             ])
             ->paginated(false)
-            ->emptyStateHeading("No published news yet.")
+            ->emptyStateHeading('No published news yet.')
             ->actions([
                 \Filament\Actions\ViewAction::make('view_news')
                     ->label('Read Article')

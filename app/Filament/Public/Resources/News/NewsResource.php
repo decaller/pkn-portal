@@ -25,12 +25,12 @@ class NewsResource extends Resource
 
     public static function infolist(Schema $schema): Schema
     {
-        return \App\Filament\User\Resources\News\Schemas\NewsInfolist::configure($schema);
+        return AppFilamentSharedSchemasNewsInfolist::configure($schema);
     }
 
     public static function table(Table $table): Table
     {
-        return \App\Filament\User\Resources\News\Tables\NewsTable::configure($table);
+        return AppFilamentPublicResourcesNewsTablesNewsTable::configure($table);
     }
 
     public static function getRelations(): array

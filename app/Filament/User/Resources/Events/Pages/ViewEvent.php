@@ -14,13 +14,13 @@ class ViewEvent extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            Action::make("register")
-                ->label("Register for this event")
-                ->icon("heroicon-o-ticket")
-                ->color("success")
-                ->visible(fn(): bool => $this->record->allow_registration && $this->record->event_date >= now()->toDateString())
-                ->url(fn(): string => EventRegistrationResource::getUrl("create", [
-                    "event_id" => $this->record->getKey(),
+            Action::make('register')
+                ->label('Register for this event')
+                ->icon('heroicon-o-ticket')
+                ->color('success')
+                ->visible(fn (): bool => $this->record->allow_registration && $this->record->event_date >= now()->toDateString())
+                ->url(fn (): string => EventRegistrationResource::getUrl('create', [
+                    'event_id' => $this->record->getKey(),
                 ])),
 
             Action::make('submitSurvey')
@@ -29,34 +29,39 @@ class ViewEvent extends ViewRecord
                 ->color('primary')
                 ->form(function () {
                     $template = $this->record->surveyTemplate;
-                    if (!$template || empty($template->questions)) return [];
-                    
+                    if (! $template || empty($template->questions)) {
+                        return [];
+                    }
+
                     $fields = [];
                     foreach ($template->questions as $index => $q) {
-                        $name = 'question_' . $index;
+                        $name = 'question_'.$index;
                         $label = $q['question_text'] ?? 'Question';
                         $type = $q['type'] ?? 'text';
-                        
+
                         if ($type === 'text') {
                             $fields[] = \Filament\Forms\Components\TextInput::make($name)->label($label)->required();
                         } elseif ($type === 'textarea') {
                             $fields[] = \Filament\Forms\Components\Textarea::make($name)->label($label)->required();
                         } elseif ($type === 'rating') {
                             $fields[] = \Filament\Forms\Components\Select::make($name)->label($label)
-                                ->options([1=>'1 Star',2=>'2 Stars',3=>'3 Stars',4=>'4 Stars',5=>'5 Stars'])->required();
+                                ->options([1 => '1 Star', 2 => '2 Stars', 3 => '3 Stars', 4 => '4 Stars', 5 => '5 Stars'])->required();
                         }
                     }
+
                     return $fields;
                 })
                 ->action(function (array $data) {
                     $template = $this->record->surveyTemplate;
-                    if (!$template) return;
-                    
+                    if (! $template) {
+                        return;
+                    }
+
                     $answers = [];
                     foreach ($template->questions as $index => $q) {
-                        $answers[$q['question_text']] = $data['question_' . $index] ?? null;
+                        $answers[$q['question_text']] = $data['question_'.$index] ?? null;
                     }
-                    
+
                     \App\Models\SurveyResponse::updateOrCreate(
                         [
                             'survey_template_id' => $template->id,
@@ -67,14 +72,17 @@ class ViewEvent extends ViewRecord
                             'answers' => $answers,
                         ]
                     );
-                    
+
                     \Filament\Notifications\Notification::make()
                         ->title('Survey submitted')
                         ->success()
                         ->send();
                 })
                 ->visible(function (): bool {
-                    if (!$this->record->survey_template_id) return false;
+                    if (! $this->record->survey_template_id) {
+                        return false;
+                    }
+
                     return $this->record->registrations()->where('booker_user_id', auth()->id())->exists();
                 }),
 
@@ -107,7 +115,7 @@ class ViewEvent extends ViewRecord
                         'rating' => $data['rating'],
                         'is_approved' => false,
                     ]);
-                    
+
                     \Filament\Notifications\Notification::make()
                         ->title('Testimonial submitted')
                         ->body('Thank you for your feedback! It will be reviewed by an administrator.')

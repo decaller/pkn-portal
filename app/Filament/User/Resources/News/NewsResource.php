@@ -2,7 +2,6 @@
 
 namespace App\Filament\User\Resources\News;
 
-use App\Filament\Resources\News\Schemas\NewsInfolist;
 use App\Filament\Resources\News\Tables\NewsTable;
 // No form needed
 use App\Filament\User\Resources\News\Pages\ListNews;
@@ -43,7 +42,7 @@ class NewsResource extends Resource
 
     public static function infolist(Schema $schema): Schema
     {
-        return \App\Filament\Shared\Schemas\NewsInfolist::configure($schema);
+        return AppFilamentSharedSchemasNewsInfolist::configure($schema);
     }
 
     public static function table(Table $table): Table
