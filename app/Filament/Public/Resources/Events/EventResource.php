@@ -3,6 +3,8 @@
 namespace App\Filament\Public\Resources\Events;
 
 use App\Filament\Public\Resources\Events\Pages\ListEvents;
+use App\Filament\Public\Resources\Events\Tables\EventsTable;
+use App\Filament\Shared\Schemas\EventInfolist;
 use App\Models\Event;
 use BackedEnum;
 use Filament\Resources\Resource;
@@ -25,12 +27,12 @@ class EventResource extends Resource
 
     public static function infolist(Schema $schema): Schema
     {
-        return AppFilamentSharedSchemasventInfolist::configure($schema);
+        return EventInfolist::configure($schema);
     }
 
     public static function table(Table $table): Table
     {
-        return AppFilamentPublicResourcesventsTablesventsTable::configure($table);
+        return EventsTable::configure($table);
     }
 
     public static function getRelations(): array

@@ -1,8 +1,7 @@
 <?php
 
-namespace App\Filament\Shared\Schemas;
+namespace App\Filament\Public\Resources\News\Schemas;
 
-use App\Filament\Admin\Resources\EventRegistrations\EventRegistrationResource;
 use App\Filament\Admin\Resources\Events\EventResource;
 use Filament\Actions\Action;
 use Filament\Infolists\Components\ImageEntry;
@@ -58,7 +57,7 @@ class NewsInfolist
                                 ->label('Register Now')
                                 ->icon('heroicon-m-ticket')
                                 ->color('success')
-                                ->url(fn ($record) => EventRegistrationResource::getUrl('create', ['event_id' => $record->event_id])),
+                                ->url(fn ($record) => route('filament.user.auth.register', ['event_id' => $record->event_id])),
                         ])->visible(fn ($record) => filled($record->event_id)),
                     ])
                     ->visible(fn ($record) => filled($record->event_id))

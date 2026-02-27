@@ -1,16 +1,13 @@
 <?php
 
-namespace App\Filament\Admin\Resources\News\Tables;
+namespace App\Filament\Shared\Tables;
 
-use Filament\Actions\BulkActionGroup;
-use Filament\Actions\DeleteBulkAction;
-use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\Layout\Split;
+use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Filament\Tables\Columns\Layout\Stack;
-use Filament\Tables\Columns\Layout\Split;
 
 class NewsTable
 {
@@ -30,8 +27,6 @@ class NewsTable
 
                     Stack::make([
                         TextColumn::make('title')
-                            ->searchable()
-                            ->sortable()
                             ->weight('bold')
                             ->size('lg')
                             ->limit(50),
@@ -51,17 +46,8 @@ class NewsTable
                     ])->space(3)->extraAttributes(['class' => 'p-4']),
                 ])->space(0)->extraAttributes(['class' => 'bg-white shadow rounded-xl dark:bg-gray-800 ring-1 ring-gray-950/5 dark:ring-white/10']),
             ])
-            ->filters([
-                //
-            ])
             ->recordActions([
                 ViewAction::make(),
-                EditAction::make(),
-            ])
-            ->toolbarActions([
-                BulkActionGroup::make([
-                    DeleteBulkAction::make(),
-                ]),
             ]);
     }
 }

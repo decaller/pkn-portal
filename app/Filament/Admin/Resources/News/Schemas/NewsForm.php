@@ -4,6 +4,7 @@ namespace App\Filament\Admin\Resources\News\Schemas;
 
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
@@ -41,7 +42,7 @@ class NewsForm
                             ->label('Visible to Parents')
                             ->default(true),
 
-                        \Filament\Forms\Components\Select::make('event_id')
+                        Select::make('event_id')
                             ->label('Related Event')
                             ->relationship('event', 'title')
                             ->searchable()

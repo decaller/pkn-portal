@@ -65,7 +65,16 @@ class OrganizationForm
                 ->schema([
                     Select::make('users')
                         ->multiple()
-                        ->relationship('users', 'name')
+                        ->relationship(
+                            name: 'users',
+                            titleAttribute: 'name',
+                            modifyQueryUsing: fn ($query) => $query->select(
+                                'users.id',
+                                'users.name',
+                                'users.phone_number',
+                                'users.email'
+                            )
+                        )
                         ->getOptionLabelFromRecordUsing(
                             fn (User $record): string => $record->name.
                                 ' ('.

@@ -6,7 +6,9 @@ use App\Filament\Admin\Resources\News\Pages\CreateNews;
 use App\Filament\Admin\Resources\News\Pages\EditNews;
 use App\Filament\Admin\Resources\News\Pages\ListNews;
 use App\Filament\Admin\Resources\News\Pages\ViewNews;
-use App\Filament\Admin\Resources\News\Tables\NewsTable;
+use App\Filament\Admin\Resources\News\Schemas\NewsForm;
+use App\Filament\Shared\Schemas\NewsInfolist;
+use App\Filament\Shared\Tables\NewsTable;
 use App\Models\News;
 use BackedEnum;
 use Filament\Resources\Resource;
@@ -14,8 +16,6 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use UnitEnum;
-use App\Filament\Admin\Resources\News\Schemas\NewsForm;
-use App\Filament\Shared\Schemas\NewsInfolist;
 
 class NewsResource extends Resource
 {
