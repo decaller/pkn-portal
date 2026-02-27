@@ -2,7 +2,7 @@
 
 namespace App\Filament\User\Resources\Invoices;
 
-use App\Filament\Resources\Invoices\Schemas\InvoiceInfolist;
+use App\Filament\Shared\Schemas\InvoiceInfolist;
 use App\Filament\Resources\Invoices\Tables\InvoicesTable;
 // No form needed
 use App\Filament\User\Resources\Invoices\Pages\ListInvoices;

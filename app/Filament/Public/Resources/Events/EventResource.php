@@ -25,7 +25,7 @@ class EventResource extends Resource
 
     public static function infolist(Schema $schema): Schema
     {
-        return \App\Filament\User\Resources\Events\Schemas\EventInfolist::configure($schema);
+        return \App\Filament\Shared\Schemas\EventInfolist::configure($schema);
     }
 
     public static function table(Table $table): Table

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\Invoices\Schemas;
+namespace App\Filament\Shared\Schemas;
 
 use App\Enums\InvoiceStatus;
 use Filament\Infolists\Components\RepeatableEntry;

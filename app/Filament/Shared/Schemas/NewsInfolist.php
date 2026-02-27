@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Filament\User\Resources\News\Schemas;
+namespace App\Filament\Shared\Schemas;
 
 use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Schema;
+use Filament\Schemas\Components\Section;
+
 
 class NewsInfolist
 {
@@ -12,7 +14,7 @@ class NewsInfolist
     {
         return $schema
             ->components([
-                \Filament\Infolists\Components\Section::make()
+                Section::make()
                     ->schema([
                         \Filament\Infolists\Components\ImageEntry::make('thumbnail')
                             ->hiddenLabel()
@@ -39,7 +41,7 @@ class NewsInfolist
                     ])
                     ->columnSpanFull(),
 
-                \Filament\Infolists\Components\Section::make('Related Event')
+                Section::make('Related Event')
                     ->schema([
                         \Filament\Infolists\Components\TextEntry::make('event.title')
                             ->label('Event Name')
@@ -49,8 +51,8 @@ class NewsInfolist
                             ->color('primary')
                             ->size('lg'),
                             
-                        \Filament\Infolists\Components\Actions::make([
-                            \Filament\Infolists\Components\Actions\Action::make('register')
+                        Section::make([
+                            \Filament\Actions\Action::make('register')
                                 ->label('Register Now')
                                 ->icon('heroicon-m-ticket')
                                 ->color('success')

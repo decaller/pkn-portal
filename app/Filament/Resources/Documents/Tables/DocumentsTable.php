@@ -62,7 +62,7 @@ class DocumentsTable
                     ->color('success')
                     ->action(fn ($record) => Storage::disk('public')->download($record->file_path)),
                 ViewAction::make(),
-                EditAction::make(),
+                // EditAction::make(),
             ])
             ->toolbarActions([
                 BulkActionGroup::make([

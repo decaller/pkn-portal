@@ -43,7 +43,7 @@ class NewsResource extends Resource
 
     public static function infolist(Schema $schema): Schema
     {
-        return NewsInfolist::configure($schema);
+        return \App\Filament\Shared\Schemas\NewsInfolist::configure($schema);
     }
 
     public static function table(Table $table): Table

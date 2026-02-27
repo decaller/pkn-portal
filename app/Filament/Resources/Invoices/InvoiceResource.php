@@ -4,7 +4,7 @@ namespace App\Filament\Resources\Invoices;
 
 use App\Filament\Resources\Invoices\Pages\ListInvoices;
 use App\Filament\Resources\Invoices\Pages\ViewInvoice;
-use App\Filament\Resources\Invoices\Schemas\InvoiceInfolist;
+use App\Filament\Shared\Schemas\InvoiceInfolist;
 use App\Filament\Resources\Invoices\Tables\InvoicesTable;
 use App\Models\Invoice;
 use BackedEnum;

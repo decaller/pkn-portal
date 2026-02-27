@@ -2,7 +2,6 @@
 
 namespace App\Filament\User\Resources\Documents;
 
-use App\Filament\User\Resources\Documents\Schemas\DocumentInfolist;
 use App\Filament\Resources\Documents\Tables\DocumentsTable;
 // No form needed
 use App\Filament\User\Resources\Documents\Pages\ListDocuments;
@@ -30,14 +29,15 @@ class DocumentResource extends Resource
         return false;
     }
 
+
     public static function form(Schema $schema): Schema
     {
-        return $schema;
+        return \App\Filament\Shared\Schemas\DocumentForm::configure($schema);
     }
 
     public static function infolist(Schema $schema): Schema
     {
-        return DocumentInfolist::configure($schema);
+        return \App\Filament\Shared\Schemas\DocumentInfolist::configure($schema);
     }
 
     public static function table(Table $table): Table

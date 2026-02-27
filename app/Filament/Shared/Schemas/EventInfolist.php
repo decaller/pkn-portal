@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\Events\Schemas;
+namespace App\Filament\Shared\Schemas;
 
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\RepeatableEntry;
