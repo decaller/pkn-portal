@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Resources\Events\Schemas;
+namespace App\Filament\User\Resources\Events\Schemas;
 
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\RepeatableEntry;
@@ -84,7 +84,7 @@ class EventInfolist
                                 TextEntry::make('proposal')
                                     ->label('Event Proposal')
                                     ->formatStateUsing(fn () => 'View Proposal')
-                                    ->url(fn ($record) => $record->proposal ? asset('storage/' . $record->proposal) : null)
+                                    ->url(fn ($record) => $record->proposal ? asset('storage/'.$record->proposal) : null)
                                     ->openUrlInNewTab()
                                     ->icon('heroicon-m-document-text')
                                     ->badge()
@@ -93,7 +93,7 @@ class EventInfolist
                             ]),
                     ])->columnSpan(['md' => 1]),
                 ])
-                ->columnSpanFull(),
+                    ->columnSpanFull(),
 
                 Section::make('Sessions & Rundown')
                     ->schema([
@@ -134,23 +134,9 @@ class EventInfolist
                                     ->prose()
                                     ->columnSpanFull()
                                     ->visible(fn ($state) => filled($state)),
-                                RepeatableEntry::make('data.session_files')
+                                TextEntry::make('data.session_files')
                                     ->label('Files & Materials')
-                                    ->getStateUsing(function ($state) {
-                                        if (!is_array($state)) return [];
-                                        return array_map(fn($file) => ['file_path' => $file], $state);
-                                    })
-                                    ->schema([
-                                        TextEntry::make('file_path')
-                                            ->hiddenLabel()
-                                            ->formatStateUsing(fn ($state) => basename($state))
-                                            ->icon('heroicon-o-document-text')
-                                            ->url(fn ($state) => asset('storage/' . $state))
-                                            ->openUrlInNewTab(),
-                                    ])
-                                    ->grid(2)
-                                    ->columnSpanFull()
-                                    ->visible(fn ($state) => filled($state)),
+                                    ->formatStateUsing(function ($state) {}),
                                 RepeatableEntry::make('data.links')
                                     ->label('External Resources')
                                     ->schema([
@@ -165,92 +151,31 @@ class EventInfolist
                     ])
                     ->visible(fn ($record) => filled($record->rundown))
                     ->columnSpanFull(),
-                    
+
                 Section::make('Event Documentation')
                     ->schema([
-                        RepeatableEntry::make('documentation')
+                        TextEntry::make('event_docs')
                             ->hiddenLabel()
                             ->getStateUsing(function ($record) {
                                 $docs = $record->documentation;
-                                if (!is_array($docs)) return [];
-                                return array_map(fn($file) => ['file_path' => $file], $docs);
+                                if (! is_array($docs)) {
+                                    return [];
+                                }
+
+                                return $docs;
                             })
-                            ->schema([
-                                TextEntry::make('file_path')
-                                    ->hiddenLabel()
-                                    ->formatStateUsing(fn ($state) => basename($state))
-                                    ->icon('heroicon-o-document-text')
-                                    ->url(fn ($state) => asset('storage/' . $state))
-                                    ->openUrlInNewTab(),
-                            ])
-                            ->grid(2)
-                    ])
-                    ->columnSpanFull()
-                    ->visible(fn ($record) => filled($record->documentation)),
-                    
-                Section::make('Testimonials')
-                    ->schema([
-                        RepeatableEntry::make('approvedTestimonials')
-                            ->hiddenLabel()
-                            ->schema([
-                                TextEntry::make('author')
-                                    ->getStateUsing(fn ($record) => $record->user ? $record->user->name : $record->guest_name)
-                                    ->label('Participant')
-                                    ->weight('bold')
-                                    ->icon('heroicon-m-user'),
-                                TextEntry::make('rating')
-                                    ->badge()
-                                    ->color('warning')
-                                    ->icon('heroicon-m-star'),
-                                TextEntry::make('content')
-                                    ->hiddenLabel()
-                                    ->prose()
-                                    ->columnSpanFull(),
-                            ])
-                            ->columns(2)
-                            ->grid(2),
-                    ])
-                    ->columnSpanFull()
-                    ->visible(fn ($record) => $record->approvedTestimonials()->exists()),
-                    
-                Section::make('What People Say About Us')
-                    ->schema([
-                        RepeatableEntry::make('previous_testimonials') // State-driven component
-                            ->hiddenLabel()
-                            ->state(function (\App\Models\Event $record) {
-                                return \App\Models\Testimonial::with(['user', 'event'])
-                                    ->where('event_id', '!=', $record->id)
-                                    ->where('is_approved', true)
-                                    ->where('rating', '>=', 4)
-                                    ->inRandomOrder()
-                                    ->limit(4)
-                                    ->get();
+                            ->formatStateUsing(function ($state) {
+                                $url = asset('storage/'.$state);
+                                $name = basename($state);
+
+                                return "<a href=\"{$url}\" target=\"_blank\" class=\"text-primary-600 hover:underline flex items-center gap-1\"><svg class=\"w-4 h-4\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z\"></path></svg><span>{$name}</span></a>";
                             })
-                            ->schema([
-                                TextEntry::make('event.title')
-                                    ->label('From Event')
-                                    ->icon('heroicon-m-calendar')
-                                    ->color('primary')
-                                    ->columnSpanFull(),
-                                TextEntry::make('author')
-                                    ->label('Participant')
-                                    ->getStateUsing(fn ($record) => $record->user ? $record->user->name : $record->guest_name)
-                                    ->weight('bold')
-                                    ->icon('heroicon-m-user'),
-                                TextEntry::make('rating')
-                                    ->badge()
-                                    ->color('warning')
-                                    ->icon('heroicon-m-star'),
-                                TextEntry::make('content')
-                                    ->hiddenLabel()
-                                    ->prose()
-                                    ->columnSpanFull(),
-                            ])
-                            ->columns(2)
-                            ->grid(2),
+                            ->html()
+                            ->listWithLineBreaks()
+                            ->columnSpanFull(),
                     ])
                     ->columnSpanFull()
-                    ->visible(fn ($record) => $record->allow_registration && $record->event_date >= now()->startOfDay()),
+                    ->visible(fn ($record) => filled($record->documentation) && $record->event_date >= now()->startOfDay()),
             ]);
     }
 }
