@@ -29,7 +29,7 @@ class NewsResource extends Resource
 
     public static function form(Schema $schema): Schema
     {
-        return \App\Filament\Shared\Schemas\NewsForm::configure($schema);
+        return \App\Filament\Resources\News\Schemas\NewsForm::configure($schema);
     }
 
     public static function infolist(Schema $schema): Schema

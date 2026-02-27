@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Shared\Schemas;
+namespace App\Filament\Resources\Events\Schemas;
 
 use App\Enums\EventType;
 use Filament\Forms\Components\DatePicker;
