@@ -19,19 +19,19 @@ class EventRegistrationsTable
                 TextColumn::make('status')->badge(),
                 TextColumn::make('payment_status')->badge(),
                 TextColumn::make('event.title')
-                    ->label('Event')
+                    ->label(__('Event'))
                     ->searchable()
                     ->sortable()
                     ->weight('bold'),
-                TextColumn::make('booker.name')->label('Booker')->searchable(),
+                TextColumn::make('booker.name')->label(__('Booker'))->searchable(),
                 TextColumn::make('organization.name')
-                    ->label('Organization')
-                    ->placeholder('Personal'),
+                    ->label(__('Organization'))
+                    ->placeholder(__('Personal')),
                 // TextColumn::make("package_name")
                 //     ->label("Package")
                 //     ->placeholder("-"),
                 TextColumn::make('participants_count')
-                    ->label('Participants')
+                    ->label(__('Participants'))
                     ->badge(),
                 // TextColumn::make("participant_count")->label("Qty")->badge(),
                 // TextColumn::make("unit_price")

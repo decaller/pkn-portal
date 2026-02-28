@@ -19,7 +19,7 @@ class EventInfolist
             ->components([
                 Grid::make(['default' => 1, 'md' => 2])->schema([
                     Group::make([
-                        Section::make('Event Guidelines')
+                        Section::make(__('Event Guidelines'))
                             ->schema([
                                 TextEntry::make('title')->weight('bold')->size('lg'),
                                 TextEntry::make('description')->markdown()->prose(),
@@ -35,36 +35,36 @@ class EventInfolist
                                 TextEntry::make('province')->visible(fn ($state) => filled($state)),
                                 TextEntry::make('nation')->visible(fn ($state) => filled($state)),
                                 TextEntry::make('google_maps_url')
-                                    ->label('Map URL')
+                                    ->label(__('Map URL'))
                                     ->url(fn ($state) => $state, true)
                                     ->color('primary')
                                     ->icon('heroicon-m-map')
                                     ->visible(fn ($state) => filled($state)),
                                 TextEntry::make('duration_days')
-                                    ->label('Duration')
+                                    ->label(__('Duration'))
                                     ->icon('heroicon-m-clock')
-                                    ->formatStateUsing(fn ($state) => "{$state} Days")
+                                    ->formatStateUsing(fn ($state) => "{$state} ".__('Days'))
                                     ->visible(fn ($state) => filled($state)),
                                 TextEntry::make('allow_registration')
                                     ->badge()
                                     ->color(fn ($state) => $state ? 'success' : 'danger')
-                                    ->formatStateUsing(fn ($state) => $state ? 'Open' : 'Closed'),
+                                    ->formatStateUsing(fn ($state) => $state ? __('Open') : __('Closed')),
                                 TextEntry::make('tags')
                                     ->badge()
                                     ->separator(',')
                                     ->columnSpanFull(),
                                 TextEntry::make('capacity')
-                                    ->label('Availability')
+                                    ->label(__('Availability'))
                                     ->icon('heroicon-m-user-group')
                                     ->state(function (Event $event) {
                                         if (is_null($event->max_capacity)) {
-                                            return 'Unlimited Spots';
+                                            return __('Unlimited Spots');
                                         }
                                         $available = $event->availableSpots();
 
                                         return $available > 0
-                                            ? "{$available} spots remaining out of {$event->max_capacity}"
-                                            : "Sold Out ({$event->max_capacity} capacity reached)";
+                                            ? __(':available spots remaining out of :max', ['available' => $available, 'max' => $event->max_capacity])
+                                            : __('Sold Out (:max capacity reached)', ['max' => $event->max_capacity]);
                                     })
                                     ->badge()
                                     ->color(fn (Event $event) => $event->isFull() ? 'danger' : 'success'),
@@ -72,7 +72,7 @@ class EventInfolist
                     ])->columnSpan(['md' => 1]),
 
                     Group::make([
-                        Section::make('Promotional Image')
+                        Section::make(__('Promotional Image'))
                             ->schema([
                                 ImageEntry::make('cover_image')->hiddenLabel(),
                                 ImageEntry::make('photos')
@@ -80,11 +80,11 @@ class EventInfolist
                                     ->stacked()
                                     ->circular(),
                             ]),
-                        Section::make('Additional Documents')
+                        Section::make(__('Additional Documents'))
                             ->schema([
                                 TextEntry::make('proposal')
-                                    ->label('Event Proposal')
-                                    ->formatStateUsing(fn () => 'View Proposal')
+                                    ->label(__('Event Proposal'))
+                                    ->formatStateUsing(fn () => __('View Proposal'))
                                     ->url(fn ($record) => $record->proposal ? asset('storage/'.$record->proposal) : null)
                                     ->openUrlInNewTab()
                                     ->icon('heroicon-m-document-text')
@@ -96,54 +96,54 @@ class EventInfolist
                 ])
                     ->columnSpanFull(),
 
-                Section::make('Sessions & Rundown')
+                Section::make(__('Sessions & Rundown'))
                     ->schema([
                         RepeatableEntry::make('rundown')
                             ->hiddenLabel()
                             ->schema([
                                 TextEntry::make('data.title')
-                                    ->label('Session Title')
+                                    ->label(__('Session Title'))
                                     ->weight('bold')
                                     ->size('lg')
                                     ->columnSpanFull(),
                                 TextEntry::make('data.date')
-                                    ->label('Date')
+                                    ->label(__('Date'))
                                     ->date('d M Y')
                                     ->icon('heroicon-m-calendar')
                                     ->visible(fn ($state) => filled($state)),
                                 TextEntry::make('data.place')
-                                    ->label('Location')
+                                    ->label(__('Location'))
                                     ->icon('heroicon-m-map-pin')
                                     ->visible(fn ($state) => filled($state)),
                                 TextEntry::make('data.start_time')
-                                    ->label('Start')
+                                    ->label(__('Start'))
                                     ->icon('heroicon-m-clock')
                                     ->visible(fn ($state) => filled($state)),
                                 TextEntry::make('data.end_time')
-                                    ->label('End')
+                                    ->label(__('End'))
                                     ->icon('heroicon-m-clock')
                                     ->visible(fn ($state) => filled($state)),
                                 TextEntry::make('data.speaker')
-                                    ->label('Speaker')
+                                    ->label(__('Speaker'))
                                     ->icon('heroicon-m-user')
                                     ->badge()
                                     ->color('info')
                                     ->visible(fn ($state) => filled($state)),
                                 TextEntry::make('data.description')
-                                    ->label('Description')
+                                    ->label(__('Description'))
                                     ->html()
                                     ->prose()
                                     ->columnSpanFull()
                                     ->visible(fn ($state) => filled($state)),
                                 \Filament\Infolists\Components\ViewEntry::make('data.session_files')
-                                    ->label('Files & Materials')
+                                    ->label(__('Files & Materials'))
                                     ->view('filament.infolists.components.file-list-simple')
                                     ->columnSpanFull()
                                     ->visible(fn ($state) => filled($state)),
                                 RepeatableEntry::make('data.links')
-                                    ->label('External Resources')
+                                    ->label(__('External Resources'))
                                     ->schema([
-                                        TextEntry::make('label')->label('Resource'),
+                                        TextEntry::make('label')->label(__('Resource')),
                                         TextEntry::make('url')->label('URL')->url(fn ($state) => $state, true)->color('primary'),
                                     ])
                                     ->columns(2)
@@ -155,7 +155,7 @@ class EventInfolist
                     ->visible(fn ($record) => filled($record->rundown))
                     ->columnSpanFull(),
 
-                Section::make('Event Documentation')
+                Section::make(__('Event Documentation'))
                     ->schema([
                         TextEntry::make('event_docs')
                             ->hiddenLabel()

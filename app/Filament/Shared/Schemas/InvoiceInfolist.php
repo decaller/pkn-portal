@@ -13,9 +13,9 @@ class InvoiceInfolist
     public static function configure(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Invoice')
+            Section::make(__('Invoice'))
                 ->schema([
-                    TextEntry::make('invoice_number')->label('Invoice #'),
+                    TextEntry::make('invoice_number')->label(__('Invoice #')),
                     TextEntry::make('version')->badge(),
                     TextEntry::make('status')
                         ->badge()
@@ -39,38 +39,38 @@ class InvoiceInfolist
                 ])
                 ->columns(3),
 
-            Section::make('Registration Snapshot')
+            Section::make(__('Registration Snapshot'))
                 ->schema([
-                    TextEntry::make('registration.id')->label('Registration ID'),
-                    TextEntry::make('event_snapshot.title')->label('Event'),
+                    TextEntry::make('registration.id')->label(__('Registration ID')),
+                    TextEntry::make('event_snapshot.title')->label(__('Event')),
                     TextEntry::make('event_snapshot.date')
-                        ->label('Event date')
+                        ->label(__('Event date'))
                         ->placeholder('-'),
                     TextEntry::make('organization_snapshot.name')
-                        ->label('Organization')
-                        ->placeholder('Personal'),
-                    TextEntry::make('booker_snapshot.name')->label('Booker'),
+                        ->label(__('Organization'))
+                        ->placeholder(__('Personal')),
+                    TextEntry::make('booker_snapshot.name')->label(__('Booker')),
                     TextEntry::make('booker_snapshot.email')
-                        ->label('Booker email')
+                        ->label(__('Booker email'))
                         ->placeholder('-'),
                 ])
                 ->columns(2),
 
-            Section::make('Line Items')
+            Section::make(__('Line Items'))
                 ->schema([
                     RepeatableEntry::make('items')
                         ->schema([
                             TextEntry::make('package_name')
-                                ->label('Package')
+                                ->label(__('Package'))
                                 ->weight('bold'),
                             TextEntry::make('participant_count')
-                                ->label('Qty')
+                                ->label(__('Qty'))
                                 ->badge(),
                             TextEntry::make('unit_price')
-                                ->label('Unit')
+                                ->label(__('Unit'))
                                 ->money('IDR'),
                             TextEntry::make('line_total')
-                                ->label('Line total')
+                                ->label(__('Line total'))
                                 ->money('IDR'),
                         ])
                         ->columns(4)

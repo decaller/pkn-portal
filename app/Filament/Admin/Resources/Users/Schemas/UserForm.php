@@ -17,13 +17,13 @@ class UserForm
     {
         return $schema
             ->components([
-                Section::make('Account')
+                Section::make(__('Account'))
                     ->schema([
                         TextInput::make('name')
                             ->required()
                             ->maxLength(255),
                         TextInput::make('phone_number')
-                            ->label('Phone number')
+                            ->label(__('Phone number'))
                             ->required()
                             ->maxLength(30)
                             ->unique(User::class, 'phone_number', ignoreRecord: true),
@@ -39,10 +39,10 @@ class UserForm
                             ->dehydrated(fn (?string $state): bool => filled($state))
                             ->dehydrateStateUsing(fn (string $state): string => Hash::make($state)),
                         Toggle::make('is_super_admin')
-                            ->label('Main admin'),
+                            ->label(__('Main admin')),
                     ])
                     ->columns(2),
-                Section::make('Organizations')
+                Section::make(__('Organizations'))
                     ->schema([
                         Select::make('organizations')
                             ->multiple()

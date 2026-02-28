@@ -21,25 +21,25 @@ class UsersTable
                     ->sortable()
                     ->weight('bold'),
                 TextColumn::make('phone_number')
-                    ->label('Phone')
+                    ->label(__('Phone'))
                     ->searchable(),
                 TextColumn::make('email')
                     ->searchable(),
                 TextColumn::make('organizations')
-                    ->label('Organizations')
+                    ->label(__('Organizations'))
                     ->state(fn (User $record): string => $record->organizations
                         ->map(fn ($organization): string => $organization->name)
                         ->join(', '))
                     ->toggleable(),
                 IconColumn::make('is_super_admin')
-                    ->label('Main admin')
+                    ->label(__('Main admin'))
                     ->boolean(),
                 TextColumn::make('updated_at')
                     ->since(),
             ])
             ->filters([
                 SelectFilter::make('organization')
-                    ->label('Organization')
+                    ->label(__('Organization'))
                     ->relationship('organizations', 'name'),
             ])
             ->recordActions([

@@ -21,12 +21,12 @@ class SurveyTemplateForm
                     ->schema([
                         TextInput::make('question_text')
                             ->required()
-                            ->label('Question'),
+                            ->label(__('Question')),
                         Select::make('type')
                             ->options([
-                                'text' => 'Short Text',
-                                'textarea' => 'Long Text (Paragraph)',
-                                'rating' => 'Rating (1-5)',
+                                'text' => __('Short Text'),
+                                'textarea' => __('Long Text (Paragraph)'),
+                                'rating' => __('Rating (1-5)'),
                             ])
                             ->required()
                             ->default('text'),

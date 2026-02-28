@@ -23,14 +23,14 @@ class EventRegistrationInfolist
     public static function configure(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Registration details')
+            Section::make(__('Registration details'))
                 ->schema([
                     TextEntry::make('booker.name')
-                        ->label('Booked by'),
-                    TextEntry::make('event.title')->label('Event'),
+                        ->label(__('Booked by')),
+                    TextEntry::make('event.title')->label(__('Event')),
                     TextEntry::make('organization.name')
-                        ->label('Organization')
-                        ->placeholder('Personal registration'),
+                        ->label(__('Organization'))
+                        ->placeholder(__('Personal registration')),
                     TextEntry::make('created_at')->dateTime(),
                     TextEntry::make('status')
                         ->badge()
@@ -42,11 +42,11 @@ class EventRegistrationInfolist
                         ->color(fn (PaymentStatus|string|null $state): string => $state instanceof PaymentStatus ? $state->getColor() : PaymentStatus::tryFrom((string) $state)?->getColor() ?? 'gray'),
 
                     TextEntry::make('payment_proof_path')
-                        ->label('Payment proof')
+                        ->label(__('Payment proof'))
                         ->placeholder('-')
                         ->formatStateUsing(
                             fn (?string $state): string => $state
-                                ? 'View proof'
+                                ? __('View proof')
                                 : '-',
                         )
                         ->url(
@@ -61,41 +61,41 @@ class EventRegistrationInfolist
                     TextEntry::make('notes')->placeholder('-'),
                 ])
                 ->columns(2),
-            Section::make('How to Pay')
+            Section::make(__('How to Pay'))
                 ->schema([
                     TextEntry::make('payment_instructions')
                         ->label('')
                         ->markdown()
                         ->state("**Please transfer payment to the following account:**\n\n- **Bank:** Bank Central Asia (BCA)\n- **Account Number:** 1234567890\n- **Account Name:** PT Kita Bisa\n\nPlease include your registration number as the transfer description.\n\nAfter making the transfer, please upload the payment proof above.")]),
 
-            Section::make('Participants')
+            Section::make(__('Participants'))
                 ->schema([
                     RepeatableEntry::make('participants')
                         ->label('')
                         ->schema([
                             TextEntry::make('name')->weight('bold'),
                             TextEntry::make('phone')
-                                ->label('Phone')
+                                ->label(__('Phone'))
                                 ->placeholder('-'),
                             TextEntry::make('email')
-                                ->label('Email')
+                                ->label(__('Email'))
                                 ->placeholder('-'),
                             SchemaActions::make([
                                 ActionGroup::make([
                                     Action::make('copy_password')
-                                        ->label('Reset & copy credentials')
+                                        ->label(__('Reset & copy credentials'))
                                         ->icon('heroicon-o-key')
                                         ->color('warning')
                                         ->requiresConfirmation()
-                                        ->modalHeading('Reset participant password')
-                                        ->modalDescription('This will generate a new random password for this participant and copy their full credentials to your clipboard.')
+                                        ->modalHeading(__('Reset participant password'))
+                                        ->modalDescription(__('This will generate a new random password for this participant and copy their full credentials to your clipboard.'))
                                         ->visible(fn ($record): bool => $record->registration && auth()->user()->can('manageParticipants', $record->registration))
                                         ->action(function (RegistrationParticipant $record, $livewire): void {
                                             $user = $record->user;
 
                                             if (! $user) {
                                                 Notification::make()
-                                                    ->title('No user account linked to this participant.')
+                                                    ->title(__('No user account linked to this participant.'))
                                                     ->warning()
                                                     ->send();
 
@@ -123,7 +123,7 @@ class EventRegistrationInfolist
                                             $livewire->js("navigator.clipboard.writeText('{$escaped}').catch(() => {})");
 
                                             Notification::make()
-                                                ->title('Credentials copied to clipboard')
+                                                ->title(__('Credentials copied to clipboard'))
                                                 ->body("Password reset for **{$user->name}**. Full credentials have been copied.")
                                                 ->success()
                                                 ->persistent()
@@ -131,7 +131,7 @@ class EventRegistrationInfolist
                                         }),
 
                                     Action::make('edit_participant')
-                                        ->label('Edit details')
+                                        ->label(__('Edit details'))
                                         ->icon('heroicon-o-pencil-square')
                                         ->color('info')
                                         ->visible(fn ($record): bool => $record->registration && auth()->user()->can('manageParticipants', $record->registration))
@@ -146,14 +146,14 @@ class EventRegistrationInfolist
                                         })
                                         ->form([
                                             TextInput::make('name')
-                                                ->label('Full name')
+                                                ->label(__('Full name'))
                                                 ->required()
                                                 ->maxLength(255),
                                             TextInput::make('phone_number')
-                                                ->label('Phone number')
+                                                ->label(__('Phone number'))
                                                 ->maxLength(30),
                                             TextInput::make('email')
-                                                ->label('Email')
+                                                ->label(__('Email'))
                                                 ->email()
                                                 ->maxLength(255),
                                         ])
@@ -175,29 +175,29 @@ class EventRegistrationInfolist
                                             ]);
 
                                             Notification::make()
-                                                ->title('Participant details updated.')
+                                                ->title(__('Participant details updated.'))
                                                 ->success()
                                                 ->send();
                                         }),
 
                                     Action::make('delete_participant')
-                                        ->label('Remove from event')
+                                        ->label(__('Remove from event'))
                                         ->icon('heroicon-o-trash')
                                         ->color('danger')
                                         ->requiresConfirmation()
                                         ->visible(fn ($record): bool => $record->registration && auth()->user()->can('manageParticipants', $record->registration))
-                                        ->modalHeading('Remove participant')
-                                        ->modalDescription('Are you sure you want to remove this participant from the event? This cannot be undone.')
+                                        ->modalHeading(__('Remove participant'))
+                                        ->modalDescription(__('Are you sure you want to remove this participant from the event? This cannot be undone.'))
                                         ->action(function (RegistrationParticipant $record): void {
                                             $record->delete();
 
                                             Notification::make()
-                                                ->title('Participant removed from event.')
+                                                ->title(__('Participant removed from event.'))
                                                 ->success()
                                                 ->send();
                                         }),
                                 ])
-                                    ->label('Actions')
+                                    ->label(__('Actions'))
                                     ->icon('heroicon-m-chevron-down')
                                     ->iconPosition('after')
                                     ->button()
@@ -209,14 +209,14 @@ class EventRegistrationInfolist
                         ->columnSpanFull(),
                 ])->columnSpanFull(),
 
-            Section::make('Invoices')
+            Section::make(__('Invoices'))
                 ->visible(fn ($record): bool => auth()->user()->can('viewInvoice', $record))
                 ->schema([
                     RepeatableEntry::make('invoices')
                         ->label('')
                         ->schema([
                             TextEntry::make('invoice_number')
-                                ->label('Invoice #')
+                                ->label(__('Invoice #'))
                                 ->weight('bold'),
                             TextEntry::make('status')
                                 ->badge()
@@ -239,15 +239,15 @@ class EventRegistrationInfolist
                                         )?->getColor(),
                                 ),
                             TextEntry::make('total_amount')
-                                ->label('Total')
+                                ->label(__('Total'))
                                 ->money('IDR'),
                             TextEntry::make('issued_at')
-                                ->label('Issued')
+                                ->label(__('Issued'))
                                 ->dateTime(),
                             TextEntry::make('id')
                                 ->label('PDF')
                                 ->formatStateUsing(
-                                    fn (): string => 'Download PDF',
+                                    fn (): string => __('Download PDF'),
                                 )
                                 ->badge()
                                 ->color('success')

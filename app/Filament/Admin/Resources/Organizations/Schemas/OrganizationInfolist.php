@@ -13,18 +13,18 @@ class OrganizationInfolist
     public static function configure(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Organization')
+            Section::make(__('Organization'))
                 ->schema([
                     TextEntry::make('name'),
                     TextEntry::make('slug'),
                     ImageEntry::make('logo')
                         ->disk('public')
-                        ->label('Logo')
+                        ->label(__('Logo'))
                         ->circular(),
-                    TextEntry::make('admin.name')->label('Admin'),
-                    TextEntry::make('users_count')->label('Members'),
+                    TextEntry::make('admin.name')->label(__('Admin')),
+                    TextEntry::make('users_count')->label(__('Members')),
                     TextEntry::make('users')
-                        ->label('User list')
+                        ->label(__('User list'))
                         ->state(
                             fn (Organization $record): string => $record->users
                                 ->map(

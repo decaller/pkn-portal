@@ -15,11 +15,11 @@ class DocumentForm
     public static function configure(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('General Information')
+            Section::make(__('General Information'))
                 ->schema([
                     TextInput::make('title')->required(),
                     TagsInput::make('tags')
-                        ->placeholder('Add tags...')
+                        ->placeholder(__('Add tags...'))
                         ->suggestions(
                             fn () => \App\Models\Document::pluck('tags')
                                 ->flatten()
@@ -30,12 +30,12 @@ class DocumentForm
                 ])
                 ->columnSpanFull(),
 
-            Section::make('Extracted Content')
-                ->description('Content read by Apache Tika')
+            Section::make(__('Extracted Content'))
+                ->description(__('Content read by Apache Tika'))
                 ->collapsible()
                 ->schema([
                     ViewField::make('file_path')
-                        ->label('File Preview')
+                        ->label(__('File Preview'))
                         ->view('filament.forms.components.document-file-viewer')
                         ->columnSpanFull(),
                     Textarea::make('content')->rows(10)->readOnly(),

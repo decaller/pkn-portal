@@ -16,7 +16,7 @@ class OrganizationForm
     public static function configure(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Organization details')
+            Section::make(__('Organization details'))
                 ->schema([
                     TextInput::make('name')
                         ->required()
@@ -51,16 +51,16 @@ class OrganizationForm
                         ->directory('organization-logos')
                         ->imageEditor(),
                     Select::make('admin_user_id')
-                        ->label('Organization admin')
+                        ->label(__('Organization admin'))
                         ->relationship('admin', 'name')
                         ->searchable()
                         ->preload()
                         ->required(),
                 ])
                 ->columns(2),
-            Section::make('Members')
+            Section::make(__('Members'))
                 ->description(
-                    'Users attached to this organization. Selected admin will always be included as admin.',
+                    __('Users attached to this organization. Selected admin will always be included as admin.'),
                 )
                 ->schema([
                     Select::make('users')
@@ -78,7 +78,7 @@ class OrganizationForm
                         ->getOptionLabelFromRecordUsing(
                             fn (User $record): string => $record->name.
                                 ' ('.
-                                ($record->phone_number ?: 'no phone').
+                                ($record->phone_number ?: __('no phone')).
                                 ')',
                         )
                         ->searchable(['name', 'phone_number', 'email'])

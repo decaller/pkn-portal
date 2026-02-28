@@ -23,8 +23,8 @@ class EventForm
     public static function configure(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Event Identity')
-                ->description('Basic information and folder naming.')
+            Section::make(__('Event Identity'))
+                ->description(__('Basic information and folder naming.'))
                 ->schema([
                     TextInput::make('title')
                         ->required()
@@ -44,7 +44,7 @@ class EventForm
                         ->dehydrated() // Ensures it still gets saved to the DB
                         ->required()
                         ->unique(ignoreRecord: true)
-                        ->label('Folder Name (Auto-generated)'),
+                        ->label(__('Folder Name (Auto-generated)')),
 
                     DatePicker::make('event_date')
                         ->required()
@@ -63,64 +63,64 @@ class EventForm
                         ->displayFormat('d/m/Y'),
 
                     TextInput::make('duration_days')
-                        ->label('Duration (Days)')
+                        ->label(__('Duration (Days)'))
                         ->numeric()
                         ->minValue(1)
-                        ->placeholder('Optional total days'),
+                        ->placeholder(__('Optional total days')),
 
                     Select::make('event_type')
-                        ->label('Event Type')
+                        ->label(__('Event Type'))
                         ->options(EventType::class)
                         ->default(EventType::Offline->value)
                         ->required()
                         ->native(false),
 
                     Toggle::make('allow_registration')
-                        ->label('Allow user registration')
+                        ->label(__('Allow user registration'))
                         ->helperText(
-                            'When enabled, event date cannot be backdated.',
+                            __('When enabled, event date cannot be backdated.'),
                         )
                         ->default(false),
 
                     TextInput::make('max_capacity')
-                        ->label('Max Capacity')
+                        ->label(__('Max Capacity'))
                         ->numeric()
                         ->minValue(1)
-                        ->placeholder('Leave blank for unlimited spots')
-                        ->helperText('Maximum number of participants allowed to register.'),
+                        ->placeholder(__('Leave blank for unlimited spots'))
+                        ->helperText(__('Maximum number of participants allowed to register.')),
 
                     TextInput::make('place')
-                        ->label('Event Place/Location')
+                        ->label(__('Event Place/Location'))
                         ->live(onBlur: true)
                         ->maxLength(255),
 
                     TextInput::make('city')
-                        ->label('City')
+                        ->label(__('City'))
                         ->maxLength(255),
 
                     TextInput::make('province')
-                        ->label('Province')
+                        ->label(__('Province'))
                         ->maxLength(255),
 
                     TextInput::make('nation')
-                        ->label('Nation')
+                        ->label(__('Nation'))
                         ->maxLength(255),
 
                     TextInput::make('google_maps_url')
-                        ->label('Google Maps URL')
+                        ->label(__('Google Maps URL'))
                         ->url()
                         ->maxLength(255)
                         ->columnSpanFull(),
 
                     Select::make('survey_template_id')
-                        ->label('Survey Template')
+                        ->label(__('Survey Template'))
                         ->relationship('surveyTemplate', 'name')
                         ->preload()
-                        ->placeholder('Select a survey template')
+                        ->placeholder(__('Select a survey template'))
                         ->nullable(),
 
                     TagsInput::make('tags')
-                        ->placeholder('Add tags...')
+                        ->placeholder(__('Add tags...'))
                         ->suggestions(
                             fn () => \App\Models\Event::pluck('tags')
                                 ->flatten()
@@ -133,7 +133,7 @@ class EventForm
                 ])
                 ->columnSpan(2),
 
-            Section::make('Promotional Image')
+            Section::make(__('Promotional Image'))
                 ->schema([
                     FileUpload::make('cover_image')
                         ->image()
@@ -144,10 +144,10 @@ class EventForm
                 ])
                 ->columnSpanFull(),
 
-            Section::make('Additional Documents')
+            Section::make(__('Additional Documents'))
                 ->schema([
                     FileUpload::make('proposal')
-                        ->label('Event Proposal')
+                        ->label(__('Event Proposal'))
                         ->disk('public')
                         ->acceptedFileTypes(['application/pdf', 'image/*'])
                         ->directory('event-proposals')
@@ -155,7 +155,7 @@ class EventForm
                         ->openable(),
 
                     FileUpload::make('documentation')
-                        ->label('Event Documentation')
+                        ->label(__('Event Documentation'))
                         ->disk('public')
                         ->multiple()
                         ->directory('event-documentation')
@@ -166,45 +166,45 @@ class EventForm
                 ])
                 ->columnSpanFull(),
 
-            Section::make('Registration Packages')
-                ->description('Define package types and price per participant.')
+            Section::make(__('Registration Packages'))
+                ->description(__('Define package types and price per participant.'))
                 ->schema([
                     Repeater::make('registration_packages')
                         ->schema([
                             TextInput::make('name')
-                                ->label('Package name')
+                                ->label(__('Package name'))
                                 ->required()
                                 ->maxLength(100)
-                                ->placeholder('e.g. Regular, VIP, Group'),
+                                ->placeholder(__('e.g. Regular, VIP, Group')),
                             TextInput::make('price')
-                                ->label('Price / participant')
+                                ->label(__('Price / participant'))
                                 ->numeric()
                                 ->prefix('IDR')
                                 ->required()
                                 ->minValue(0),
                             TextInput::make('max_quota')
-                                ->label('Max Quota')
+                                ->label(__('Max Quota'))
                                 ->numeric()
                                 ->minValue(1)
-                                ->placeholder('Optional limit'),
+                                ->placeholder(__('Optional limit')),
                         ])
                         ->columns(3)
                         ->defaultItems(0)
-                        ->addActionLabel('Add package')
+                        ->addActionLabel(__('Add package'))
                         ->columnSpanFull(),
                 ])
                 ->columnSpanFull(),
 
-            Section::make('Description')
+            Section::make(__('Description'))
                 ->schema([RichEditor::make('description')->columnSpanFull()])
                 ->columnSpanFull(),
-            Section::make('Event Rundown')
-                ->description('Add sessions, speakers, and materials.')
+            Section::make(__('Event Rundown'))
+                ->description(__('Add sessions, speakers, and materials.'))
                 ->schema([
                     Builder::make('rundown') // Matches the 'rundown' column in DB
                         ->blocks([
                             Block::make('simple')
-                                ->label('Simple Session')
+                                ->label(__('Simple Session'))
                                 ->schema([
                                     TextInput::make('title')->required()->columnSpanFull(),
                                     DatePicker::make('date')
@@ -218,7 +218,7 @@ class EventForm
                                 ])->columns(2),
 
                             Block::make('advanced')
-                                ->label('Advanced Session')
+                                ->label(__('Advanced Session'))
                                 ->schema([
                                     TextInput::make('title')->required()->columnSpanFull(),
                                     DatePicker::make('date')
@@ -230,7 +230,7 @@ class EventForm
                                     TextInput::make('end_time')->required(),
 
                                     TextInput::make('speaker')
-                                        ->placeholder('e.g. Speaker Name')
+                                        ->placeholder(__('e.g. Speaker Name'))
                                         ->columnSpanFull(),
 
                                     RichEditor::make('description')
@@ -243,7 +243,7 @@ class EventForm
                                         ->columnSpanFull(),
 
                                     FileUpload::make('session_files')
-                                        ->label('Materials')
+                                        ->label(__('Materials'))
                                         ->multiple()
                                         ->disk('public')
                                         ->visibility('public')
@@ -255,25 +255,25 @@ class EventForm
                                         ->columnSpanFull(),
 
                                     Repeater::make('links')
-                                        ->label('External Resources')
+                                        ->label(__('External Resources'))
                                         ->schema([
                                             TextInput::make('url')
                                                 ->label('URL')
                                                 ->url()
                                                 ->required(),
                                             TextInput::make('label')
-                                                ->label('Label')
-                                                ->placeholder('e.g. Watch on YouTube')
+                                                ->label(__('Label'))
+                                                ->placeholder(__('e.g. Watch on YouTube'))
                                                 ->required(),
                                         ])
                                         ->columns(2)
                                         ->defaultItems(0)
-                                        ->addActionLabel('Add Link')
+                                        ->addActionLabel(__('Add Link'))
                                         ->columnSpanFull(),
                                 ])->columns(2),
                         ])
                         ->columnSpanFull()
-                        ->addActionLabel('Add Session Block'),
+                        ->addActionLabel(__('Add Session Block')),
                 ])
                 ->columnSpanFull(),
         ]);

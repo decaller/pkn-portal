@@ -24,7 +24,7 @@ class EventRegistrationForm
     public static function configure(Schema $schema): Schema
     {
         return $schema->components([
-            Section::make('Registration')
+            Section::make(__('Registration'))
                 ->columnSpanFull()
                 ->schema([
                     ToggleButtons::make('status')
@@ -52,11 +52,11 @@ class EventRegistrationForm
                         ->preload(),
 
                     Repeater::make('package_breakdown')
-                        ->label('Package participants')
+                        ->label(__('Package participants'))
                         ->columnSpanFull()
                         ->schema([
                             Select::make('package_name')
-                                ->label('Package')
+                                ->label(__('Package'))
                                 ->options(
                                     fn (Get $get): array => self::packageOptions(
                                         $get('../../event_id'),
@@ -82,18 +82,18 @@ class EventRegistrationForm
                                 })
                                 ->required(),
                             TextInput::make('participant_count')
-                                ->label('Participants')
+                                ->label(__('Participants'))
                                 ->numeric()
                                 ->minValue(1)
                                 ->default(1)
                                 ->required(),
                             Toggle::make('use_custom_price')
-                                ->label('Custom price')
+                                ->label(__('Custom price'))
                                 ->visible(fn (): bool => self::isMainAdmin())
                                 ->default(false)
                                 ->dehydrated(false),
                             TextInput::make('unit_price')
-                                ->label('Unit price')
+                                ->label(__('Unit price'))
                                 ->numeric()
                                 ->prefix('IDR')
                                 ->default(0)
@@ -108,7 +108,7 @@ class EventRegistrationForm
                         ])
                         ->columns(4)
                         ->defaultItems(0)
-                        ->addActionLabel('Add package row')
+                        ->addActionLabel(__('Add package row'))
                         ->live(onBlur: true)
                         ->afterStateUpdated(function (
                             ?array $state,
@@ -121,13 +121,13 @@ class EventRegistrationForm
                     // The repeater `package_breakdown` (JSON) is the single source of truth.
 
                     Select::make('booker_user_id')
-                        ->label('Booker')
+                        ->label(__('Booker'))
                         ->relationship('booker', 'name')
                         ->required()
                         ->searchable()
                         ->preload(),
                     Select::make('organization_id')
-                        ->label('Organization')
+                        ->label(__('Organization'))
                         ->relationship('organization', 'name')
                         ->searchable()
                         ->preload()
@@ -138,13 +138,13 @@ class EventRegistrationForm
                         ->readOnly()
                         ->required(),
                     FileUpload::make('payment_proof_path')
-                        ->label('Payment proof')
+                        ->label(__('Payment proof'))
                         ->disk('public')
                         ->visibility('public')
                         ->directory('payment-proofs')
                         ->maxSize(4096),
                     Select::make('verified_by_user_id')
-                        ->label('Verified by')
+                        ->label(__('Verified by'))
                         ->relationship('verifier', 'name')
                         ->default(fn () => auth()->id())
                         ->searchable()

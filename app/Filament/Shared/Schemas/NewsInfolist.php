@@ -43,10 +43,10 @@ class NewsInfolist
                     ])
                     ->columnSpanFull(),
 
-                Section::make('Related Event')
+                Section::make(__('Related Event'))
                     ->schema([
                         TextEntry::make('event.title')
-                            ->label('Event Name')
+                            ->label(__('Event Name'))
                             ->weight('bold')
                             ->icon('heroicon-m-calendar-days')
                             ->url(fn ($record) => $record->event_id ? EventResource::getUrl('view', ['record' => $record->event_id]) : null)
@@ -55,7 +55,7 @@ class NewsInfolist
 
                         Section::make([
                             Action::make('register')
-                                ->label('Register Now')
+                                ->label(__('Register Now'))
                                 ->icon('heroicon-m-ticket')
                                 ->color('success')
                                 ->url(fn ($record) => EventRegistrationResource::getUrl('create', ['event_id' => $record->event_id])),

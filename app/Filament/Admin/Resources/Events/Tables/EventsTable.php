@@ -32,10 +32,10 @@ class EventsTable
                 TextColumn::make('event_date')
                     ->date('d M Y') // Example: 16 Feb 2026
                     ->sortable()
-                    ->label('Event Date'),
+                    ->label(__('Event Date')),
 
                 TextColumn::make('event_type')
-                    ->label('Type')
+                    ->label(__('Type'))
                     ->badge()
                     ->formatStateUsing(
                         fn (
@@ -58,12 +58,12 @@ class EventsTable
                 // 4. Quick Publish Toggle
                 // This lets you click to publish/unpublish directly from the list!
                 ToggleColumn::make('is_published')
-                    ->label('Published')
+                    ->label(__('Published'))
                     ->onColor('success')
                     ->offColor('danger'),
 
                 ToggleColumn::make('allow_registration')
-                    ->label('Registration Open')
+                    ->label(__('Registration Open'))
                     ->onColor('success')
                     ->offColor('gray'),
 

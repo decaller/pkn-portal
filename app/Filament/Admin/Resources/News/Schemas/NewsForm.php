@@ -16,8 +16,8 @@ class NewsForm
     {
         return $schema
             ->components([
-                Section::make('Main Content')
-                    ->description('The primary information for this news post.')
+                Section::make(__('Main Content'))
+                    ->description(__('The primary information for this news post.'))
                     ->schema([
                         TextInput::make('title')
                             ->required()
@@ -28,7 +28,7 @@ class NewsForm
                             ->columnSpanFull(),
                     ])->columnSpan(2),
 
-                Section::make('Metadata')
+                Section::make(__('Metadata'))
                     ->schema([
                         FileUpload::make('thumbnail')
                             ->image()
@@ -39,16 +39,16 @@ class NewsForm
                             ->imageEditor(),
 
                         Toggle::make('is_published')
-                            ->label('Visible to Parents')
+                            ->label(__('Visible to Parents'))
                             ->default(true),
 
                         Select::make('event_id')
-                            ->label('Related Event')
+                            ->label(__('Related Event'))
                             ->relationship('event', 'title')
                             ->searchable()
                             ->preload()
                             ->nullable()
-                            ->helperText('Link this news to a specific event to drive registrations.'),
+                            ->helperText(__('Link this news to a specific event to drive registrations.')),
                     ])->columnSpan(1),
             ]);
     }

@@ -22,26 +22,26 @@ class TestimonialForm
                     ->preload(),
                 Select::make('user_id')
                     ->relationship('user', 'name')
-                    ->label('Registered User (Optional)')
+                    ->label(__('Registered User (Optional)'))
                     ->searchable()
                     ->preload(),
                 TextInput::make('guest_name')
-                    ->label('Guest Name')
-                    ->placeholder('Leave blank if User is selected')
+                    ->label(__('Guest Name'))
+                    ->placeholder(__('Leave blank if User is selected'))
                     ->maxLength(255),
                 ToggleButtons::make('rating')
                     ->options([
-                        1 => '1 Star',
-                        2 => '2 Stars',
-                        3 => '3 Stars',
-                        4 => '4 Stars',
-                        5 => '5 Stars',
+                        1 => __('1 Star'),
+                        2 => __('2 Stars'),
+                        3 => __('3 Stars'),
+                        4 => __('4 Stars'),
+                        5 => __('5 Stars'),
                     ])
                     ->inline()
                     ->required()
                     ->default(5),
                 Toggle::make('is_approved')
-                    ->label('Approved & Published')
+                    ->label(__('Approved & Published'))
                     ->required(),
                 Textarea::make('content')
                     ->required()

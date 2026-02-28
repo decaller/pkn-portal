@@ -26,10 +26,10 @@ class OrganizationsTable
                     ->weight('bold'),
                 TextColumn::make('slug')->searchable(),
                 TextColumn::make('admin.name')
-                    ->label('Admin')
+                    ->label(__('Admin'))
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('users_count')->label('Members')->badge(),
+                TextColumn::make('users_count')->label(__('Members'))->badge(),
                 TextColumn::make('updated_at')->since(),
             ])
             ->recordActions([ViewAction::make(), EditAction::make()])
