@@ -11,6 +11,7 @@ use App\Filament\User\Widgets\EventRegistrationsTableWidget;
 use App\Filament\User\Widgets\LatestNewsWidget;
 use App\Filament\User\Widgets\WelcomeWidget;
 use App\Models\Organization;
+use CraftForge\FilamentLanguageSwitcher\FilamentLanguageSwitcherPlugin;
 use Filament\Http\Middleware\Authenticate;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
@@ -76,6 +77,12 @@ class UserPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
-            ->authMiddleware([Authenticate::class]);
+            ->authMiddleware([Authenticate::class])
+            ->plugins([
+                FilamentLanguageSwitcherPlugin::make()
+                    ->locales(['en', 'id'])
+                    ->rememberLocale()
+                    ->showOnAuthPages(),
+            ]);
     }
 }

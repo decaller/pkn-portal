@@ -4,6 +4,7 @@ namespace App\Providers\Filament;
 
 use App\Filament\Public\Widgets\AvailableRegistrationEventsWidget;
 use App\Filament\User\Widgets\LatestNewsWidget;
+use CraftForge\FilamentLanguageSwitcher\FilamentLanguageSwitcherPlugin;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -51,6 +52,12 @@ class PublicPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 // Disable authentication for public visitors
+            ])
+            ->plugins([
+                FilamentLanguageSwitcherPlugin::make()
+                    ->locales(['en', 'id'])
+                    ->rememberLocale()
+                    ->showOnAuthPages(),
             ]);
     }
 }
