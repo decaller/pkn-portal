@@ -2,37 +2,31 @@
 
 namespace App\Filament\Admin\Resources\EventRegistrations\Pages;
 
+use App\Enums\RegistrationStatus;
 use App\Filament\Admin\Resources\EventRegistrations\EventRegistrationResource;
 use App\Filament\Admin\Resources\Users\UserResource;
+use App\Filament\Public\Resources\Events\EventResource;
+use App\Models\EventRegistration;
+use App\Models\User;
 use Filament\Actions\Action;
 use Filament\Actions\EditAction;
-use Filament\Resources\Pages\ViewRecord;
-use App\Models\EventRegistration;
-use App\Filament\Public\Resources\Events\EventResource;
-use App\Enums\RegistrationStatus;
-use App\Models\User;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Notifications\Notification;
+use Filament\Resources\Pages\ViewRecord;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 
-
 class ViewEventRegistration extends ViewRecord
 {
     protected static string $resource = EventRegistrationResource::class;
-    
 
     protected function getHeaderActions(): array
     {
-
-        $status = $this->record->status;
-        $canManage = auth()->user()->can('manageParticipants', $this->record);
-
         return [
             Action::make('verify_payment')
                 ->label('Verify Payment')
@@ -56,11 +50,13 @@ class ViewEventRegistration extends ViewRecord
                 ->label('Edit Participants')
                 ->icon('heroicon-o-users')
                 ->color('warning')
-                ->visible(fn (): bool => $canManage && in_array($status, [
-                    RegistrationStatus::Draft,
-                    RegistrationStatus::PendingPayment,
-                    RegistrationStatus::Paid,
-                ]))
+                ->visible(fn (EventRegistration $record): bool => auth()->user()->is_super_admin || (
+                    auth()->user()->can('manageParticipants', $record) && in_array($record->status, [
+                        RegistrationStatus::Draft,
+                        RegistrationStatus::PendingPayment,
+                        RegistrationStatus::Paid,
+                    ])
+                ))
                 ->fillForm(fn (): array => [
                     'packages' => $this->packageEntriesForForm(),
                 ])
@@ -284,6 +280,10 @@ class ViewEventRegistration extends ViewRecord
 
     private function ensureRegistrationEditable(): void
     {
+        if (auth()->user()->is_super_admin) {
+            return;
+        }
+
         if ($this->record->canRemoveParticipants()) {
             return;
         }
@@ -297,6 +297,7 @@ class ViewEventRegistration extends ViewRecord
     {
         return trim($phone);
     }
+
     private function packageEntriesForForm(): array
     {
         $rows = is_array($this->record->package_breakdown)
@@ -354,5 +355,4 @@ class ViewEventRegistration extends ViewRecord
 
         return $packages;
     }
-
 }
