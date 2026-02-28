@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Filament\User\Resources\Invoices\Tables;
+namespace App\Filament\Shared\Tables;
 
-use Filament\Tables\Actions\Action;
-use Filament\Tables\Actions\ViewAction;
+use Filament\Actions\Action;
+use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 

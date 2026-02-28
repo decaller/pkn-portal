@@ -3,6 +3,8 @@
 namespace App\Filament\User\Widgets;
 
 use App\Models\News;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget;
@@ -26,14 +28,14 @@ class LatestNewsWidget extends TableWidget
                 'xl' => 3,
             ])
             ->columns([
-                \Filament\Tables\Columns\Layout\Stack::make([
-                    \Filament\Tables\Columns\ImageColumn::make('thumbnail')
+                Stack::make([
+                    ImageColumn::make('thumbnail')
                         ->height('150px')
                         ->width('100%')
                         ->extraImgAttributes([
                             'class' => 'object-cover rounded-xl w-full',
                         ]),
-                    \Filament\Tables\Columns\Layout\Stack::make([
+                    Stack::make([
                         TextColumn::make('title')->weight('bold')->limit(45)->size('lg'),
                         TextColumn::make('created_at')
                             ->since()

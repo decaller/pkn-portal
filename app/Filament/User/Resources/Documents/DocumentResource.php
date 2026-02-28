@@ -2,8 +2,10 @@
 
 namespace App\Filament\User\Resources\Documents;
 
-use App\Filament\Resources\Documents\Tables\DocumentsTable;
 // No form needed
+use App\Filament\Shared\Schemas\DocumentForm as AppFilamentSharedSchemasDocumentForm;
+use App\Filament\Shared\Schemas\DocumentInfolist as AppFilamentSharedSchemasDocumentInfolist;
+use App\Filament\Shared\Tables\DocumentsTable;
 use App\Filament\User\Resources\Documents\Pages\ListDocuments;
 use App\Filament\User\Resources\Documents\Pages\ViewDocument;
 use App\Models\Document;

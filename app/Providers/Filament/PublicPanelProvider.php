@@ -2,6 +2,8 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Public\Widgets\AvailableRegistrationEventsWidget;
+use App\Filament\User\Widgets\LatestNewsWidget;
 use Filament\Http\Middleware\AuthenticateSession;
 use Filament\Http\Middleware\DisableBladeIconComponents;
 use Filament\Http\Middleware\DispatchServingFilamentEvent;
@@ -33,8 +35,8 @@ class PublicPanelProvider extends PanelProvider
             ])
             ->discoverWidgets(in: app_path('Filament/Public/Widgets'), for: 'App\Filament\Public\Widgets')
             ->widgets([
-                \App\Filament\User\Widgets\LatestNewsWidget::class,
-                \App\Filament\Public\Widgets\AvailableRegistrationEventsWidget::class,
+                LatestNewsWidget::class,
+                AvailableRegistrationEventsWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,

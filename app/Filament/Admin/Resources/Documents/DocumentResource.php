@@ -5,9 +5,9 @@ namespace App\Filament\Admin\Resources\Documents;
 use App\Filament\Admin\Resources\Documents\Pages\EditDocument;
 use App\Filament\Admin\Resources\Documents\Pages\ListDocuments;
 use App\Filament\Admin\Resources\Documents\Pages\ViewDocument;
-use App\Filament\Admin\Resources\Documents\Tables\DocumentsTable;
 use App\Filament\Shared\Schemas\DocumentForm;
 use App\Filament\Shared\Schemas\DocumentInfolist;
+use App\Filament\Shared\Tables\DocumentsTable;
 use App\Models\Document;
 use BackedEnum;
 use Filament\Resources\Resource;
@@ -15,7 +15,6 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use UnitEnum;
-
 
 class DocumentResource extends Resource
 {

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Filament\Admin\Resources\Documents\Tables;
+namespace App\Filament\Shared\Tables;
 
 use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
