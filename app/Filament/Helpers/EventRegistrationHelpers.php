@@ -30,14 +30,14 @@ final class EventRegistrationHelpers
      */
     public static function packagesForEvent(?int $eventId): array
     {
-        if (!$eventId) {
+        if (! $eventId) {
             return [];
         }
 
         /** @var Event|null $event */
         $event = Event::query()->find($eventId);
 
-        if (!$event) {
+        if (! $event) {
             return [];
         }
 
@@ -58,19 +58,19 @@ final class EventRegistrationHelpers
         $packages = self::packagesForEvent($eventId);
 
         if ($packages === []) {
-            return ["General" => "General (IDR 0)"];
+            return ['General' => 'General (IDR 0)'];
         }
 
         $options = [];
 
         foreach ($packages as $package) {
-            $name = (string) ($package["name"] ?? "General");
-            $price = (float) ($package["price"] ?? 0);
+            $name = (string) ($package['name'] ?? 'General');
+            $price = (float) ($package['price'] ?? 0);
 
             $options[$name] = sprintf(
-                "%s (IDR %s)",
+                '%s (IDR %s)',
                 $name,
-                number_format($price, 0, ",", "."),
+                number_format($price, 0, ',', '.'),
             );
         }
 
@@ -91,11 +91,11 @@ final class EventRegistrationHelpers
         }
 
         foreach ($packages as $package) {
-            if ((string) ($package["name"] ?? "") !== (string) $packageName) {
+            if ((string) ($package['name'] ?? '') !== (string) $packageName) {
                 continue;
             }
 
-            return (float) ($package["price"] ?? 0);
+            return (float) ($package['price'] ?? 0);
         }
 
         return 0.0;
@@ -112,8 +112,8 @@ final class EventRegistrationHelpers
         Set $set,
         $livewire,
     ): void {
-        $eventId = $get("event_id");
-        $rows = $get("package_breakdown") ?? [];
+        $eventId = $get('event_id');
+        $rows = $get('package_breakdown') ?? [];
 
         if ($rows === []) {
             return;
@@ -122,17 +122,17 @@ final class EventRegistrationHelpers
         $refreshed = [];
 
         foreach ($rows as $row) {
-            $qty = max(1, (int) ($row["participant_count"] ?? 1));
+            $qty = max(1, (int) ($row['participant_count'] ?? 1));
             $refreshed[] = [
-                "package_name" => null,
-                "participant_count" => $qty,
-                "unit_price" => 0,
+                'package_name' => null,
+                'participant_count' => $qty,
+                'unit_price' => 0,
             ];
         }
 
         // debug removed: refreshed packages for event (reselect required): {eventId}
 
-        $set("package_breakdown", $refreshed);
+        $set('package_breakdown', $refreshed);
         self::syncTotalAmount($refreshed, $set);
     }
 
@@ -144,25 +144,25 @@ final class EventRegistrationHelpers
         Set $set,
         $livewire,
     ): void {
-        $eventId = $get("event_id");
+        $eventId = $get('event_id');
         $options = self::packageOptions($eventId);
         $firstPackage = array_key_first($options);
 
-        if (!$firstPackage) {
+        if (! $firstPackage) {
             return;
         }
 
         $rows = [
             [
-                "package_name" => $firstPackage,
-                "participant_count" => 1,
-                "unit_price" => self::packagePrice($eventId, $firstPackage),
+                'package_name' => $firstPackage,
+                'participant_count' => 1,
+                'unit_price' => self::packagePrice($eventId, $firstPackage),
             ],
         ];
 
         // debug removed: seeded first package row
 
-        $set("package_breakdown", $rows);
+        $set('package_breakdown', $rows);
         self::syncTotalAmount($rows, $set);
     }
 
@@ -170,32 +170,32 @@ final class EventRegistrationHelpers
      * Compute and set total_amount and also mirror the first repeater row into
      * flat hidden fields for easy inspection.
      *
-     * @param array<int, array<string,mixed>> $rows
+     * @param  array<int, array<string,mixed>>  $rows
      */
     public static function syncTotalAmount(array $rows, Set $set): void
     {
         $total = 0.0;
 
         foreach ($rows as $row) {
-            $total += (float) ($row["unit_price"] ?? 0);
+            $total += (float) ($row['unit_price'] ?? 0);
         }
 
         $first = $rows[0] ?? null;
 
         if ($first) {
-            $set("package_name", (string) ($first["package_name"] ?? ""));
+            $set('package_name', (string) ($first['package_name'] ?? ''));
             $set(
-                "participant_count",
-                max(0, (int) ($first["participant_count"] ?? 0)),
+                'participant_count',
+                max(0, (int) ($first['participant_count'] ?? 0)),
             );
-            $set("unit_price", (float) ($first["unit_price"] ?? 0));
+            $set('unit_price', (float) ($first['unit_price'] ?? 0));
         } else {
-            $set("package_name", null);
-            $set("participant_count", 0);
-            $set("unit_price", 0);
+            $set('package_name', null);
+            $set('participant_count', 0);
+            $set('unit_price', 0);
         }
 
-        $set("total_amount", $total);
+        $set('total_amount', $total);
     }
 
     /**
@@ -206,14 +206,13 @@ final class EventRegistrationHelpers
      * This function is intentionally conservative: it merges the partial into the
      * first row (the seeded primary row) to avoid relying on repeater internals.
      *
-     * @param Get $get
-     * @param array<string,mixed> $currentRowPartial
+     * @param  array<string,mixed>  $currentRowPartial
      */
     public static function computeTotalWithCurrentRow(
         Get $get,
         array $currentRowPartial = [],
     ): float {
-        $rows = $get("../../package_breakdown") ?? [];
+        $rows = $get('../../package_breakdown') ?? [];
 
         // Merge partial into the first row (pragmatic approach for immediate feedback)
         $first = $rows[0] ?? [];
@@ -224,7 +223,7 @@ final class EventRegistrationHelpers
 
         $total = 0.0;
         foreach ($rows as $row) {
-            $total += (float) ($row["unit_price"] ?? 0);
+            $total += (float) ($row['unit_price'] ?? 0);
         }
 
         return $total;
@@ -241,26 +240,26 @@ final class EventRegistrationHelpers
     /**
      * Legacy pricing summary used by admin form: multiply qty * unit for every row.
      *
-     * @param array<int, array<string,mixed>> $rows
+     * @param  array<int, array<string,mixed>>  $rows
      */
     public static function syncPricingSummary(array $rows, Set $set): void
     {
         $total = 0.0;
 
         foreach ($rows as $row) {
-            $qty = max(1, (int) ($row["participant_count"] ?? 1));
-            $unit = (float) ($row["unit_price"] ?? 0);
+            $qty = max(1, (int) ($row['participant_count'] ?? 1));
+            $unit = (float) ($row['unit_price'] ?? 0);
             $total += $qty * $unit;
         }
 
         $first = $rows[0] ?? [];
 
-        $set("package_name", (string) ($first["package_name"] ?? ""));
+        $set('package_name', (string) ($first['package_name'] ?? ''));
         $set(
-            "participant_count",
-            max(0, (int) ($first["participant_count"] ?? 0)),
+            'participant_count',
+            max(0, (int) ($first['participant_count'] ?? 0)),
         );
-        $set("unit_price", (float) ($first["unit_price"] ?? 0));
-        $set("total_amount", $total);
+        $set('unit_price', (float) ($first['unit_price'] ?? 0));
+        $set('total_amount', $total);
     }
 }

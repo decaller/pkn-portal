@@ -1,0 +1,31 @@
+<?php
+
+namespace App\Filament\Admin\Resources\Analytics\Schemas;
+
+use Filament\Infolists\Components\TextEntry;
+use Filament\Schemas\Schema;
+
+class AnalyticInfolist
+{
+    public static function configure(Schema $schema): Schema
+    {
+        return $schema
+            ->components([
+                TextEntry::make('user_id')
+                    ->numeric()
+                    ->placeholder('-'),
+                TextEntry::make('trackable_type'),
+                TextEntry::make('trackable_id')
+                    ->numeric(),
+                TextEntry::make('action'),
+                TextEntry::make('platform')
+                    ->placeholder('-'),
+                TextEntry::make('created_at')
+                    ->dateTime()
+                    ->placeholder('-'),
+                TextEntry::make('updated_at')
+                    ->dateTime()
+                    ->placeholder('-'),
+            ]);
+    }
+}

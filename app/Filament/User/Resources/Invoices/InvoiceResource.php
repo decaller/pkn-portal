@@ -2,14 +2,13 @@
 
 namespace App\Filament\User\Resources\Invoices;
 
-use App\Filament\Resources\Invoices\Schemas\InvoiceInfolist;
-use App\Filament\Resources\Invoices\Tables\InvoicesTable;
+use App\Filament\Shared\Schemas\InvoiceInfolist;
+use App\Filament\Shared\Tables\InvoicesTable;
 // No form needed
 use App\Filament\User\Resources\Invoices\Pages\ListInvoices;
 use App\Filament\User\Resources\Invoices\Pages\ViewInvoice;
 use App\Models\Invoice;
 use BackedEnum;
-use Filament\Facades\Filament;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -34,8 +33,10 @@ class InvoiceResource extends Resource
 
     public static function getEloquentQuery(): Builder
     {
-        return parent::getEloquentQuery()->whereHas('registration', function (Builder $query) {
-            $query->where('organization_id', Filament::getTenant()->id);
+        $userId = auth()->id();
+
+        return parent::getEloquentQuery()->whereHas('registration', function (Builder $query) use ($userId) {
+            $query->where('booker_user_id', $userId);
         });
     }
 

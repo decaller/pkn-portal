@@ -3,6 +3,8 @@
 namespace App\Filament\User\Widgets;
 
 use App\Models\News;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget;
@@ -13,38 +15,38 @@ class LatestNewsWidget extends TableWidget
 
     protected static ?int $sort = 6;
 
-    protected static ?string $heading = "Latest news";
+    protected static ?string $heading = 'Latest news';
 
     public function table(Table $table): Table
     {
         return $table
             ->query(
-                News::query()->where("is_published", true)->latest()->limit(5),
+                News::query()->where('is_published', true)->latest()->limit(5),
             )
             ->contentGrid([
                 'md' => 2,
                 'xl' => 3,
             ])
             ->columns([
-                \Filament\Tables\Columns\Layout\Stack::make([
-                    \Filament\Tables\Columns\ImageColumn::make('thumbnail')
+                Stack::make([
+                    ImageColumn::make('thumbnail')
                         ->height('150px')
                         ->width('100%')
                         ->extraImgAttributes([
                             'class' => 'object-cover rounded-xl w-full',
                         ]),
-                    \Filament\Tables\Columns\Layout\Stack::make([
-                        TextColumn::make("title")->weight("bold")->limit(45)->size('lg'),
-                        TextColumn::make("created_at")
+                    Stack::make([
+                        TextColumn::make('title')->weight('bold')->limit(45)->size('lg'),
+                        TextColumn::make('created_at')
                             ->since()
-                            ->label("Published")
+                            ->label('Published')
                             ->color('gray')
                             ->size('sm'),
                     ])->space(1)->extraAttributes(['class' => 'pt-4']),
                 ])->space(0),
             ])
             ->paginated(false)
-            ->emptyStateHeading("No published news yet.")
+            ->emptyStateHeading('No published news yet.')
             ->actions([
                 \Filament\Actions\ViewAction::make('view_news')
                     ->label('Read Article')

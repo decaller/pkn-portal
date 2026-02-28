@@ -2,10 +2,10 @@
 
 namespace App\Filament\User\Resources\Events;
 
+use App\Filament\Resources\Events\Schemas\EventForm;
+use App\Filament\Shared\Schemas\EventInfolist;
 use App\Filament\User\Resources\Events\Pages\ListEvents;
 use App\Filament\User\Resources\Events\Pages\ViewEvent;
-use App\Filament\User\Resources\Events\Schemas\EventForm;
-use App\Filament\User\Resources\Events\Schemas\EventInfolist;
 use App\Filament\User\Resources\Events\Tables\EventsTable;
 use App\Models\Event;
 use BackedEnum;

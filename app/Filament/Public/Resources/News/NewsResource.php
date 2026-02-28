@@ -3,6 +3,9 @@
 namespace App\Filament\Public\Resources\News;
 
 use App\Filament\Public\Resources\News\Pages\ListNews;
+use App\Filament\Public\Resources\News\Pages\ViewNews;
+use App\Filament\Public\Resources\News\Schemas\NewsInfolist;
+use App\Filament\Shared\Tables\NewsTable;
 use App\Models\News;
 use BackedEnum;
 use Filament\Resources\Resource;
@@ -18,25 +21,20 @@ class NewsResource extends Resource
 
     protected static string|\UnitEnum|null $navigationGroup = 'Public Information';
 
-    public static function form(Schema $schema): Schema
-    {
-        return $schema;
-    }
-
     public static function infolist(Schema $schema): Schema
     {
-        return \App\Filament\User\Resources\News\Schemas\NewsInfolist::configure($schema);
+        return NewsInfolist::configure($schema);
     }
 
     public static function table(Table $table): Table
     {
-        return \App\Filament\User\Resources\News\Tables\NewsTable::configure($table);
+        return NewsTable::configure($table);
     }
 
     public static function getRelations(): array
     {
         return [
-            //
+
         ];
     }
 
@@ -44,7 +42,7 @@ class NewsResource extends Resource
     {
         return [
             'index' => ListNews::route('/'),
-            'view' => \App\Filament\Public\Resources\News\Pages\ViewNews::route('/{record}'),
+            'view' => ViewNews::route('/{record}'),
         ];
     }
 }

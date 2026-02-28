@@ -3,7 +3,6 @@
 namespace App\Filament\Public\Resources\Events\Tables;
 
 use App\Enums\EventType;
-use App\Filament\User\Resources\EventRegistrations\EventRegistrationResource;
 use App\Models\Event;
 use Filament\Actions\Action;
 use Filament\Actions\ViewAction;
@@ -53,7 +52,7 @@ class EventsTable
                     ->icon('heroicon-o-ticket')
                     ->color('success')
                     ->visible(fn (Event $record): bool => $record->allow_registration && $record->event_date >= now()->toDateString() && ! $record->isFull())
-                    ->url(fn (Event $record): string => "/user/register?event_id=" . $record->getKey()),
+                    ->url(fn (Event $record): string => '/user/register?event_id='.$record->getKey()),
             ]);
     }
 }

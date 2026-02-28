@@ -2,9 +2,8 @@
 
 namespace App\Filament\User\Resources\News;
 
-use App\Filament\Resources\News\Schemas\NewsInfolist;
-use App\Filament\Resources\News\Tables\NewsTable;
-// No form needed
+use App\Filament\Shared\Schemas\NewsInfolist;
+use App\Filament\Shared\Tables\NewsTable;
 use App\Filament\User\Resources\News\Pages\ListNews;
 use App\Filament\User\Resources\News\Pages\ViewNews;
 use App\Models\News;
@@ -34,11 +33,6 @@ class NewsResource extends Resource
     public static function getEloquentQuery(): Builder
     {
         return parent::getEloquentQuery()->where('is_published', true);
-    }
-
-    public static function form(Schema $schema): Schema
-    {
-        return $schema;
     }
 
     public static function infolist(Schema $schema): Schema

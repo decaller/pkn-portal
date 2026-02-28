@@ -1,0 +1,27 @@
+<?php
+
+namespace App\Filament\Admin\Resources\Events\Pages;
+
+use App\Filament\Admin\Resources\Events\EventResource;
+use App\Filament\Admin\Resources\Events\Widgets\TopViewedEvents;
+use Filament\Actions\CreateAction;
+use Filament\Resources\Pages\ListRecords;
+
+class ListEvents extends ListRecords
+{
+    protected static string $resource = EventResource::class;
+
+    protected function getHeaderActions(): array
+    {
+        return [
+            CreateAction::make(),
+        ];
+    }
+
+    protected function getHeaderWidgets(): array
+    {
+        return [
+            TopViewedEvents::class,
+        ];
+    }
+}
