@@ -2,6 +2,7 @@
 
 namespace App\Filament\Shared\Schemas;
 
+use App\Models\Event;
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry;
@@ -55,7 +56,7 @@ class EventInfolist
                                 TextEntry::make('capacity')
                                     ->label('Availability')
                                     ->icon('heroicon-m-user-group')
-                                    ->state(function (\App\Models\Event $event) {
+                                    ->state(function (Event $event) {
                                         if (is_null($event->max_capacity)) {
                                             return 'Unlimited Spots';
                                         }
@@ -66,7 +67,7 @@ class EventInfolist
                                             : "Sold Out ({$event->max_capacity} capacity reached)";
                                     })
                                     ->badge()
-                                    ->color(fn (\App\Models\Event $event) => $event->isFull() ? 'danger' : 'success'),
+                                    ->color(fn (Event $event) => $event->isFull() ? 'danger' : 'success'),
                             ]),
                     ])->columnSpan(['md' => 1]),
 
@@ -134,9 +135,11 @@ class EventInfolist
                                     ->prose()
                                     ->columnSpanFull()
                                     ->visible(fn ($state) => filled($state)),
-                                TextEntry::make('data.session_files')
+                                \Filament\Infolists\Components\ViewEntry::make('data.session_files')
                                     ->label('Files & Materials')
-                                    ->formatStateUsing(function ($state) {}),
+                                    ->view('filament.infolists.components.file-list-simple')
+                                    ->columnSpanFull()
+                                    ->visible(fn ($state) => filled($state)),
                                 RepeatableEntry::make('data.links')
                                     ->label('External Resources')
                                     ->schema([
