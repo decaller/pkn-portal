@@ -8,10 +8,14 @@
     "require": {
         "php": "^8.2",
         "barryvdh/laravel-dompdf": "^3.1",
+        "craft-forge/filament-language-switcher": "^1.2",
         "filament/filament": "^5.0",
         "laravel/framework": "^12.0",
+        "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.10.1",
-        "league/flysystem-aws-s3-v3": "^3.0"
+        "league/flysystem-aws-s3-v3": "^3.0",
+        "rupadana/filament-api-service": "dev-copilot/update-to-filament-v5#533a7a6c1c230c7bfaab749029e94d63662257b2 as 4.0.99",
+        "spatie/laravel-permission": "^6.0"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

@@ -177,5 +177,7 @@ class DatabaseSeeder extends Seeder
                     ],
                 );
             });
+
+        $this->call(SuperAdminRoleSeeder::class);
     }
 }
