@@ -14,6 +14,13 @@ class LatestEventsWidget extends TableWidget
 
     protected int|string|array $columnSpan = 'full';
 
+    protected static ?string $heading = null;
+
+    public function getHeading(): string
+    {
+        return __('Latest Events');
+    }
+
     public function table(Table $table): Table
     {
         return EventsTable::configure($table)

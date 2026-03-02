@@ -16,7 +16,12 @@ class AvailableRegistrationEventsWidget extends TableWidget
 
     protected static ?int $sort = 2;
 
-    protected static ?string $heading = 'Available events to register';
+    protected static ?string $heading = null;
+
+    public function getTableHeading(): string
+    {
+        return __('Available events to register');
+    }
 
     public function table(Table $table): Table
     {
@@ -41,9 +46,9 @@ class AvailableRegistrationEventsWidget extends TableWidget
                             'class' => 'object-cover rounded-xl w-full',
                         ]),
                     \Filament\Tables\Columns\Layout\Stack::make([
-                        TextColumn::make('title')->label('Event')->weight('bold')->size('lg'),
+                        TextColumn::make('title')->label(__('Event'))->weight('bold')->size('lg'),
                         TextColumn::make('event_date')
-                            ->label('Date')
+                            ->label(__('Date'))
                             ->date('d M Y')
                             ->icon('heroicon-m-calendar')
                             ->color('gray')
@@ -54,14 +59,17 @@ class AvailableRegistrationEventsWidget extends TableWidget
             ->recordUrl(fn (Event $record): string => EventResource::getUrl('view', ['record' => $record]))
             ->recordActions([
                 ViewAction::make()->url(fn (Event $record): string => EventResource::getUrl('view', ['record' => $record])),
-                Action::make('register')->icon('heroicon-o-ticket')->url(
-                    fn (Event $record): string => '/user/register?event_id='.$record->getKey()
-                ),
+                Action::make('register')
+                    ->label(__('Register'))
+                    ->icon('heroicon-o-ticket')
+                    ->url(
+                        fn (Event $record): string => '/user/register?event_id='.$record->getKey()
+                    ),
             ])
             ->defaultSort('event_date', 'asc')
             ->paginated(false)
             ->emptyStateHeading(
-                'No events are open for registration right now.',
+                __('No events are open for registration right now.'),
             );
     }
 }

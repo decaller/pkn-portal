@@ -14,7 +14,12 @@ class PastEventsWidget extends TableWidget
 
     protected static ?int $sort = 5;
 
-    protected static ?string $heading = 'Past events';
+    protected static ?string $heading = null;
+
+    public function getHeading(): string
+    {
+        return __('Past events');
+    }
 
     public function table(Table $table): Table
     {
@@ -36,6 +41,6 @@ class PastEventsWidget extends TableWidget
                 ]),
             )
             ->paginated(false)
-            ->emptyStateHeading('No past events.');
+            ->emptyStateHeading(__('No past events.'));
     }
 }

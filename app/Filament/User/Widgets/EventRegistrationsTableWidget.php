@@ -15,7 +15,7 @@ class EventRegistrationsTableWidget extends BaseWidget
 
     protected function getTableHeading(): ?string
     {
-        return 'My Event Registrations';
+        return __('My Event Registrations');
     }
 
     public function table(Table $table): Table

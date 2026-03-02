@@ -22,7 +22,10 @@ class TestimonialResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedStar;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Settings & Content';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Settings & Content');
+    }
 
     public static function form(Schema $schema): Schema
     {

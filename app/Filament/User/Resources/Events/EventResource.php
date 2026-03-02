@@ -14,7 +14,6 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use UnitEnum;
 
 class EventResource extends Resource
 {
@@ -24,9 +23,15 @@ class EventResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedCalendarDateRange;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Events';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Events');
+    }
 
-    protected static ?string $navigationLabel = 'Events';
+    public static function getNavigationLabel(): string
+    {
+        return __('Events');
+    }
 
     public static function form(Schema $schema): Schema
     {

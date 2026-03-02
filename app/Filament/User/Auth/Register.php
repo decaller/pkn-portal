@@ -23,27 +23,27 @@ class Register extends BaseRegister
         return $schema
             ->components([
                 TextInput::make('name')
-                    ->label('Name')
+                    ->label(__('Name'))
                     ->required()
                     ->maxLength(255)
                     ->autofocus(),
                 TextInput::make('phone_number')
-                    ->label('Phone number')
+                    ->label(__('Phone number'))
                     ->required()
                     ->maxLength(30)
                     ->unique($this->getUserModel(), 'phone_number'),
                 Select::make('registration_type')
-                    ->label('Registration type')
+                    ->label(__('Registration type'))
                     ->options([
-                        'personal' => 'Personal',
-                        'existing' => 'Join existing organization',
-                        'new' => 'Create new organization',
+                        'personal' => __('Personal'),
+                        'existing' => __('Join existing organization'),
+                        'new' => __('Create new organization'),
                     ])
                     ->default('personal')
                     ->required()
                     ->live(),
                 Select::make('existing_organization_id')
-                    ->label('Choose existing organization')
+                    ->label(__('Choose existing organization'))
                     ->options(
                         fn () => Organization::query()
                             ->whereRaw('LOWER(slug) NOT LIKE ?', ['%pkn%'])
@@ -67,7 +67,7 @@ class Register extends BaseRegister
                         ),
                     ),
                 TextInput::make('organization_name')
-                    ->label('New organization name')
+                    ->label(__('New organization name'))
                     ->visible(
                         fn (Get $get): bool => $get('registration_type') ===
                             'new',
@@ -78,7 +78,7 @@ class Register extends BaseRegister
                     )
                     ->maxLength(255),
                 FileUpload::make('organization_logo')
-                    ->label('Organization logo')
+                    ->label(__('Organization logo'))
                     ->image()
                     ->imageResizeMode('cover')
                     ->imageResizeTargetWidth('1200')
@@ -127,7 +127,7 @@ class Register extends BaseRegister
 
             if (Str::contains($newSlug, 'pkn')) {
                 throw ValidationException::withMessages([
-                    'data.organization_name' => 'Organization slug cannot contain "pkn".',
+                    'data.organization_name' => __('Organization slug cannot contain "pkn".'),
                 ]);
             }
         }

@@ -13,7 +13,12 @@ class LatestEventRegistrationsWidget extends TableWidget
 
     protected int|string|array $columnSpan = 'full';
 
-    protected static ?string $heading = 'Event Registrations';
+    protected static ?string $heading = null;
+
+    public function getHeading(): string
+    {
+        return __('Event Registrations');
+    }
 
     public function table(Table $table): Table
     {

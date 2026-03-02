@@ -22,7 +22,10 @@ class SurveyTemplateResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedClipboardDocumentCheck;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Event Management';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Event Management');
+    }
 
     public static function form(Schema $schema): Schema
     {

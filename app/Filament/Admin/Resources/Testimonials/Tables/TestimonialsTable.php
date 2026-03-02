@@ -15,7 +15,7 @@ class TestimonialsTable
         return $table
             ->columns([
                 TextColumn::make('user.name')
-                    ->label('Participant / Guest')
+                    ->label(__('Participant / Guest'))
                     ->getStateUsing(fn ($record) => $record->user ? $record->user->name : $record->guest_name)
                     ->searchable()
                     ->sortable(),
@@ -30,7 +30,7 @@ class TestimonialsTable
                     ->color('warning')
                     ->icon('heroicon-m-star'),
                 \Filament\Tables\Columns\ToggleColumn::make('is_approved')
-                    ->label('Approved'),
+                    ->label(__('Approved')),
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()

@@ -31,7 +31,7 @@ class RegisterEvent extends BaseRegister
         return $schema
             ->components([
                 Checkbox::make('is_registering_for_event')
-                    ->label('I also want to register for an event')
+                    ->label(__('I also want to register for an event'))
                     ->default(true)
                     ->live(),
 
@@ -44,27 +44,27 @@ class RegisterEvent extends BaseRegister
                             true,
                     ),
                 TextInput::make('name')
-                    ->label('Full Name')
+                    ->label(__('Full Name'))
                     ->required()
                     ->maxLength(255)
                     ->autofocus(),
                 TextInput::make('phone_number')
-                    ->label('Phone number')
+                    ->label(__('Phone number'))
                     ->required()
                     ->maxLength(30)
                     ->unique($this->getUserModel(), 'phone_number'),
                 Select::make('registration_type')
-                    ->label('Registration type')
+                    ->label(__('Registration type'))
                     ->options([
-                        'personal' => 'Personal',
-                        'existing' => 'Join existing organization',
-                        'new' => 'Create new organization',
+                        'personal' => __('Personal'),
+                        'existing' => __('Join existing organization'),
+                        'new' => __('Create new organization'),
                     ])
                     ->default('personal')
                     ->required()
                     ->live(),
                 Select::make('existing_organization_id')
-                    ->label('Choose existing organization')
+                    ->label(__('Choose existing organization'))
                     ->options(
                         fn () => Organization::query()
                             ->whereRaw('LOWER(slug) NOT LIKE ?', ['%pkn%'])
@@ -88,7 +88,7 @@ class RegisterEvent extends BaseRegister
                         ),
                     ),
                 TextInput::make('organization_name')
-                    ->label('New organization name')
+                    ->label(__('New organization name'))
                     ->visible(
                         fn (Get $get): bool => $get('registration_type') ===
                             'new',
@@ -99,7 +99,7 @@ class RegisterEvent extends BaseRegister
                     )
                     ->maxLength(255),
                 FileUpload::make('organization_logo')
-                    ->label('Organization logo')
+                    ->label(__('Organization logo'))
                     ->image()
                     ->disk('public')
                     ->visibility('public')
@@ -136,7 +136,7 @@ class RegisterEvent extends BaseRegister
                 //     ->required()
                 //     ->dehydrated(false),
                 CheckboxList::make('past_events')
-                    ->label('Were you attending these past events? (Optional)')
+                    ->label(__('Were you attending these past events? (Optional)'))
                     ->options(fn () => Event::where('event_date', '<', now())->pluck('title', 'id'))
                     ->columns(2)
                     ->gridDirection('row')
@@ -153,7 +153,7 @@ class RegisterEvent extends BaseRegister
 
             if (Str::contains($newSlug, 'pkn')) {
                 throw ValidationException::withMessages([
-                    'data.organization_name' => 'Organization slug cannot contain "pkn".',
+                    'data.organization_name' => __('Organization slug cannot contain "pkn".'),
                 ]);
             }
         }

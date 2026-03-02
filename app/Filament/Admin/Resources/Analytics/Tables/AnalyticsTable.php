@@ -14,7 +14,7 @@ class AnalyticsTable
             ->columns([
                 // 1. Show the User's Name, not just their ID
                 TextColumn::make('user.name')
-                    ->label('User')
+                    ->label(__('User'))
                     ->searchable()
                     ->sortable(),
 
@@ -31,14 +31,14 @@ class AnalyticsTable
 
                 // 3. The "Item Type" (News, Event, Document)
                 TextColumn::make('trackable_type')
-                    ->label('Type')
-                    ->formatStateUsing(fn (string $state): string => class_basename($state)) // "News", not "App\Models\News"
+                    ->label(__('Type'))
+                    ->formatStateUsing(fn (string $state): string => class_basename($state))
                     ->badge()
                     ->color('warning'),
 
                 // 4. The "Item Name" (The Magic Part)
                 TextColumn::make('trackable_id')
-                    ->label('Target Item')
+                    ->label(__('Target Item'))
                     ->formatStateUsing(function ($record) {
                         // Dynamically tries to find the 'title' or 'name' of the item
                         return $record->trackable->title
@@ -48,13 +48,13 @@ class AnalyticsTable
                     ->limit(40),
 
                 TextColumn::make('platform')
-                    ->label('Device/Platform')
+                    ->label(__('Device/Platform'))
                     ->toggleable(),
 
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable()
-                    ->label('Time'),
+                    ->label(__('Time')),
             ])
             ->defaultSort('created_at', 'desc') // Show newest logs first
             ->filters([

@@ -15,7 +15,12 @@ class LatestNewsWidget extends TableWidget
 
     protected static ?int $sort = 6;
 
-    protected static ?string $heading = 'Latest news';
+    protected static ?string $heading = null;
+
+    public function getHeading(): string
+    {
+        return __('Latest news');
+    }
 
     public function table(Table $table): Table
     {
@@ -39,17 +44,17 @@ class LatestNewsWidget extends TableWidget
                         TextColumn::make('title')->weight('bold')->limit(45)->size('lg'),
                         TextColumn::make('created_at')
                             ->since()
-                            ->label('Published')
+                            ->label(__('Published'))
                             ->color('gray')
                             ->size('sm'),
                     ])->space(1)->extraAttributes(['class' => 'pt-4']),
                 ])->space(0),
             ])
             ->paginated(false)
-            ->emptyStateHeading('No published news yet.')
+            ->emptyStateHeading(__('No published news yet.'))
             ->actions([
                 \Filament\Actions\ViewAction::make('view_news')
-                    ->label('Read Article')
+                    ->label(__('Read Article'))
                     ->modalHeading(fn ($record) => $record->title)
                     ->infolist([
                         \Filament\Infolists\Components\ImageEntry::make('thumbnail')
@@ -68,7 +73,7 @@ class LatestNewsWidget extends TableWidget
                             ->columnSpanFull(),
                     ])
                     ->modalSubmitAction(false)
-                    ->modalCancelActionLabel('Close'),
+                    ->modalCancelActionLabel(__('Close')),
             ])
             ->recordAction('view_news');
     }

@@ -16,8 +16,8 @@ class EventRegistrationsTable
     {
         return $table
             ->columns([
-                TextColumn::make('status')->badge(),
-                TextColumn::make('payment_status')->badge(),
+                TextColumn::make('status')->label(__('Status'))->badge(),
+                TextColumn::make('payment_status')->label(__('Payment Status'))->badge(),
                 TextColumn::make('event.title')
                     ->label(__('Event'))
                     ->searchable()
@@ -38,8 +38,8 @@ class EventRegistrationsTable
                 //     ->money("IDR")
                 //     ->label("Unit price"),
 
-                TextColumn::make('total_amount')->money('IDR')->sortable(),
-                TextColumn::make('updated_at')->since(),
+                TextColumn::make('total_amount')->money('IDR')->label(__('Total'))->sortable(),
+                TextColumn::make('updated_at')->label(__('Updated'))->since(),
             ])
             ->filters([
                 SelectFilter::make('status')->options(

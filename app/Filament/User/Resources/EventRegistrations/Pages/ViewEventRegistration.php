@@ -35,7 +35,7 @@ class ViewEventRegistration extends ViewRecord
 
         return [
             Action::make('view_event')
-                ->label('View Event')
+                ->label(__('View Event'))
                 ->icon('heroicon-o-calendar')
                 ->color('info')
                 ->url(fn (): string => route('filament.user.resources.events.view', [
@@ -43,7 +43,7 @@ class ViewEventRegistration extends ViewRecord
                     'record' => $this->record->event_id,
                 ])),
             Action::make('edit_registration')
-                ->label('Edit Registration')
+                ->label(__('Edit Registration'))
                 ->icon('heroicon-o-pencil')
                 ->color('primary')
                 ->visible(fn (): bool => $isEditable && $canManage)
@@ -51,7 +51,7 @@ class ViewEventRegistration extends ViewRecord
                     'record' => $this->record,
                 ])),
             Action::make('edit_participants')
-                ->label('Edit Participants')
+                ->label(__('Edit Participants'))
                 ->icon('heroicon-o-users')
                 ->color('warning')
                 ->visible(fn (): bool => $canManage && in_array($status, [
@@ -64,17 +64,17 @@ class ViewEventRegistration extends ViewRecord
                 ])
                 ->form([
                     Repeater::make('packages')
-                        ->label('Packages')
+                        ->label(__('Packages'))
                         ->schema([
                             TextInput::make('package_name')
-                                ->label('Package')
+                                ->label(__('Package'))
                                 ->disabled()
                                 ->dehydrated(),
                             Repeater::make('participants')
-                                ->label('Participants')
+                                ->label(__('Participants'))
                                 ->schema([
                                     Select::make('user_id')
-                                        ->label('Select from organization')
+                                        ->label(__('Select from organization'))
                                         ->options(fn (Get $get): array => $this->organizationUserOptionsExcluding(
                                             $get('../../../../packages'),
                                             $get('user_id'),
@@ -100,11 +100,11 @@ class ViewEventRegistration extends ViewRecord
                                             }
                                         }),
                                     TextInput::make('full_name')
-                                        ->label('Full name')
+                                        ->label(__('Full name'))
                                         ->disabled(fn (Get $get): bool => (bool) $get('user_id'))
                                         ->dehydrated(),
                                     TextInput::make('phone')
-                                        ->label('Phone number')
+                                        ->label(__('Phone number'))
                                         ->disabled(fn (Get $get): bool => (bool) $get('user_id'))
                                         ->dehydrated(),
                                 ])
@@ -228,7 +228,7 @@ class ViewEventRegistration extends ViewRecord
                     });
 
                     Notification::make()
-                        ->title('Participants updated.')
+                        ->title(__('Participants updated.'))
                         ->success()
                         ->send();
 
@@ -239,7 +239,7 @@ class ViewEventRegistration extends ViewRecord
                     );
                 }),
             Action::make('upload_payment_proof')
-                ->label('Upload Payment')
+                ->label(__('Upload Payment'))
                 ->icon('heroicon-o-arrow-up-tray')
                 ->color('success')
                 ->visible(
@@ -252,7 +252,7 @@ class ViewEventRegistration extends ViewRecord
                 )
                 ->form([
                     FileUpload::make('payment_proof_path')
-                        ->label('Payment proof')
+                        ->label(__('Payment proof'))
                         ->disk('public')
                         ->visibility('public')
                         ->directory('payment-proofs')

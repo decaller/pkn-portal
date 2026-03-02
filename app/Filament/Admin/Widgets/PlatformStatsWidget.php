@@ -28,16 +28,16 @@ class PlatformStatsWidget extends BaseWidget
         $totalUsers = $tenant ? $tenant->users()->count() : User::count();
 
         return [
-            Stat::make('Active Future Events', $activeEvents)
-                ->description('Published events allowing registration')
+            Stat::make(__('Active Future Events'), $activeEvents)
+                ->description(__('Published events allowing registration'))
                 ->icon('heroicon-o-calendar'),
-            Stat::make('Pending Verifications', $pendingRegistrations)
-                ->description('Awaiting payment verification')
+            Stat::make(__('Pending Verifications'), $pendingRegistrations)
+                ->description(__('Awaiting payment verification'))
                 ->descriptionIcon('heroicon-m-arrow-trending-up')
                 ->color($pendingRegistrations > 0 ? 'warning' : 'success')
                 ->icon('heroicon-o-clipboard-document-check'),
-            Stat::make('Connected Users', $totalUsers)
-                ->description('Users affiliated with this space')
+            Stat::make(__('Connected Users'), $totalUsers)
+                ->description(__('Users affiliated with this space'))
                 ->icon('heroicon-o-users'),
         ];
     }

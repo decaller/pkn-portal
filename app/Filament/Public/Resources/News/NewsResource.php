@@ -19,7 +19,25 @@ class NewsResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedNewspaper;
 
-    protected static string|\UnitEnum|null $navigationGroup = 'Public Information';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Public Information');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('News');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('News');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('News');
+    }
 
     public static function infolist(Schema $schema): Schema
     {

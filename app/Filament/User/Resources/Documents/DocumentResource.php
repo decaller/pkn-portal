@@ -14,7 +14,6 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use UnitEnum;
 
 class DocumentResource extends Resource
 {
@@ -24,7 +23,25 @@ class DocumentResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Information';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Information');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('Documents');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Document');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Documents');
+    }
 
     public static function canCreate(): bool
     {

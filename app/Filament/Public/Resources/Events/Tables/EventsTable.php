@@ -21,9 +21,9 @@ class EventsTable
                     ->searchable()
                     ->sortable()
                     ->weight('bold'),
-                TextColumn::make('event_date')->date('d M Y')->sortable(),
+                TextColumn::make('event_date')->date('d M Y')->label(__('Event Date'))->sortable(),
                 TextColumn::make('event_type')
-                    ->label('Type')
+                    ->label(__('Type'))
                     ->badge()
                     ->formatStateUsing(
                         fn (
@@ -42,13 +42,13 @@ class EventsTable
                             : EventType::tryFrom((string) $state)?->getColor(),
                     )
                     ->sortable(),
-                TextColumn::make('description')->limit(80)->label('Summary'),
+                TextColumn::make('description')->limit(80)->label(__('Summary')),
             ])
             ->defaultSort('event_date', 'desc')
             ->recordActions([
                 ViewAction::make(),
                 Action::make('register')
-                    ->label('Register')
+                    ->label(__('Register'))
                     ->icon('heroicon-o-ticket')
                     ->color('success')
                     ->visible(fn (Event $record): bool => $record->allow_registration && $record->event_date >= now()->toDateString() && ! $record->isFull())

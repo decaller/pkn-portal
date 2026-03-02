@@ -14,7 +14,6 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use UnitEnum;
 
 class InvoiceResource extends Resource
 {
@@ -24,7 +23,25 @@ class InvoiceResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Finance';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Finance');
+    }
+
+    public static function getNavigationLabel(): string
+    {
+        return __('Invoices');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Invoice');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Invoices');
+    }
 
     public static function canCreate(): bool
     {

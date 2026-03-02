@@ -16,7 +16,6 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use UnitEnum;
 
 class OrganizationResource extends Resource
 {
@@ -26,9 +25,15 @@ class OrganizationResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedBuildingOffice2;
 
-    protected static string|UnitEnum|null $navigationGroup = 'System Administration';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('System Administration');
+    }
 
-    protected static ?string $navigationLabel = 'Organizations';
+    public static function getNavigationLabel(): string
+    {
+        return __('Organizations');
+    }
 
     public static function form(Schema $schema): Schema
     {

@@ -22,12 +22,12 @@ class EventRegistrationsTable
             )
             ->columns([
                 TextColumn::make('event.title')
-                    ->label('Event')
+                    ->label(__('Event'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('organization.name')
-                    ->label('Organization')
-                    ->placeholder('Personal'),
+                    ->label(__('Organization'))
+                    ->placeholder(__('Personal')),
                 TextColumn::make('status')
                     ->badge()
                     ->formatStateUsing(fn (RegistrationStatus|string|null $state): string => $state instanceof RegistrationStatus ? $state->getLabel() : RegistrationStatus::tryFrom((string) $state)?->getLabel() ?? '-')

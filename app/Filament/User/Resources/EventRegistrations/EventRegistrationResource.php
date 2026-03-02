@@ -18,7 +18,6 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use UnitEnum;
 
 class EventRegistrationResource extends Resource
 {
@@ -28,9 +27,25 @@ class EventRegistrationResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedTicket;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Events';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Events');
+    }
 
-    protected static ?string $navigationLabel = 'My registrations';
+    public static function getNavigationLabel(): string
+    {
+        return __('My registrations');
+    }
+
+    public static function getModelLabel(): string
+    {
+        return __('Event Registration');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('Event Registrations');
+    }
 
     public static function form(Schema $schema): Schema
     {

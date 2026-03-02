@@ -24,26 +24,26 @@ class DocumentsTable
                     ->description(fn ($record) => $record->original_filename),
 
                 TextColumn::make('event.title')
-                    ->label('Event')
+                    ->label(__('Event'))
                     ->badge()
                     ->color('info'),
 
                 TextColumn::make('tags')
-                    ->label('Keywords')
+                    ->label(__('Keywords'))
                     ->badge() // 👈 This turns the tags into those nice "pills"
                     ->separator(',') // 👈 Tell Filament how to split the string/array
                     ->searchable()
                     ->color('info'), // You can change this to 'success' or 'warning'
 
                 TextColumn::make('mime_type')
-                    ->label('Type')
+                    ->label(__('Type'))
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('created_at')
                     ->dateTime()
                     ->sortable(),
                 TextColumn::make('content')
-                    ->label('Full Text')
+                    ->label(__('Full Text'))
                     ->searchable() // 👈 This enables searching inside the PDF content!
                     ->toggleable(isToggledHiddenByDefault: true), // 👈 Keeps the table UI clean
             ])
@@ -55,6 +55,7 @@ class DocumentsTable
             ->recordActions([
                 // DOWNLOAD ACTION
                 Action::make('download')
+                    ->label(__('Download'))
                     ->icon('heroicon-o-arrow-down-tray')
                     ->color('success')
                     ->action(fn ($record) => Storage::disk('public')->download($record->file_path)),
