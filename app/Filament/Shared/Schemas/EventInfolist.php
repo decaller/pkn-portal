@@ -85,12 +85,12 @@ class EventInfolist
                                 TextEntry::make('proposal')
                                     ->label(__('Event Proposal'))
                                     ->formatStateUsing(fn () => __('View Proposal'))
-                                    ->url(fn ($record) => $record->proposal ? asset('storage/'.$record->proposal) : null)
+                                    ->url(fn ($record) => $record?->proposal ? asset('storage/'.$record->proposal) : null)
                                     ->openUrlInNewTab()
                                     ->icon('heroicon-m-document-text')
                                     ->badge()
                                     ->color('primary')
-                                    ->visible(fn ($record) => filled($record->proposal)),
+                                    ->visible(fn ($record) => filled($record?->proposal)),
                             ]),
                     ])->columnSpan(['md' => 1]),
                 ])
@@ -152,7 +152,7 @@ class EventInfolist
                             ])
                             ->columns(2),
                     ])
-                    ->visible(fn ($record) => filled($record->rundown))
+                    ->visible(fn ($record) => filled($record?->rundown))
                     ->columnSpanFull(),
 
                 Section::make(__('Event Documentation'))
@@ -160,6 +160,9 @@ class EventInfolist
                         TextEntry::make('event_docs')
                             ->hiddenLabel()
                             ->getStateUsing(function ($record) {
+                                if (! $record) {
+                                    return [];
+                                }
                                 $docs = $record->documentation;
                                 if (! is_array($docs)) {
                                     return [];
@@ -178,7 +181,7 @@ class EventInfolist
                             ->columnSpanFull(),
                     ])
                     ->columnSpanFull()
-                    ->visible(fn ($record) => filled($record->documentation) && $record->event_date >= now()->startOfDay()),
+                    ->visible(fn ($record) => filled($record?->documentation) && $record?->event_date >= now()->startOfDay()),
             ]);
     }
 }
