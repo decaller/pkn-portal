@@ -7,6 +7,16 @@ use Illuminate\Support\Facades\Gate;
 
 Route::view("/", "home")->name("home");
 
+Route::get("/locale/{locale}", function (string $locale) {
+    $supportedLocales = ['en', 'id'];
+
+    if (in_array($locale, $supportedLocales, true)) {
+        session(['locale' => $locale]);
+    }
+
+    return redirect()->back();
+})->name("locale.switch");
+
 Route::get(
     "/login",
     fn() => redirect()->route("filament.user.auth.login"),
