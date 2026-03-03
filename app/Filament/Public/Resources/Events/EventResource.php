@@ -45,7 +45,11 @@ class EventResource extends Resource
 
     public static function infolist(Schema $schema): Schema
     {
-        return EventInfolist::configure($schema);
+        return EventInfolist::configure($schema, [
+            'showRundownFiles' => false,
+            'showRundownLinks' => false,
+            'showPublicRundownCta' => true,
+        ]);
     }
 
     public static function table(Table $table): Table

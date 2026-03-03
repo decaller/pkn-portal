@@ -6,6 +6,7 @@ use App\Models\Event;
 use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry;
+use Filament\Infolists\Components\ViewEntry;
 use Filament\Schemas\Components\Grid;
 use Filament\Schemas\Components\Group;
 use Filament\Schemas\Components\Section;
@@ -13,8 +14,19 @@ use Filament\Schemas\Schema;
 
 class EventInfolist
 {
-    public static function configure(Schema $schema): Schema
+    /**
+     * @param  array{
+     *     showRundownFiles?: bool,
+     *     showRundownLinks?: bool,
+     *     showPublicRundownCta?: bool
+     * }  $options
+     */
+    public static function configure(Schema $schema, array $options = []): Schema
     {
+        $showRundownFiles = $options['showRundownFiles'] ?? true;
+        $showRundownLinks = $options['showRundownLinks'] ?? true;
+        $showPublicRundownCta = $options['showPublicRundownCta'] ?? false;
+
         return $schema
             ->components([
                 Grid::make(['default' => 1, 'md' => 2])->schema([
@@ -135,11 +147,11 @@ class EventInfolist
                                     ->prose()
                                     ->columnSpanFull()
                                     ->visible(fn ($state) => filled($state)),
-                                \Filament\Infolists\Components\ViewEntry::make('data.session_files')
+                                ViewEntry::make('data.session_files')
                                     ->label(__('Files & Materials'))
                                     ->view('filament.infolists.components.file-list-simple')
                                     ->columnSpanFull()
-                                    ->visible(fn ($state) => filled($state)),
+                                    ->visible(fn ($state) => $showRundownFiles && filled($state)),
                                 RepeatableEntry::make('data.links')
                                     ->label(__('External Resources'))
                                     ->schema([
@@ -148,7 +160,29 @@ class EventInfolist
                                     ])
                                     ->columns(2)
                                     ->columnSpanFull()
-                                    ->visible(fn ($state) => filled($state)),
+                                    ->visible(fn ($state) => $showRundownLinks && filled($state)),
+                                TextEntry::make('data.public_rundown_cta')
+                                    ->hiddenLabel()
+                                    ->html()
+                                    ->state(function () {
+                                        $message = e(__('To see files and shared links, please login or make a free account'));
+                                        $loginLabel = e(__('Login'));
+                                        $registerLabel = e(__('Register'));
+                                        $loginUrl = route('filament.user.auth.login');
+                                        $registerUrl = route('filament.user.auth.register');
+
+                                        return <<<HTML
+<div class="rounded-xl border border-gray-200 bg-gray-50 px-4 py-3 dark:border-gray-700 dark:bg-gray-900/40">
+    <p class="text-sm text-gray-700 dark:text-gray-200">{$message}</p>
+    <div class="mt-3 flex flex-wrap gap-2" style="margin-top:5px;">
+        <a href="{$loginUrl}" class="fi-btn fi-btn-size-sm fi-color-gray fi-btn-color-gray fi-btn-outlined" style="margin: 3px; margin-left:1px;">{$loginLabel}</a>
+        <a href="{$registerUrl}" class="fi-btn fi-btn-size-sm fi-color-primary fi-btn-color-primary" style="margin: 3px;">{$registerLabel}</a>
+    </div>
+</div>
+HTML;
+                                    })
+                                    ->columnSpanFull()
+                                    ->visible(fn () => $showPublicRundownCta),
                             ])
                             ->columns(2),
                     ])
