@@ -65,12 +65,8 @@ class RegisterEvent extends BaseRegister
                     ->live(),
                 Select::make('existing_organization_id')
                     ->label(__('Choose existing organization'))
-                    ->options(
-                        fn () => Organization::query()
-                            ->whereRaw('LOWER(slug) NOT LIKE ?', ['%pkn%'])
-                            ->orderBy('name')
-                            ->pluck('name', 'id'),
-                    )
+                    ->allowHtml()
+                    ->options(fn () => self::organizationOptionsWithLogo())
                     ->visible(
                         fn (Get $get): bool => $get('registration_type') ===
                             'existing',
@@ -238,5 +234,44 @@ class RegisterEvent extends BaseRegister
         }
 
         return $slug;
+    }
+
+    private static function organizationOptionsWithLogo(): array
+    {
+        return Organization::query()
+            ->whereRaw('LOWER(slug) NOT LIKE ?', ['%pkn%'])
+            ->orderBy('name')
+            ->get(['id', 'name', 'logo'])
+            ->mapWithKeys(
+                fn (Organization $organization): array => [
+                    $organization->id => self::organizationOptionLabel($organization),
+                ],
+            )
+            ->all();
+    }
+
+    private static function organizationOptionLabel(Organization $organization): string
+    {
+        $name = e($organization->name);
+        $logoUrl = self::organizationLogoUrl($organization->logo);
+
+        if (! $logoUrl) {
+            return "<div class=\"flex items-center gap-2\"><span class=\"inline-flex h-6 w-6 items-center justify-center rounded-full bg-gray-200 text-[10px] font-semibold text-gray-700 dark:bg-gray-700 dark:text-gray-100\">NA</span><span>{$name}</span></div>";
+        }
+
+        return "<div class=\"flex items-center gap-2\"><img src=\"{$logoUrl}\" alt=\"{$name}\" class=\"h-6 w-6 rounded-full object-cover ring-1 ring-gray-200 dark:ring-gray-700\" /><span>{$name}</span></div>";
+    }
+
+    private static function organizationLogoUrl(?string $logo): ?string
+    {
+        if (blank($logo)) {
+            return null;
+        }
+
+        if (str_starts_with($logo, 'http://') || str_starts_with($logo, 'https://')) {
+            return e($logo);
+        }
+
+        return e(asset('storage/'.$logo));
     }
 }
