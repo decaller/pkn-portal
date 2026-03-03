@@ -89,6 +89,7 @@
 @php
     use App\Models\Event;
     use App\Models\News;
+    use App\Models\Setting;
     use Illuminate\Support\Facades\Storage;
     use Illuminate\Support\Str;
 
@@ -149,6 +150,9 @@
 
         return abs(min(0, now()->startOfDay()->diffInDays($event->event_date, false)));
     };
+
+    $contactNumber = Setting::defaultContactNumber();
+    $contactWhatsAppUrl = Setting::defaultContactWhatsAppUrl('Hello, I need support for PKN Portal.');
 @endphp
 
 <body class="min-h-screen bg-base-200 text-base-content">
@@ -162,9 +166,16 @@
                     <a href="{{ route('filament.user.auth.login') }}" class="hover:text-base-content">{{ $tr('User Login', 'Masuk User') }}</a>
                     <a href="{{ route('filament.admin.auth.login') }}" class="hover:text-base-content">Admin</a>
                 </nav>
-                <div class="join">
-                    <a href="{{ route('locale.switch', ['locale' => 'id']) }}" class="join-item btn btn-xs {{ app()->getLocale() === 'id' ? 'btn-primary' : 'btn-ghost' }}">ID</a>
-                    <a href="{{ route('locale.switch', ['locale' => 'en']) }}" class="join-item btn btn-xs {{ app()->getLocale() === 'en' ? 'btn-primary' : 'btn-ghost' }}">EN</a>
+                <div class="flex items-center gap-2">
+                    @if ($contactNumber && $contactWhatsAppUrl)
+                        <a href="{{ $contactWhatsAppUrl }}" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-xs bg-white text-base-content hover:bg-base-100">
+                            {{ $tr('Help', 'Bantuan') }}
+                        </a>
+                    @endif
+                    <div class="join">
+                        <a href="{{ route('locale.switch', ['locale' => 'id']) }}" class="join-item btn btn-xs {{ app()->getLocale() === 'id' ? 'btn-primary' : 'btn-ghost' }}">ID</a>
+                        <a href="{{ route('locale.switch', ['locale' => 'en']) }}" class="join-item btn btn-xs {{ app()->getLocale() === 'en' ? 'btn-primary' : 'btn-ghost' }}">EN</a>
+                    </div>
                 </div>
             </div>
         </header>
@@ -315,7 +326,14 @@
                     </div>
                 </div>
                 <div class="flex items-start md:justify-end">
-                    <button id="theme-toggle" type="button" class="btn btn-outline btn-sm">Switch to Dark Mode</button>
+                    <div class="flex flex-col items-stretch gap-2">
+                        @if ($contactNumber && $contactWhatsAppUrl)
+                            <a href="{{ $contactWhatsAppUrl }}" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm bg-white text-base-content hover:bg-base-100">
+                                {{ $tr('Help', 'Bantuan') }}
+                            </a>
+                        @endif
+                        <button id="theme-toggle" type="button" class="btn btn-outline btn-sm">Switch to Dark Mode</button>
+                    </div>
                 </div>
             </div>
         </footer>

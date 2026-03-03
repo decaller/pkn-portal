@@ -67,6 +67,10 @@ class UserPanelProvider extends PanelProvider
                 'panels::scripts.after',
                 fn () => view('filament.user.log-listener'),
             )
+            ->renderHook(
+                'panels::topbar.end',
+                fn () => view('filament.components.whatsapp-contact-topbar'),
+            )
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

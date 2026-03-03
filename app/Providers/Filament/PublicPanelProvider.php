@@ -27,6 +27,7 @@ class PublicPanelProvider extends PanelProvider
         return $panel
             ->id('public')
             ->path('public')
+            ->brandName('PKN Public Panel')
             ->colors([
                 'primary' => Color::Amber,
             ])
@@ -40,6 +41,10 @@ class PublicPanelProvider extends PanelProvider
                 LatestNewsWidget::class,
                 AvailableRegistrationEventsWidget::class,
             ])
+            ->renderHook(
+                'panels::topbar.end',
+                fn () => view('filament.components.whatsapp-contact-topbar'),
+            )
             ->middleware([
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,

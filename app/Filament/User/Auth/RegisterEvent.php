@@ -5,6 +5,9 @@ namespace App\Filament\User\Auth;
 use App\Filament\User\Resources\EventRegistrations\Schemas\EventRegistrationForm;
 use App\Models\Event;
 use App\Models\Organization;
+use App\Models\Setting;
+use Filament\Actions\Action;
+use Filament\Actions\ActionGroup;
 use Filament\Auth\Pages\Register as BaseRegister;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\CheckboxList;
@@ -140,6 +143,30 @@ class RegisterEvent extends BaseRegister
             ])
 
             ->statePath('data');
+    }
+
+    /**
+     * @return array<Action | ActionGroup>
+     */
+    protected function getFormActions(): array
+    {
+        return [
+            $this->getRegisterFormAction(),
+            $this->getHelpAction(),
+        ];
+    }
+
+    protected function getHelpAction(): Action
+    {
+        return Action::make('help')
+            ->label(app()->getLocale() === 'id' ? 'Bantuan' : 'Help')
+            ->color('gray')
+            ->outlined()
+            ->url(
+                fn (): ?string => Setting::defaultContactWhatsAppUrl('Hello, I need help with registration on PKN Portal.'),
+                shouldOpenInNewTab: true,
+            )
+            ->visible(fn (): bool => filled(Setting::defaultContactWhatsAppUrl()));
     }
 
     protected function handleRegistration(array $data): Model
