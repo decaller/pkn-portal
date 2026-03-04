@@ -32,7 +32,7 @@ services:
       - "${APP_PORT:-80}:80"
     volumes:
       - app_code:/var/www/html:ro
-      - ./docker/production/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./docker/production/nginx:/etc/nginx/conf.d:ro
       - public_storage:/var/www/html/public/storage:ro
     restart: unless-stopped
     healthcheck:
