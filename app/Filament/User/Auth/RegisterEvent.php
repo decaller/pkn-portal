@@ -68,7 +68,10 @@ class RegisterEvent extends BaseRegister
                     ->live(),
                 Select::make('existing_organization_id')
                     ->label(__('Choose existing organization'))
+                    ->native(false)
                     ->allowHtml()
+                    ->searchable()
+                    ->preload()
                     ->options(fn () => self::organizationOptionsWithLogo())
                     ->visible(
                         fn (Get $get): bool => $get('registration_type') ===
@@ -283,10 +286,10 @@ class RegisterEvent extends BaseRegister
         $logoUrl = self::organizationLogoUrl($organization->logo);
 
         if (! $logoUrl) {
-            return "<div class=\"flex items-center gap-2\"><span class=\"inline-flex h-6 w-6 items-center justify-center rounded-full bg-gray-200 text-[10px] font-semibold text-gray-700 dark:bg-gray-700 dark:text-gray-100\">NA</span><span>{$name}</span></div>";
+            return "<div class=\"flex items-center gap-2\"><span class=\"inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gray-200 text-[10px] font-semibold text-gray-700 dark:bg-gray-700 dark:text-gray-100\">NA</span><span class=\"leading-5\">{$name}</span></div>";
         }
 
-        return "<div class=\"flex items-center gap-2\"><img src=\"{$logoUrl}\" alt=\"{$name}\" class=\"h-6 w-6 rounded-full object-cover ring-1 ring-gray-200 dark:ring-gray-700\" /><span>{$name}</span></div>";
+        return "<div class=\"flex items-center gap-2\"><img src=\"{$logoUrl}\" alt=\"{$name}\" class=\"h-6 w-6 shrink-0 rounded-full object-cover ring-1 ring-gray-200 dark:ring-gray-700\" width=\"100\" height=\"100\" /><span class=\"leading-5\">{$name}</span></div>";
     }
 
     private static function organizationLogoUrl(?string $logo): ?string
