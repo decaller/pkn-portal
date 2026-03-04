@@ -8,7 +8,8 @@ RUN composer install \
     --no-interaction \
     --no-progress \
     --prefer-dist \
-    --optimize-autoloader
+    --optimize-autoloader \
+    --ignore-platform-reqs
 
 FROM node:22-alpine AS frontend
 WORKDIR /app
