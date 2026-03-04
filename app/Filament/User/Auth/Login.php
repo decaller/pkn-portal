@@ -42,8 +42,9 @@ class Login extends BaseLogin
     protected function getFormActions(): array
     {
         return [
-            $this->getAuthenticateFormAction(),
             $this->getHelpAction(),
+            $this->getAuthenticateFormAction(),
+            
         ];
     }
 

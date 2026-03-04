@@ -154,8 +154,9 @@ class RegisterEvent extends BaseRegister
     protected function getFormActions(): array
     {
         return [
-            $this->getRegisterFormAction(),
             $this->getHelpAction(),
+            $this->getRegisterFormAction(),
+            
         ];
     }
 
