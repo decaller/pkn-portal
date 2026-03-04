@@ -283,5 +283,18 @@
     "Read Article": "Baca Artikel",
     "participant detail havent been added": "detail peserta belum ditambahkan",
     "To see files and shared links, please login or make a free account": "Untuk melihat file dan tautan yang dibagikan, silakan masuk atau buat akun gratis",
-    "Login": "Masuk"
+    "Login": "Masuk",
+    "Latest Registration": "Pendaftaran Terbaru",
+    "Your registration is complete! You can now access the event page.": "Pendaftaran Anda sudah lengkap! Anda sekarang dapat mengakses halaman acara.",
+    "Please upload your payment proof and add all participants to complete your registration.": "Silakan unggah bukti pembayaran Anda dan tambahkan semua peserta untuk menyelesaikan pendaftaran Anda.",
+    "Go to Event Page": "Buka Halaman Acara",
+    "View Registration": "Lihat Pendaftaran",
+
+    "Join / Create organization": "Bergabung / Buat organisasi",
+    "Do you want to create a new organization or join an existing one?": "Apakah Anda ingin membuat organisasi baru atau bergabung dengan yang sudah ada?",
+    "Create a new organization": "Buat organisasi baru",
+    "Join an existing organization": "Bergabung dengan organisasi yang sudah ada",
+    "Select Organization": "Pilih Organisasi",
+    "Organization profile": "Profil organisasi",
+    "Slug": "Slug"
 }

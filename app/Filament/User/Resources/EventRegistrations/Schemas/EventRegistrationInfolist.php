@@ -63,10 +63,11 @@ class EventRegistrationInfolist
                 ->columns(2),
             Section::make(__('How to Pay'))
                 ->schema([
-                    TextEntry::make('payment_instructions')
+                    TextEntry::make('event.payment_instructions')
                         ->label('')
-                        ->markdown()
-                        ->state("**Please transfer payment to the following account:**\n\n- **Bank:** Bank Central Asia (BCA)\n- **Account Number:** 1234567890\n- **Account Name:** PT Kita Bisa\n\nPlease include your registration number as the transfer description.\n\nAfter making the transfer, please upload the payment proof above.")]),
+                        ->html()
+                        ->placeholder(__('No payment instructions available.')),
+                ]),
 
             Section::make(__('Participants'))
                 ->schema([

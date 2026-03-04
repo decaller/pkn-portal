@@ -3,20 +3,20 @@
 namespace App\Filament\Admin\Resources\Events\Schemas;
 
 use App\Enums\EventType;
+use Filament\Forms\Components\Builder;
+use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
+use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Illuminate\Support\Str;
-use Filament\Forms\Components\Builder;
-use Filament\Forms\Components\Builder\Block;
-use Filament\Forms\Components\TagsInput;
 
 class EventForm
 {
@@ -197,6 +197,13 @@ class EventForm
 
             Section::make(__('Description'))
                 ->schema([RichEditor::make('description')->columnSpanFull()])
+                ->columnSpanFull(),
+            Section::make(__('Payment Instructions'))
+                ->schema([
+                    RichEditor::make('payment_instructions')
+                        ->label(__('Payment Instructions'))
+                        ->columnSpanFull(),
+                ])
                 ->columnSpanFull(),
             Section::make(__('Event Rundown'))
                 ->description(__('Add sessions, speakers, and materials.'))

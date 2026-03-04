@@ -11,4 +11,14 @@ class WelcomeWidget extends Widget
     protected static ?int $sort = 1;
 
     protected string $view = 'filament.user.widgets.welcome-widget';
+
+    protected function getViewData(): array
+    {
+        return [
+            'lastRegistration' => \App\Models\EventRegistration::with(['participants', 'event'])
+                ->where('booker_user_id', auth()->id())
+                ->latest()
+                ->first(),
+        ];
+    }
 }

@@ -2,8 +2,11 @@
 
 namespace App\Filament\User\Auth;
 
+use App\Enums\PaymentStatus;
+use App\Enums\RegistrationStatus;
 use App\Filament\User\Resources\EventRegistrations\Schemas\EventRegistrationForm;
 use App\Models\Event;
+use App\Models\EventRegistration;
 use App\Models\Organization;
 use App\Models\Setting;
 use Filament\Actions\Action;
@@ -28,6 +31,8 @@ use Illuminate\Validation\ValidationException;
 class RegisterEvent extends BaseRegister
 {
     protected Width|string|null $maxWidth = Width::FourExtraLarge;
+
+    protected ?EventRegistration $createdRegistration = null;
 
     public function form(Schema $schema): Schema
     {
@@ -125,8 +130,8 @@ class RegisterEvent extends BaseRegister
                     ->revealable(filament()->arePasswordsRevealable())
                     ->required()
                     ->minLength(8)
-                    ->dehydrateStateUsing(fn ($state) => Hash::make($state))
-                    ->same('passwordConfirmation'),
+                    ->dehydrateStateUsing(fn ($state) => Hash::make($state)),
+                // ->same('passwordConfirmation'),
                 // TextInput::make("passwordConfirmation")
                 //     ->label(
                 //         __(
@@ -156,7 +161,7 @@ class RegisterEvent extends BaseRegister
         return [
             $this->getHelpAction(),
             $this->getRegisterFormAction(),
-            
+
         ];
     }
 
@@ -171,6 +176,27 @@ class RegisterEvent extends BaseRegister
                 shouldOpenInNewTab: true,
             )
             ->visible(fn (): bool => filled(Setting::defaultContactWhatsAppUrl()));
+    }
+
+    public function register(): ?\Filament\Auth\Http\Responses\Contracts\RegistrationResponse
+    {
+        $response = parent::register();
+
+        if ($this->createdRegistration) {
+            return new class($this) implements \Filament\Auth\Http\Responses\Contracts\RegistrationResponse
+            {
+                public function __construct(
+                    private \App\Filament\User\Auth\RegisterEvent $page
+                ) {}
+
+                public function toResponse($request): \Illuminate\Http\RedirectResponse|\Livewire\Features\SupportRedirects\Redirector
+                {
+                    return redirect()->to($this->page->getRedirectUrl());
+                }
+            };
+        }
+
+        return $response;
     }
 
     protected function handleRegistration(array $data): Model
@@ -200,8 +226,22 @@ class RegisterEvent extends BaseRegister
             ]);
 
             $registrationType = $data['registration_type'] ?? 'personal';
+            $organization = null;
 
-            if ($registrationType === 'existing') {
+            if ($registrationType === 'personal') {
+                $baseSlug = Str::slug("personal-{$data['name']}-".uniqid());
+                $slug = $this->makeUniqueOrganizationSlug($baseSlug);
+
+                $organization = Organization::create([
+                    'name' => "Personal - {$data['name']}",
+                    'slug' => $slug,
+                    'admin_user_id' => $user->getKey(),
+                ]);
+
+                $organization->users()->syncWithoutDetaching([
+                    $user->getKey() => ['role' => 'admin'],
+                ]);
+            } elseif ($registrationType === 'existing') {
                 $organization = Organization::query()
                     ->whereKey($data['existing_organization_id'])
                     ->whereRaw('LOWER(slug) NOT LIKE ?', ['%pkn%'])
@@ -228,8 +268,37 @@ class RegisterEvent extends BaseRegister
                 ]);
             }
 
+            // After user and organization creation, create Event Registration if applicable
+            if ($data['is_registering_for_event'] ?? false) {
+                if (! empty($data['event_id'])) {
+                    $this->createdRegistration = EventRegistration::create([
+                        'event_id' => $data['event_id'],
+                        'organization_id' => $organization?->getKey() ?? null,
+                        'booker_user_id' => $user->getKey(),
+                        'package_breakdown' => $data['package_breakdown'] ?? null,
+                        'total_amount' => $data['total_amount'] ?? 0,
+                        'status' => RegistrationStatus::Draft->value,
+                        'payment_status' => PaymentStatus::Unpaid->value,
+                    ]);
+                }
+            }
+
             return $user;
         });
+    }
+
+    public function getRedirectUrl(): string
+    {
+        if ($this->createdRegistration) {
+            $tenant = $this->createdRegistration->organization ?? filament()->getTenant();
+
+            return \App\Filament\User\Resources\EventRegistrations\EventRegistrationResource::getUrl('view', [
+                'tenant' => $tenant,
+                'record' => $this->createdRegistration,
+            ]);
+        }
+
+        return parent::getRedirectUrl();
     }
 
     /**
@@ -271,6 +340,7 @@ class RegisterEvent extends BaseRegister
     {
         return Organization::query()
             ->whereRaw('LOWER(slug) NOT LIKE ?', ['%pkn%'])
+            ->where('name', 'not like', 'Personal - %')
             ->orderBy('name')
             ->get(['id', 'name', 'logo'])
             ->mapWithKeys(
@@ -287,7 +357,7 @@ class RegisterEvent extends BaseRegister
         $logoUrl = self::organizationLogoUrl($organization->logo);
 
         if (! $logoUrl) {
-            return "<div class=\"flex items-center gap-2\"><span class=\"inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gray-200 text-[10px] font-semibold text-gray-700 dark:bg-gray-700 dark:text-gray-100\">NA</span><span class=\"leading-5\">{$name}</span></div>";
+            return "<div class=\"flex items-center gap-2\"><span class=\"inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-gray-200 text-[10px] font-semibold text-gray-700 dark:bg-gray-700 dark:text-gray-100\"></span><span class=\"leading-5\">{$name}</span></div>";
         }
 
         return "<div class=\"flex items-center gap-2\"><img src=\"{$logoUrl}\" alt=\"{$name}\" class=\"h-6 w-6 shrink-0 rounded-full object-cover ring-1 ring-gray-200 dark:ring-gray-700\" width=\"100\" height=\"100\" /><span class=\"leading-5\">{$name}</span></div>";

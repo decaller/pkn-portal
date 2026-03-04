@@ -22,158 +22,162 @@ class DatabaseSeeder extends Seeder
         // User::factory(10)->create();
         $defaultPackages = [
             [
-                "name" => "Regular",
-                "price" => 100000,
+                'name' => 'Regular',
+                'price' => 100000,
             ],
             [
-                "name" => "VIP",
-                "price" => 250000,
+                'name' => 'VIP',
+                'price' => 250000,
             ],
         ];
         $regionalPackages = [
             [
-                "name" => "Regular",
-                "price" => 75000,
+                'name' => 'Regular',
+                'price' => 75000,
             ],
             [
-                "name" => "VIP",
-                "price" => 200000,
+                'name' => 'VIP',
+                'price' => 200000,
             ],
         ];
 
+        $samplePaymentInstructions = '<p><strong>Please transfer payment to the following account:</strong></p><ul><li><strong>Bank:</strong> Bank Central Asia (BCA)</li><li><strong>Account Number:</strong> 1234567890</li><li><strong>Account Name:</strong> PT Kita Bisa</li></ul><p>Please include your registration number as the transfer description.</p><p>After making the transfer, please upload the payment proof above.</p>';
+
         $admin = User::updateOrCreate(
-            ["email" => "harridiilmantovid@gmail.com"],
+            ['email' => 'harridiilmantovid@gmail.com'],
             [
-                "name" => "Admin",
-                "phone_number" => "081100000001",
-                "password" => Hash::make("cemara153"), // Change this later!
-                "is_super_admin" => true,
+                'name' => 'Admin',
+                'phone_number' => '081100000001',
+                'password' => Hash::make('cemara153'), // Change this later!
+                'is_super_admin' => true,
             ],
         );
 
         $pkn = Organization::firstOrCreate(
-            ["slug" => "pkn"],
+            ['slug' => 'pkn'],
             [
-                "name" => "PKN",
-                "admin_user_id" => $admin->id,
+                'name' => 'PKN',
+                'admin_user_id' => $admin->id,
             ],
         );
 
         $pkn->users()->syncWithoutDetaching([
-            $admin->id => ["role" => "admin"],
+            $admin->id => ['role' => 'admin'],
         ]);
 
         $ybitAdmin = User::updateOrCreate(
-            ["email" => "admin.ybit@example.com"],
+            ['email' => 'admin.ybit@example.com'],
             [
-                "name" => "YBIT Admin",
-                "phone_number" => "081100000002",
-                "password" => Hash::make("password123"),
-                "is_super_admin" => false,
+                'name' => 'YBIT Admin',
+                'phone_number' => '081100000002',
+                'password' => Hash::make('password123'),
+                'is_super_admin' => false,
             ],
         );
 
         $ybitMember = User::updateOrCreate(
-            ["email" => "member.ybit@example.com"],
+            ['email' => 'member.ybit@example.com'],
             [
-                "name" => "YBIT Member",
-                "phone_number" => "081100000003",
-                "password" => Hash::make("password123"),
-                "is_super_admin" => false,
+                'name' => 'YBIT Member',
+                'phone_number' => '081100000003',
+                'password' => Hash::make('password123'),
+                'is_super_admin' => false,
             ],
         );
 
         $ybit = Organization::updateOrCreate(
-            ["slug" => "ybit"],
+            ['slug' => 'ybit'],
             [
-                "name" => "Yayasan Bina Insan Taqwa",
-                "admin_user_id" => $ybitAdmin->id,
+                'name' => 'Yayasan Bina Insan Taqwa',
+                'admin_user_id' => $ybitAdmin->id,
             ],
         );
 
         $ybit->users()->syncWithoutDetaching([
-            $ybitAdmin->id => ["role" => "admin"],
-            $ybitMember->id => ["role" => "member"],
+            $ybitAdmin->id => ['role' => 'admin'],
+            $ybitMember->id => ['role' => 'member'],
         ]);
 
         Event::updateOrCreate(
-            ["slug" => "pkn-national-conference-2026"],
+            ['slug' => 'pkn-national-conference-2026'],
             [
-                "title" => "PKN National Conference 2026",
-                "description" => "Annual national offline conference by PKN.",
-                "event_date" => now()->addMonths(3)->toDateString(),
-                "is_published" => true,
-                "allow_registration" => true,
-                "registration_packages" => $defaultPackages,
+                'title' => 'PKN National Conference 2026',
+                'description' => 'Annual national offline conference by PKN.',
+                'event_date' => now()->addMonths(3)->toDateString(),
+                'is_published' => true,
+                'allow_registration' => true,
+                'registration_packages' => $defaultPackages,
+                'payment_instructions' => $samplePaymentInstructions,
             ],
         );
 
         Event::updateOrCreate(
-            ["slug" => "pkn-regional-workshop-2026"],
+            ['slug' => 'pkn-regional-workshop-2026'],
             [
-                "title" => "PKN Regional Workshop 2026",
-                "description" =>
-                    "Regional offline workshop and networking session.",
-                "event_date" => now()->addMonths(6)->toDateString(),
-                "is_published" => true,
-                "allow_registration" => true,
-                "registration_packages" => $regionalPackages,
+                'title' => 'PKN Regional Workshop 2026',
+                'description' => 'Regional offline workshop and networking session.',
+                'event_date' => now()->addMonths(6)->toDateString(),
+                'is_published' => true,
+                'allow_registration' => true,
+                'registration_packages' => $regionalPackages,
+                'payment_instructions' => $samplePaymentInstructions,
             ],
         );
 
         // Past events for testing (registrations disabled to avoid validation errors)
         Event::updateOrCreate(
-            ["slug" => "pkn-recap-2023"],
+            ['slug' => 'pkn-recap-2023'],
             [
-                "title" => "PKN Recap 2023",
-                "description" => "Past recap event used for tests.",
-                "event_date" => now()->subYears(1)->toDateString(),
-                "is_published" => true,
-                "allow_registration" => false,
-                "registration_packages" => $defaultPackages,
+                'title' => 'PKN Recap 2023',
+                'description' => 'Past recap event used for tests.',
+                'event_date' => now()->subYears(1)->toDateString(),
+                'is_published' => true,
+                'allow_registration' => false,
+                'registration_packages' => $defaultPackages,
+                'payment_instructions' => $samplePaymentInstructions,
             ],
         );
 
         Event::updateOrCreate(
-            ["slug" => "pkn-mini-summit-2024"],
+            ['slug' => 'pkn-mini-summit-2024'],
             [
-                "title" => "PKN Mini Summit 2024",
-                "description" => "Past mini summit used for testing.",
-                "event_date" => now()->subMonths(8)->toDateString(),
-                "is_published" => true,
-                "allow_registration" => false,
-                "registration_packages" => $regionalPackages,
+                'title' => 'PKN Mini Summit 2024',
+                'description' => 'Past mini summit used for testing.',
+                'event_date' => now()->subMonths(8)->toDateString(),
+                'is_published' => true,
+                'allow_registration' => false,
+                'registration_packages' => $regionalPackages,
+                'payment_instructions' => $samplePaymentInstructions,
             ],
         );
 
         Event::query()
-            ->whereNull("registration_packages")
+            ->whereNull('registration_packages')
             ->update([
-                "registration_packages" => $defaultPackages,
+                'registration_packages' => $defaultPackages,
             ]);
 
         Event::query()
-            ->where("allow_registration", true)
-            ->whereDate("event_date", ">=", now()->toDateString())
+            ->where('allow_registration', true)
+            ->whereDate('event_date', '>=', now()->toDateString())
             ->get()
             ->each(function (Event $event) use ($ybit): void {
                 $registrationUrl = route(
-                    "filament.user.resources.event-registrations.create",
+                    'filament.user.resources.event-registrations.create',
                     [
-                        "tenant" => $ybit->slug,
-                        "event_id" => $event->getKey(),
+                        'tenant' => $ybit->slug,
+                        'event_id' => $event->getKey(),
                     ],
                 );
 
                 News::updateOrCreate(
-                    ["title" => "Registration Open: {$event->title}"],
+                    ['title' => "Registration Open: {$event->title}"],
                     [
-                        "content" =>
-                            "<p>Registration is now open for <strong>{$event->title}</strong> on {$event->event_date?->format(
-                                "d M Y",
-                            )}.</p>" .
+                        'content' => "<p>Registration is now open for <strong>{$event->title}</strong> on {$event->event_date?->format(
+                            'd M Y',
+                        )}.</p>".
                             "<p><a href=\"{$registrationUrl}\">Click here to register now</a>.</p>",
-                        "is_published" => true,
+                        'is_published' => true,
                     ],
                 );
             });
