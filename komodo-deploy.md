@@ -23,11 +23,12 @@ In the Komodo UI, create a new **Build**:
 
 Create a new **Stack** in Komodo:
 
-1. **Compose File**: Copy the contents of `docker-compose.prod.yml` into the Stack's Compose editor, or link it directly from the Git repository.
+1. **Compose File Source**:
+    - Link `docker-compose.prod.yml` directly from your Git repository (if using "Git" source).
+    - Alternatively, copy the contents of `docker-compose.prod.yml` into the Komodo Compose editor.
 2. **Environment Variables**:
-    - Create a `.env` file in the Stack's "Variables" section.
-    - Use the variables from `.env.production.example` as a template.
-    - **Important**: Set `APP_KEY` to a secure 32-character string.
+    - Pass your environment variables (from `.env.production.example`) using Komodo's **Variable** tab or an uploaded `.env` file in the Stack directory.
+    - **Important**: Ensure `APP_KEY` is set to a secure 32-character string.
     - **Important**: Set `RUN_MIGRATIONS=true` if you want the first deployment to run database migrations automatically.
 
 ## 4. Step 3: Deployment

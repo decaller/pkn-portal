@@ -1,11 +1,9 @@
+# this is the komodo compose file, you have to build the image first in komodo
+
 services:
   app:
-    build:
-      context: .
-      dockerfile: docker/production/Dockerfile
+    # Komodo will build the image. Ensure the Build 'Image Name' matches this.
     image: pkn-portal-app:latest
-    env_file:
-      - .env.production
     depends_on:
       pgsql:
         condition: service_healthy
@@ -29,6 +27,7 @@ services:
     ports:
       - "${APP_PORT:-80}:80"
     volumes:
+      # Ensure this path is correct if the stack is Git-backed in Komodo
       - ./docker/production/nginx/default.conf:/etc/nginx/conf.d/default.conf:ro
       - public_storage:/var/www/html/public/storage
     restart: unless-stopped
@@ -40,8 +39,6 @@ services:
 
   worker:
     image: pkn-portal-app:latest
-    env_file:
-      - .env.production
     depends_on:
       app:
         condition: service_healthy
@@ -54,8 +51,6 @@ services:
 
   scheduler:
     image: pkn-portal-app:latest
-    env_file:
-      - .env.production
     depends_on:
       app:
         condition: service_healthy
