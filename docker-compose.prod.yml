@@ -3,7 +3,7 @@
 services:
   app:
     # Komodo will build the image. Ensure the Build 'Image Name' matches this.
-    image: pkn-portal-app:latest
+    image: pkn-portal:latest
     depends_on:
       pgsql:
         condition: service_healthy
@@ -38,7 +38,7 @@ services:
       retries: 3
 
   worker:
-    image: pkn-portal-app:latest
+    image: pkn-portal:latest
     depends_on:
       app:
         condition: service_healthy
@@ -50,7 +50,7 @@ services:
     restart: unless-stopped
 
   scheduler:
-    image: pkn-portal-app:latest
+    image: pkn-portal:latest
     depends_on:
       app:
         condition: service_healthy
