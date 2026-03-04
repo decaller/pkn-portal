@@ -1,59 +1,151 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# PKN Portal
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+PKN Portal is a multi-panel event platform built with Laravel 12 + Filament 5.
 
-## About Laravel
+It supports three main audiences:
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Public visitors: browse published events and news
+- Members/users: register accounts, manage event registrations, and access member features
+- Admins: manage events, registrations, organizations, users, content, and analytics
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Tech Stack
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- PHP 8.2
+- Laravel 12
+- Filament 5
+- PostgreSQL
+- Redis
+- Tailwind CSS / Vite
+- Laravel Sail (local Docker development)
 
-## Learning Laravel
+## Panels and URLs
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+Default panel paths:
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- Public panel: `/public`
+- User panel: `/user`
+- Admin panel: `/admin`
 
-## Laravel Sponsors
+Home page is served at `/` and links into the panels.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Core Features
 
-### Premium Partners
+- Event management with date, location, capacity, packages, and rundown
+- Public event/news listing
+- User registration/login using phone number
+- Organization-based membership (create new or join existing)
+- Event registration flow with participants and package breakdown
+- Invoice and payment proof handling
+- Surveys and testimonials
+- Analytics and document indexing integrations
+- Multi-language support (English / Indonesian)
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+## Local Development (Sail)
 
-## Contributing
+### 1. Install dependencies
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+```bash
+composer install
+npm install
+```
 
-## Code of Conduct
+### 2. Create environment file
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+```bash
+cp .env.example .env
+```
 
-## Security Vulnerabilities
+### 3. Start Sail services
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```bash
+./vendor/bin/sail up -d
+```
+
+### 4. Generate app key and migrate
+
+```bash
+./vendor/bin/sail artisan key:generate
+./vendor/bin/sail artisan migrate
+```
+
+### 5. Build frontend assets
+
+```bash
+./vendor/bin/sail npm run dev
+```
+
+## Useful Commands
+
+- Run tests:
+```bash
+./vendor/bin/sail artisan test
+```
+
+- Format code:
+```bash
+./vendor/bin/sail php ./vendor/bin/pint
+```
+
+- Queue worker (manual):
+```bash
+./vendor/bin/sail artisan queue:work
+```
+
+## Deployment (Docker, Production)
+
+This repository includes a production Docker setup aligned with Filament deployment guidance.
+
+### Files
+
+- `docker-compose.prod.yml`
+- `docker/production/Dockerfile`
+- `docker/production/nginx/default.conf`
+- `docker/production/entrypoint.sh`
+- `.env.production.example`
+
+### 1. Prepare environment
+
+```bash
+cp .env.production.example .env.production
+```
+
+Set real values in `.env.production` (`APP_URL`, database credentials, SMTP, etc.).
+
+Generate an app key:
+
+```bash
+docker compose -f docker-compose.prod.yml run --rm app php artisan key:generate --show
+```
+
+Copy the printed key into `APP_KEY=` in `.env.production`.
+
+### 2. Build and start
+
+```bash
+docker compose -f docker-compose.prod.yml up -d --build
+```
+
+### 3. Run migrations
+
+```bash
+docker compose -f docker-compose.prod.yml exec app php artisan migrate --force
+```
+
+### 4. Verify container health/logs
+
+```bash
+docker compose -f docker-compose.prod.yml ps
+docker compose -f docker-compose.prod.yml logs -f app nginx worker scheduler
+```
+
+### Notes
+
+- `entrypoint.sh` runs:
+  - `php artisan optimize`
+  - `php artisan filament:optimize`
+- Queue worker and scheduler run in dedicated containers.
+- Nginx serves `public/` and forwards PHP to the `app` container.
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is open-sourced software licensed under the MIT license.
