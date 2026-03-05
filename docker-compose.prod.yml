@@ -35,9 +35,10 @@ x-laravel-env: &laravel-env
 
 services:
   app:
-    # Pull the image from the registry instead of building it natively.
-    image: ${IMAGE_NAME:-ghcr.io/username/pkn-portal}:latest
-    pull_policy: always
+    build:
+      context: .
+      dockerfile: docker/production/Dockerfile
+    image: pkn-portal:latest
     environment: *laravel-env
     depends_on:
       pgsql:
@@ -123,8 +124,7 @@ services:
       retries: 3
 
   worker:
-    image: ${IMAGE_NAME:-ghcr.io/username/pkn-portal}:latest
-    pull_policy: always
+    image: pkn-portal:latest
     environment: *laravel-env
     depends_on:
       app:
@@ -137,8 +137,7 @@ services:
     restart: unless-stopped
 
   scheduler:
-    image: ${IMAGE_NAME:-ghcr.io/username/pkn-portal}:latest
-    pull_policy: always
+    image: pkn-portal:latest
     environment: *laravel-env
     depends_on:
       app:
