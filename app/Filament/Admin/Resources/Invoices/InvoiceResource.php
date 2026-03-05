@@ -13,7 +13,6 @@ use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
-use UnitEnum;
 
 class InvoiceResource extends Resource
 {
@@ -23,9 +22,15 @@ class InvoiceResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedDocumentText;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Event Management';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Event Management');
+    }
 
-    protected static ?string $navigationLabel = 'Invoices';
+    public static function getNavigationLabel(): string
+    {
+        return __('Invoices');
+    }
 
     public static function form(Schema $schema): Schema
     {

@@ -33,12 +33,12 @@ class TopViewedNews extends TableWidget
                 // 2. Title
                 TextColumn::make('title')
                     ->weight('bold')
-                    ->label('Article')
+                    ->label(__('Article'))
                     ->limit(50),
 
                 // 3. The View Count (The most important part)
                 TextColumn::make('analytics_count')
-                    ->label('Total Views')
+                    ->label(__('Total Views'))
                     ->badge()
                     ->color('success') // Green looks positive for high views
                     ->sortable(),
@@ -46,7 +46,7 @@ class TopViewedNews extends TableWidget
                 // 4. Date
                 TextColumn::make('created_at')
                     ->dateTime()
-                    ->label('Posted On')
+                    ->label(__('Posted On'))
                     ->sortable(),
             ])
             // Let's only show the top 5 so it doesn't clutter the page

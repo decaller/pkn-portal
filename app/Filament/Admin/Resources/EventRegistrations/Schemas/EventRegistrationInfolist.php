@@ -60,7 +60,7 @@ class EventRegistrationInfolist
             Section::make(__('Payment Proof'))
                 ->schema([
                     ImageEntry::make('payment_proof_path')
-                        ->label('Payment Document / Receipt')
+                        ->label(__('Payment Document / Receipt'))
                         ->hiddenLabel()
                         ->placeholder(__('No payment proof uploaded yet.'))
                         ->columnSpanFull()
@@ -69,18 +69,18 @@ class EventRegistrationInfolist
 
                     ViewEntry::make('payment_proof_pdf')
                         ->statePath('payment_proof_path')
-                        ->label('Payment Document / Receipt')
+                        ->label(__('Payment Document / Receipt'))
                         ->hiddenLabel()
                         ->view('filament.components.pdf-viewer')
                         ->columnSpanFull()
                         ->visible(fn ($record) => $record->payment_proof_path && str_ends_with(strtolower((string) $record->payment_proof_path), '.pdf')),
                 ]),
             Section::make(function (EventRegistration $record): string {
-                    $added = (int) ($record->participants_count ?? $record->participants()->count());
-                    $max = (int) collect($record->package_breakdown ?? [])->sum('participant_count');
+                $added = (int) ($record->participants_count ?? $record->participants()->count());
+                $max = (int) collect($record->package_breakdown ?? [])->sum('participant_count');
 
-                    return "Participants ({$added} of {$max})";
-                })
+                return "Participants ({$added} of {$max})";
+            })
                 ->schema([
                     RepeatableEntry::make('participants')
                         ->label('')
@@ -136,7 +136,7 @@ class EventRegistrationInfolist
 
                                             Notification::make()
                                                 ->title(__('Credentials copied to clipboard'))
-                                                ->body("Password reset for **{$user->name}**. Full credentials have been copied.")
+                                                ->body(__('Password reset for **:name**. Full credentials have been copied.', ['name' => $user->name]))
                                                 ->success()
                                                 ->persistent()
                                                 ->send();
@@ -257,7 +257,7 @@ class EventRegistrationInfolist
                                 ->label(__('Issued'))
                                 ->dateTime(),
                             TextEntry::make('id')
-                                ->label('PDF')
+                                ->label(__('PDF'))
                                 ->formatStateUsing(
                                     fn (): string => __('Download PDF'),
                                 )

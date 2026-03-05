@@ -22,6 +22,7 @@ class EventRegistrationForm
     {
         return [
             Select::make('event_id')
+                ->helperText(__('Select the event you wish to register for.'))
                 ->options(
                     fn (): array => self::availableEventsQuery()
                         ->pluck('title', 'id')
@@ -83,12 +84,16 @@ class EventRegistrationForm
                             ),
                         ),
                 ),
+            \Filament\Forms\Components\Placeholder::make('package_instructions')
+                ->label('')
+                ->content(__('Select the registration packages and set the number of participants for each.')),
             Repeater::make('package_breakdown')
                 ->label('Package participants')
                 ->columnSpanFull()
                 ->schema([
                     Select::make('package_name')
                         ->label('Package')
+                        ->placeholder(__('Choose a package'))
                         ->options(
                             fn (Get $get): array => self::packageOptions(
                                 $get('../../event_id'),
@@ -128,6 +133,7 @@ class EventRegistrationForm
                         ->required(),
                     TextInput::make('participant_count')
                         ->label('Participants')
+                        ->helperText(__('Number of people for this package.'))
                         ->numeric()
                         ->minValue(1)
                         ->default(1)
@@ -318,6 +324,7 @@ class EventRegistrationForm
                 fn () => filament()->getTenant()?->getKey(),
             ),
             TextInput::make('total_amount')
+                ->helperText(__('Total amount payable for this registration.'))
                 ->numeric()
                 ->prefix('IDR')
                 ->readOnly()

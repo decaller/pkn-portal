@@ -18,9 +18,14 @@ class EditOrganizationProfile extends EditTenantProfile
     public function form(Schema $schema): Schema
     {
         return $schema->components([
-            TextInput::make('name')->label(__('Name'))->required()->maxLength(255),
+            TextInput::make('name')
+                ->label(__('Name'))
+                ->helperText(__('The official name of your organization.'))
+                ->required()
+                ->maxLength(255),
             TextInput::make('slug')
                 ->label(__('Slug'))
+                ->helperText(__('A unique, URL-friendly name (e.g., \'acme-corp\').'))
                 ->required()
                 ->alphaDash()
                 ->maxLength(255)
@@ -33,6 +38,7 @@ class EditOrganizationProfile extends EditTenantProfile
                 ->disk('public')
                 ->visibility('public')
                 ->directory('organization-logos')
+                ->helperText(__('Upload a square image (JPG, PNG). Recommended size: 256x256 pixels. Max 2MB.'))
                 ->imageEditor(),
         ]);
     }

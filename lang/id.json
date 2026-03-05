@@ -34,7 +34,6 @@
     "Success": "Berhasil",
     "Error": "Kesalahan",
     "Warning": "Peringatan",
-
     "Event Management": "Manajemen Acara",
     "Content Management": "Manajemen Konten",
     "System Administration": "Administrasi Sistem",
@@ -50,7 +49,6 @@
     "Finance": "Keuangan",
     "Public Events": "Acara Publik",
     "Public Information": "Informasi Publik",
-
     "User": "Pengguna",
     "Target Item": "Item Target",
     "Device/Platform": "Perangkat/Platform",
@@ -62,13 +60,11 @@
     "Are you sure you want to completely verify this invoice payment? The registration will be marked as paid.": "Apakah Anda yakin ingin memverifikasi pembayaran tagihan ini? Pendaftaran akan ditandai sebagai lunas.",
     "Yes, mark as Verified": "Ya, tandai sebagai Terverifikasi",
     "Payment Verified": "Pembayaran Terverifikasi",
-
     "User registrations": "Pendaftaran Pengguna",
     "My registrations": "Pendaftaran Saya",
     "Organizations": "Organisasi",
     "Users": "Pengguna",
     "Organization users": "Pengguna Organisasi",
-
     "Event Identity": "Identitas Acara",
     "Basic information and folder naming.": "Informasi dasar dan penamaan folder.",
     "Folder Name (Auto-generated)": "Nama Folder (Dibuat Otomatis)",
@@ -112,7 +108,6 @@
     "e.g. Watch on YouTube": "mis. Tonton di YouTube",
     "Add Link": "Tambah Tautan",
     "Add Session Block": "Tambah Blok Sesi",
-
     "Event Date": "Tanggal Acara",
     "Type": "Jenis",
     "Published": "Diterbitkan",
@@ -121,7 +116,6 @@
     "Register": "Daftar",
     "Date": "Tanggal",
     "Event": "Acara",
-
     "Event Guidelines": "Panduan Acara",
     "Map URL": "URL Peta",
     "Duration": "Durasi",
@@ -143,7 +137,6 @@
     "View Proposal": "Lihat Proposal",
     "Preview": "Pratinjau",
     "Download": "Unduh",
-
     "Registration details": "Detail Pendaftaran",
     "Booked by": "Dipesan oleh",
     "Organization": "Organisasi",
@@ -175,7 +168,6 @@
     "No payment proof uploaded yet.": "Belum ada bukti pembayaran yang diunggah.",
     "Verified By": "Diverifikasi Oleh",
     "Total Participants": "Total Peserta",
-
     "Registration": "Pendaftaran",
     "View Event": "Lihat Acara",
     "Edit Registration": "Edit Pendaftaran",
@@ -190,7 +182,6 @@
     "Add package row": "Tambah baris paket",
     "Booker": "Pemesan",
     "Verified by": "Diverifikasi oleh",
-
     "Main Content": "Konten Utama",
     "The primary information for this news post.": "Informasi utama untuk posting berita ini.",
     "Metadata": "Metadata",
@@ -199,7 +190,6 @@
     "Link this news to a specific event to drive registrations.": "Hubungkan berita ini dengan acara tertentu untuk mendorong pendaftaran.",
     "Event Name": "Nama Acara",
     "Register Now": "Daftar Sekarang",
-
     "Organization details": "Detail Organisasi",
     "Organization admin": "Admin organisasi",
     "Members": "Anggota",
@@ -208,15 +198,12 @@
     "Admin": "Admin",
     "Logo": "Logo",
     "User list": "Daftar pengguna",
-
     "Account": "Akun",
     "Main admin": "Admin utama",
-
     "Question": "Pertanyaan",
     "Short Text": "Teks Pendek",
     "Long Text (Paragraph)": "Teks Panjang (Paragraf)",
     "Rating (1-5)": "Penilaian (1-5)",
-
     "Registered User (Optional)": "Pengguna Terdaftar (Opsional)",
     "Guest Name": "Nama Tamu",
     "Leave blank if User is selected": "Kosongkan jika Pengguna dipilih",
@@ -226,7 +213,6 @@
     "4 Stars": "4 Bintang",
     "5 Stars": "5 Bintang",
     "Approved & Published": "Disetujui & Diterbitkan",
-
     "Tagihan": "Tagihan",
     "Registration ID": "ID Pendaftaran",
     "Event date": "Tanggal acara",
@@ -236,15 +222,12 @@
     "Unit": "Satuan",
     "Line total": "Total baris",
     "Registration Snapshot": "Snapshot Pendaftaran",
-
     "General Information": "Informasi Umum",
     "Extracted Content": "Konten Terekstrak",
     "Content read by Apache Tika": "Konten dibaca oleh Apache Tika",
     "File Preview": "Pratinjau File",
-
     "Keywords": "Kata Kunci",
     "Full Text": "Teks Lengkap",
-
     "Version": "Versi",
     "Status": "Status",
     "Payment Status": "Status Pembayaran",
@@ -257,18 +240,14 @@
     "Voided at": "Dibatalkan pada",
     "Void reason": "Alasan pembatalan",
     "Updated": "Diperbarui",
-
-
     "Welcome": "Selamat Datang",
     "Manage your event registrations from this dashboard.": "Kelola pendaftaran acara Anda dari dasbor ini.",
-
     "Active Future Events": "Acara Mendatang Aktif",
     "Published events allowing registration": "Acara diterbitkan yang mengizinkan pendaftaran",
     "Pending Verifications": "Verifikasi Tertunda",
     "Awaiting payment verification": "Menunggu verifikasi pembayaran",
     "Connected Users": "Pengguna Terhubung",
     "Users affiliated with this space": "Pengguna yang berafiliasi dengan ruang ini",
-
     "My Event Registrations": "Pendaftaran Acara Saya",
     "Event Registration": "Pendaftaran Acara",
     "Event Registrations": "Pendaftaran Acara",
@@ -277,7 +256,6 @@
     "No events are open for registration right now.": "Tidak ada acara yang terbuka untuk pendaftaran saat ini.",
     "Past events": "Acara Lampau",
     "No past events.": "Tidak ada acara lampau.",
-
     "Latest news": "Berita terbaru",
     "No published news yet.": "Belum ada berita yang diterbitkan.",
     "Read Article": "Baca Artikel",
@@ -289,12 +267,56 @@
     "Please upload your payment proof and add all participants to complete your registration.": "Silakan unggah bukti pembayaran Anda dan tambahkan semua peserta untuk menyelesaikan pendaftaran Anda.",
     "Go to Event Page": "Buka Halaman Acara",
     "View Registration": "Lihat Pendaftaran",
-
     "Join / Create organization": "Bergabung / Buat organisasi",
     "Do you want to create a new organization or join an existing one?": "Apakah Anda ingin membuat organisasi baru atau bergabung dengan yang sudah ada?",
     "Create a new organization": "Buat organisasi baru",
     "Join an existing organization": "Bergabung dengan organisasi yang sudah ada",
     "Select Organization": "Pilih Organisasi",
     "Organization profile": "Profil organisasi",
-    "Slug": "Slug"
+    "Slug": "Slug",
+    "Analytics": "Analitik",
+    "Total Views": "Total Tayangan",
+    "Posted On": "Diposting Pada",
+    "Article": "Artikel",
+    "Document Title": "Judul Dokumen",
+    "Tags": "Tag",
+    "Indexed On": "Diindeks Pada",
+    "Personal details and roles.": "Detail pribadi dan peran.",
+    "Events this user is currently registered for or has attended in the past.": "Acara yang didaftarkan pengguna ini atau yang pernah dihadiri sebelumnya.",
+    "Active Registrations": "Pendaftaran Aktif",
+    "Previously Attended": "Pernah Dihadiri",
+    "Manual registration": "Pendaftaran Manual",
+    "Packages": "Paket",
+    "View Related Event": "Lihat Acara Terkait",
+    "Payment Document / Receipt": "Dokumen Pembayaran / Kwitansi",
+    "URL": "URL",
+    "Password reset for **:name**. Full credentials have been copied.": "Reset kata sandi untuk **:name**. Kredensial lengkap telah disalin.",
+    "PDF": "PDF",
+    "Select the registration packages and set the number of participants for each.": "Pilih paket pendaftaran dan tentukan jumlah peserta untuk masing-masing paket.",
+    "Upload a square image (JPG, PNG). Recommended size: 256x256 pixels. Max 2MB.": "Unggah gambar persegi (JPG, PNG). Ukuran yang disarankan: 256x256 piksel. Maks 2MB.",
+    "Upload an image (JPG, PNG). Recommended size: 1200x630 pixels. Max 2MB.": "Unggah gambar (JPG, PNG). Ukuran yang disarankan: 1200x630 piksel. Maks 2MB.",
+    "Upload a PDF or Image (JPG, PNG). Max 5MB per file.": "Unggah PDF atau Gambar (JPG, PNG). Maks 5MB per file.",
+    "Upload PDFs or Images (JPG, PNG). Max 5MB per file.": "Unggah PDF atau Gambar (JPG, PNG). Maks 5MB per file.",
+    "Upload presentation files or documents (PDF, PPTX, DOCX, ZIP). Max 10MB per file.": "Unggah file presentasi atau dokumen (PDF, PPTX, DOCX, ZIP). Maks 10MB per file.",
+    "Upload a scanned copy or screenshot of your payment receipt (JPG, PNG, PDF). Max 4MB.": "Unggah salinan pindaian atau tangkapan layar bukti pembayaran Anda (JPG, PNG, PDF). Maks 4MB.",
+    "Upload a scanned copy or screenshot of the payment receipt (JPG, PNG, PDF). Max 4MB.": "Unggah salinan pindaian atau tangkapan layar bukti pembayaran (JPG, PNG, PDF). Maks 4MB.",
+    "Minimum 8 characters. Your password will be used so you can upload your payment proof and add participant details later.": "Minimal 8 karakter. Kata sandi Anda akan digunakan agar Anda dapat mengunggah bukti pembayaran dan menambahkan detail peserta nanti.",
+    "By creating a PKN Portal account, you can easily register for future events, download your invoices, access your certificates, and manage your organization's members all in one place.": "Dengan membuat akun Portal PKN, Anda dapat dengan mudah mendaftar untuk acara mendatang, mengunduh faktur Anda, mengakses sertifikat Anda, dan mengelola anggota organisasi Anda semua di satu tempat.",
+    "Select the event you wish to register for.": "Pilih acara yang ingin Anda daftarkan.",
+    "Choose a package": "Pilih paket",
+    "Number of people for this package.": "Jumlah orang untuk paket ini.",
+    "Total amount payable for this registration.": "Total jumlah yang harus dibayar untuk pendaftaran ini.",
+    "This unique identifier is used in the event's web address.": "Pengenal unik ini digunakan dalam alamat web acara.",
+    "Total number of days the event will run.": "Total jumlah hari acara akan berlangsung.",
+    "Select a survey for participants to fill out after the event.": "Pilih survei untuk diisi peserta setelah acara.",
+    "Search for your organization by its official name.": "Cari organisasi Anda berdasarkan nama resminya.",
+    "Enter the official name of your organization.": "Masukkan nama resmi organisasi Anda.",
+    "A unique, URL-friendly name for your organization (e.g., 'acme-corp').": "Nama unik yang ramah URL untuk organisasi Anda (misalnya, 'acme-corp').",
+    "This email is used for communication and platform login.": "Email ini digunakan untuk komunikasi dan login platform.",
+    "The main contact number displayed for support inquiries.": "Nomor kontak utama yang ditampilkan untuk pertanyaan dukungan.",
+    "Select an existing user from your organization.": "Pilih pengguna yang ada dari organisasi Anda.",
+    "The official name of your organization.": "Nama resmi organisasi Anda.",
+    "A unique, URL-friendly name (e.g., 'acme-corp').": "Nama unik yang ramah URL (misalnya, 'acme-corp').",
+    "Choose whether you are participating individually or representing an organization.": "Pilih apakah Anda berpartisipasi secara individu atau mewakili sebuah organisasi.",
+    "Enter the official name of the new organization.": "Masukkan nama resmi organisasi baru."
 }

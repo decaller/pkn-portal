@@ -33,19 +33,19 @@ class TopViewedEvents extends TableWidget
                 // 2. Event Title
                 TextColumn::make('title')
                     ->weight('bold')
-                    ->label('Event Name')
+                    ->label(__('Event Name'))
                     ->limit(50),
 
                 // 4. View Count
                 TextColumn::make('analytics_count')
-                    ->label('Total Views')
+                    ->label(__('Total Views'))
                     ->badge()
                     ->color('success')
                     ->sortable(),
 
                 TextColumn::make('created_at')
                     ->dateTime()
-                    ->label('Posted On')
+                    ->label(__('Posted On'))
                     ->sortable(),
             ])
             ->paginated(false)

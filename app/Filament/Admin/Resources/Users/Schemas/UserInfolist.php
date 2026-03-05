@@ -15,16 +15,16 @@ class UserInfolist
         return $schema
             ->components([
                 Section::make('Profile')
-                    ->description('Personal details and roles.')
+                    ->description(__('Personal details and roles.'))
                     ->schema([
                         TextEntry::make('name'),
-                        TextEntry::make('phone_number')->label('Phone number'),
+                        TextEntry::make('phone_number')->label(__('Phone number')),
                         TextEntry::make('email'),
                         IconEntry::make('is_super_admin')
-                            ->label('Main admin')
+                            ->label(__('Main admin'))
                             ->boolean(),
                         TextEntry::make('organizations')
-                            ->label('Organizations')
+                            ->label(__('Organizations'))
                             ->state(fn (User $record): string => $record->organizations
                                 ->map(fn ($organization): string => $organization->name)
                                 ->join(', '))
@@ -33,10 +33,10 @@ class UserInfolist
                     ->columns(2),
 
                 Section::make('Event Involvement')
-                    ->description('Events this user is currently registered for or has attended in the past.')
+                    ->description(__('Events this user is currently registered for or has attended in the past.'))
                     ->schema([
                         TextEntry::make('registered_events')
-                            ->label('Active Registrations')
+                            ->label(__('Active Registrations'))
                             ->state(function (User $record): string {
                                 // We are looking for registrations where this user is the booker,
                                 // OR where they are listed as a participant.
@@ -56,7 +56,7 @@ class UserInfolist
                             ->placeholder('-'),
 
                         TextEntry::make('past_events')
-                            ->label('Previously Attended')
+                            ->label(__('Previously Attended'))
                             ->state(function (User $record): string {
                                 if (empty($record->past_events)) {
                                     return '-';

@@ -16,7 +16,7 @@ class ViewInvoice extends ViewRecord
     {
         return [
             Action::make('download_pdf')
-                ->label('Download PDF')
+                ->label(__('Download PDF'))
                 ->icon('heroicon-o-arrow-down-tray')
                 ->color('success')
                 ->action(
@@ -25,7 +25,7 @@ class ViewInvoice extends ViewRecord
                     ),
                 ),
             Action::make('view_registration')
-                ->label('View Registration')
+                ->label(__('View Registration'))
                 ->icon('heroicon-o-ticket')
                 ->color('gray')
                 ->url(fn (\App\Models\Invoice $record): string => EventRegistrationResource::getUrl('view', ['record' => $record->event_registration_id])),

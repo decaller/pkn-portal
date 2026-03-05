@@ -80,6 +80,7 @@ class ViewEventRegistration extends ViewRecord
                                             $get('user_id'),
                                         ))
                                         ->searchable()
+                                        ->helperText(__('Select an existing user from your organization.'))
                                         ->nullable()
                                         ->live()
                                         ->afterStateUpdated(function (
@@ -257,6 +258,7 @@ class ViewEventRegistration extends ViewRecord
                         ->visibility('public')
                         ->directory('payment-proofs')
                         ->maxSize(4096)
+                        ->helperText(__('Upload a scanned copy or screenshot of your payment receipt (JPG, PNG, PDF). Max 4MB.'))
                         ->required(),
                 ])
                 ->action(function (array $data): void {

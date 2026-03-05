@@ -36,6 +36,7 @@ class NewsForm
                             ->imageResizeMode('cover')
                             ->imageResizeTargetWidth('1200')
                             ->directory('news-thumbnails')
+                            ->helperText(__('Upload an image (JPG, PNG). Recommended size: 1200x630 pixels. Max 2MB.'))
                             ->imageEditor(),
 
                         Toggle::make('is_published')

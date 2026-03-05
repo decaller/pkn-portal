@@ -21,16 +21,17 @@ class OrganizationsTable
                     ->circular()
                     ->label(''),
                 TextColumn::make('name')
+                    ->translateLabel()
                     ->searchable()
                     ->sortable()
                     ->weight('bold'),
-                TextColumn::make('slug')->searchable(),
+                TextColumn::make('slug')->translateLabel()->searchable(),
                 TextColumn::make('admin.name')
                     ->label(__('Admin'))
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('users_count')->label(__('Members'))->badge(),
-                TextColumn::make('updated_at')->since(),
+                TextColumn::make('updated_at')->translateLabel()->since(),
             ])
             ->recordActions([ViewAction::make(), EditAction::make()])
             ->toolbarActions([

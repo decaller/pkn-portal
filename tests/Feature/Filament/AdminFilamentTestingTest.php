@@ -147,7 +147,7 @@ it('tests a custom filament action and notification on event registration edit',
     Livewire::test(EditEventRegistration::class, ['record' => $registration->getRouteKey()])
         ->assertActionExists('verify_payment')
         ->callAction('verify_payment')
-        ->assertNotified('Payment Verified');
+        ->assertNotified(__('Payment Verified'));
 
     $registration->refresh();
 

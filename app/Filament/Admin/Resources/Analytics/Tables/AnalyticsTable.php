@@ -20,6 +20,7 @@ class AnalyticsTable
 
                 // 2. Color-coded Action (View, Download, etc.)
                 TextColumn::make('action')
+                    ->translateLabel()
                     ->badge()
                     ->color(fn (string $state): string => match ($state) {
                         'view' => 'info',

@@ -42,6 +42,7 @@ class Settings extends Page
                     ->label(__('Default contact number'))
                     ->tel()
                     ->maxLength(30)
+                    ->helperText(__('The main contact number displayed for support inquiries.'))
                     ->required(),
             ])
             ->statePath('data');

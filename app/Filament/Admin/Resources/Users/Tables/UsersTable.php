@@ -17,6 +17,7 @@ class UsersTable
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->translateLabel()
                     ->searchable()
                     ->sortable()
                     ->weight('bold'),
@@ -24,6 +25,7 @@ class UsersTable
                     ->label(__('Phone'))
                     ->searchable(),
                 TextColumn::make('email')
+                    ->translateLabel()
                     ->searchable(),
                 TextColumn::make('organizations')
                     ->label(__('Organizations'))
@@ -35,6 +37,7 @@ class UsersTable
                     ->label(__('Main admin'))
                     ->boolean(),
                 TextColumn::make('updated_at')
+                    ->translateLabel()
                     ->since(),
             ])
             ->filters([

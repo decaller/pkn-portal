@@ -35,6 +35,7 @@ class InvoicesTable
                     ->badge()
                     ->sortable(),
                 TextColumn::make('status')
+                    ->translateLabel()
                     ->badge()
                     ->formatStateUsing(
                         fn (InvoiceStatus|string|null $state): string => $state instanceof InvoiceStatus
@@ -52,6 +53,7 @@ class InvoicesTable
                     ->money('IDR')
                     ->sortable(),
                 TextColumn::make('issued_at')
+                    ->translateLabel()
                     ->dateTime()
                     ->sortable(),
             ])

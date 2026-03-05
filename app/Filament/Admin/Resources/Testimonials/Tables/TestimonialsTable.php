@@ -20,10 +20,12 @@ class TestimonialsTable
                     ->searchable()
                     ->sortable(),
                 TextColumn::make('event.title')
+                    ->translateLabel()
                     ->searchable()
                     ->sortable()
                     ->limit(30),
                 TextColumn::make('rating')
+                    ->translateLabel()
                     ->numeric()
                     ->sortable()
                     ->badge()
@@ -32,10 +34,12 @@ class TestimonialsTable
                 \Filament\Tables\Columns\ToggleColumn::make('is_approved')
                     ->label(__('Approved')),
                 TextColumn::make('created_at')
+                    ->translateLabel()
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
                 TextColumn::make('updated_at')
+                    ->translateLabel()
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

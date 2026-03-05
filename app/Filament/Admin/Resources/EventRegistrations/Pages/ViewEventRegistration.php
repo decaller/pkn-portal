@@ -29,25 +29,25 @@ class ViewEventRegistration extends ViewRecord
     {
         return [
             Action::make('verify_payment')
-                ->label('Verify Payment')
+                ->label(__('Verify Payment'))
                 ->icon('heroicon-o-check-circle')
                 ->color('success')
                 ->visible(fn (EventRegistration $record): bool => $record->payment_status === \App\Enums\PaymentStatus::Submitted)
                 ->requiresConfirmation()
-                ->modalHeading('Verify Payment')
-                ->modalDescription('Are you absolutely sure you want to verify this payment? The user will be fully confirmed for this event.')
-                ->modalSubmitActionLabel('Yes, mark as Verified')
+                ->modalHeading(__('Verify Payment'))
+                ->modalDescription(__('Are you absolutely sure you want to verify this payment? The user will be fully confirmed for this event.'))
+                ->modalSubmitActionLabel(__('Yes, mark as Verified'))
                 ->action(function (EventRegistration $record) {
                     $record->verifyPayment(auth()->user());
 
                     \Filament\Notifications\Notification::make()
-                        ->title('Payment Verified')
+                        ->title(__('Payment Verified'))
                         ->success()
                         ->send();
                 }),
 
             Action::make('edit_participants')
-                ->label('Edit Participants')
+                ->label(__('Edit Participants'))
                 ->icon('heroicon-o-users')
                 ->color('warning')
                 ->visible(fn (EventRegistration $record): bool => auth()->user()->is_super_admin || (
@@ -62,17 +62,17 @@ class ViewEventRegistration extends ViewRecord
                 ])
                 ->form([
                     Repeater::make('packages')
-                        ->label('Packages')
+                        ->label(__('Packages'))
                         ->schema([
                             TextInput::make('package_name')
-                                ->label('Package')
+                                ->label(__('Package'))
                                 ->disabled()
                                 ->dehydrated(),
                             Repeater::make('participants')
-                                ->label('Participants')
+                                ->label(__('Participants'))
                                 ->schema([
                                     Select::make('user_id')
-                                        ->label('Select from organization')
+                                        ->label(__('Select from organization'))
                                         ->options(fn (Get $get): array => $this->organizationUserOptionsExcluding(
                                             $get('../../../../packages'),
                                             $get('user_id'),
@@ -98,11 +98,11 @@ class ViewEventRegistration extends ViewRecord
                                             }
                                         }),
                                     TextInput::make('full_name')
-                                        ->label('Full name')
+                                        ->label(__('Full name'))
                                         ->disabled(fn (Get $get): bool => (bool) $get('user_id'))
                                         ->dehydrated(),
                                     TextInput::make('phone')
-                                        ->label('Phone number')
+                                        ->label(__('Phone number'))
                                         ->disabled(fn (Get $get): bool => (bool) $get('user_id'))
                                         ->dehydrated(),
                                 ])
@@ -226,7 +226,7 @@ class ViewEventRegistration extends ViewRecord
                     });
 
                     Notification::make()
-                        ->title('Participants updated.')
+                        ->title(__('Participants updated.'))
                         ->success()
                         ->send();
 
@@ -237,14 +237,14 @@ class ViewEventRegistration extends ViewRecord
                     );
                 }),
             Action::make('view_event')
-                ->label('View Related Event')
+                ->label(__('View Related Event'))
                 ->icon('heroicon-o-link')
                 ->color('info')
                 ->url(fn (): string => EventResource::getUrl('view', ['record' => $this->record->event_id]))
                 ->visible(fn (): bool => $this->record->event_id !== null),
 
             Action::make('view_booker')
-                ->label('View Booker Profile')
+                ->label(__('View Booker Profile'))
                 ->icon('heroicon-o-user')
                 ->color('gray')
                 ->url(fn (EventRegistration $record): string => UserResource::getUrl('view', ['record' => $record->booker_user_id])),

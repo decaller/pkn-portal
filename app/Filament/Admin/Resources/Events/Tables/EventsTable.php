@@ -23,6 +23,7 @@ class EventsTable
 
                 // 2. The Title & Slug
                 TextColumn::make('title')
+                    ->translateLabel()
                     ->searchable()
                     ->sortable()
                     ->description(fn ($record) => $record->slug) // Shows slug in small gray text below title
@@ -69,6 +70,7 @@ class EventsTable
 
                 // 5. Creation Date (Hidden by default, useful for debugging)
                 TextColumn::make('created_at')
+                    ->translateLabel()
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),

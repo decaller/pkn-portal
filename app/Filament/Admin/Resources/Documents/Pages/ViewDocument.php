@@ -27,7 +27,7 @@ class ViewDocument extends ViewRecord
     {
         return [
             \Filament\Actions\Action::make('view_event')
-                ->label('View Related Event')
+                ->label(__('View Related Event'))
                 ->icon('heroicon-o-link')
                 ->color('info')
                 ->url(fn (): string => EventResource::getUrl('view', ['record' => $this->record->event_id]))

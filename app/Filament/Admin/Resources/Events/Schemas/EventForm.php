@@ -44,7 +44,8 @@ class EventForm
                         ->dehydrated() // Ensures it still gets saved to the DB
                         ->required()
                         ->unique(ignoreRecord: true)
-                        ->label(__('Folder Name (Auto-generated)')),
+                        ->label(__('Folder Name (Auto-generated)'))
+                        ->helperText(__('This unique identifier is used in the event\'s web address.')),
 
                     DatePicker::make('event_date')
                         ->required()
@@ -66,7 +67,8 @@ class EventForm
                         ->label(__('Duration (Days)'))
                         ->numeric()
                         ->minValue(1)
-                        ->placeholder(__('Optional total days')),
+                        ->placeholder(__('Optional total days'))
+                        ->helperText(__('Total number of days the event will run.')),
 
                     Select::make('event_type')
                         ->label(__('Event Type'))
@@ -117,6 +119,7 @@ class EventForm
                         ->relationship('surveyTemplate', 'name')
                         ->preload()
                         ->placeholder(__('Select a survey template'))
+                        ->helperText(__('Select a survey for participants to fill out after the event.'))
                         ->nullable(),
 
                     TagsInput::make('tags')
@@ -140,7 +143,8 @@ class EventForm
                         ->disk('public')
                         ->imageResizeMode('cover')
                         ->imageResizeTargetWidth('1200')
-                        ->directory('event-covers'), // Cover image goes in a generic folder
+                        ->directory('event-covers') // Cover image goes in a generic folder
+                        ->helperText(__('Upload an image (JPG, PNG). Recommended size: 1200x630 pixels. Max 2MB.')),
                 ])
                 ->columnSpanFull(),
 
@@ -152,7 +156,8 @@ class EventForm
                         ->acceptedFileTypes(['application/pdf', 'image/*'])
                         ->directory('event-proposals')
                         ->downloadable()
-                        ->openable(),
+                        ->openable()
+                        ->helperText(__('Upload a PDF or Image (JPG, PNG). Max 5MB per file.')),
 
                     FileUpload::make('documentation')
                         ->label(__('Event Documentation'))
@@ -162,7 +167,8 @@ class EventForm
                         ->reorderable()
                         ->downloadable()
                         ->openable()
-                        ->panelLayout('grid'),
+                        ->panelLayout('grid')
+                        ->helperText(__('Upload PDFs or Images (JPG, PNG). Max 5MB per file.')),
                 ])
                 ->columnSpanFull(),
 
@@ -259,13 +265,14 @@ class EventForm
                                         ->preserveFilenames()
                                         ->reorderable()
                                         ->downloadable()
+                                        ->helperText(__('Upload presentation files or documents (PDF, PPTX, DOCX, ZIP). Max 10MB per file.'))
                                         ->columnSpanFull(),
 
                                     Repeater::make('links')
                                         ->label(__('External Resources'))
                                         ->schema([
                                             TextInput::make('url')
-                                                ->label('URL')
+                                                ->label(__('URL'))
                                                 ->url()
                                                 ->required(),
                                             TextInput::make('label')

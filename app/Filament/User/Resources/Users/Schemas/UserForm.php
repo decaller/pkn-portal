@@ -25,6 +25,7 @@ class UserForm
                             ->unique(User::class, 'phone_number', ignoreRecord: true),
                         TextInput::make('email')
                             ->email()
+                            ->helperText(__('This email is used for communication and platform login.'))
                             ->maxLength(255)
                             ->unique(User::class, 'email', ignoreRecord: true)
                             ->disabled(fn () => ! auth()->user()?->isMainAdmin())

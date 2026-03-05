@@ -15,7 +15,6 @@ use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
 use Filament\Tables\Table;
-use UnitEnum;
 
 class AnalyticResource extends Resource
 {
@@ -25,7 +24,10 @@ class AnalyticResource extends Resource
 
     protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedChartBarSquare;
 
-    protected static string|UnitEnum|null $navigationGroup = 'Analytics';
+    public static function getNavigationGroup(): ?string
+    {
+        return __('Analytics');
+    }
 
     public static function form(Schema $schema): Schema
     {

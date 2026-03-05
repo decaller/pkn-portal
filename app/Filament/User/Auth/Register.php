@@ -43,6 +43,7 @@ class Register extends BaseRegister
                         'new' => __('Create new organization'),
                     ])
                     ->default('personal')
+                    ->helperText(__('Choose whether you are participating individually or representing an organization.'))
                     ->required()
                     ->live(),
                 Select::make('existing_organization_id')
@@ -53,6 +54,7 @@ class Register extends BaseRegister
                             ->orderBy('name')
                             ->pluck('name', 'id'),
                     )
+                    ->helperText(__('Search for your organization by its official name.'))
                     ->visible(
                         fn (Get $get): bool => $get('registration_type') ===
                             'existing',
@@ -71,6 +73,7 @@ class Register extends BaseRegister
                     ),
                 TextInput::make('organization_name')
                     ->label(__('New organization name'))
+                    ->helperText(__('Enter the official name of the new organization.'))
                     ->visible(
                         fn (Get $get): bool => $get('registration_type') ===
                             'new',
@@ -88,6 +91,7 @@ class Register extends BaseRegister
                     ->disk('public')
                     ->visibility('public')
                     ->directory('organization-logos')
+                    ->helperText(__('Upload a square image (JPG, PNG). Recommended size: 256x256 pixels. Max 2MB.'))
                     ->imageEditor()
                     ->visible(
                         fn (Get $get): bool => $get('registration_type') ===
@@ -107,8 +111,12 @@ class Register extends BaseRegister
                     ->revealable(filament()->arePasswordsRevealable())
                     ->required()
                     ->minLength(8)
+                    ->helperText(__('Minimum 8 characters. Your password will be used so you can upload your payment proof and add participant details later.'))
                     ->dehydrateStateUsing(fn ($state) => Hash::make($state))
                     ->same('passwordConfirmation'),
+                \Filament\Forms\Components\Placeholder::make('account_benefits')
+                    ->label('')
+                    ->content(__('By creating a PKN Portal account, you can easily register for future events, download your invoices, access your certificates, and manage your organization\'s members all in one place.')),
                 // TextInput::make("passwordConfirmation")
                 //     ->label(
                 //         __(

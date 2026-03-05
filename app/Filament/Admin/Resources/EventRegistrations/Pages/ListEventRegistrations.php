@@ -13,7 +13,7 @@ class ListEventRegistrations extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            CreateAction::make()->label('Manual registration'),
+            CreateAction::make()->label(__('Manual registration')),
         ];
     }
 }

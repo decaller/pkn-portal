@@ -48,10 +48,10 @@ class TopViewedDocuments extends TableWidget
                 // 2. Document Title
                 TextColumn::make('title')
                     ->weight('bold')
-                    ->label('Document Title')
+                    ->label(__('Document Title'))
                     ->description(
                         fn ($record) => $record->event?->title ??
-                            'General Archive',
+                            __('General Archive'),
                     )
                     ->limit(50),
 
@@ -60,18 +60,18 @@ class TopViewedDocuments extends TableWidget
                     ->badge()
                     ->separator(',')
                     ->color('info')
-                    ->label('Tags'),
+                    ->label(__('Tags')),
 
                 // 4. Analytics Count (Popularity)
                 TextColumn::make('analytics_count')
-                    ->label('Total Views')
+                    ->label(__('Total Views'))
                     ->badge()
                     ->color('success')
                     ->sortable(),
 
                 TextColumn::make('created_at')
                     ->dateTime()
-                    ->label('Indexed On')
+                    ->label(__('Indexed On'))
                     ->sortable(),
             ])
             ->paginated(false)
