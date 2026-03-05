@@ -48,7 +48,6 @@ class EventForm
                         ->helperText(__('This unique identifier is used in the event\'s web address.')),
 
                     DatePicker::make('event_date')
-                        ->required()
                         ->native(false)
                         ->live(onBlur: true)
                         ->minDate(
@@ -61,6 +60,7 @@ class EventForm
                                 ? ['after_or_equal:today']
                                 : [],
                         )
+                        ->nullable()
                         ->displayFormat('d/m/Y'),
 
                     TextInput::make('duration_days')
@@ -225,11 +225,11 @@ class EventForm
                                     TextInput::make('title')->required()->columnSpanFull(),
                                     DatePicker::make('date')
                                         ->default(fn (Get $get) => $get('../../event_date'))
-                                        ->required(),
+                                        ->nullable(),
                                     TextInput::make('place')
                                         ->default(fn (Get $get) => $get('../../place')),
-                                    TextInput::make('start_time')->required(),
-                                    TextInput::make('end_time')->required(),
+                                    TextInput::make('start_time'),
+                                    TextInput::make('end_time'),
 
                                 ])->columns(2),
 
@@ -239,11 +239,11 @@ class EventForm
                                     TextInput::make('title')->required()->columnSpanFull(),
                                     DatePicker::make('date')
                                         ->default(fn (Get $get) => $get('../../event_date'))
-                                        ->required(),
+                                        ->nullable(),
                                     TextInput::make('place')
                                         ->default(fn (Get $get) => $get('../../place')),
-                                    TextInput::make('start_time')->required(),
-                                    TextInput::make('end_time')->required(),
+                                    TextInput::make('start_time'),
+                                    TextInput::make('end_time'),
 
                                     TextInput::make('speaker')
                                         ->placeholder(__('e.g. Speaker Name'))
