@@ -34,6 +34,18 @@ x-laravel-env: &laravel-env
   RUN_MIGRATIONS: ${RUN_MIGRATIONS:-false}
 
 services:
+  # Copies public assets from the image into a shared volume on every deploy.
+  # Ensures nginx always serves files from the freshly built image, not a stale volume.
+  init:
+    image: pkn-portal:latest
+    command:
+      - sh
+      - -c
+      - "cp -rp /var/www/html/public/. /public/"
+    volumes:
+      - public_files:/public
+    restart: "no"
+
   app:
     build:
       context: .
@@ -41,12 +53,13 @@ services:
     image: pkn-portal:latest
     environment: *laravel-env
     depends_on:
+      init:
+        condition: service_completed_successfully
       pgsql:
         condition: service_healthy
       redis:
         condition: service_healthy
     volumes:
-      - app_code:/var/www/html
       - public_storage:/var/www/html/storage/app/public
     restart: unless-stopped
     healthcheck:
@@ -59,12 +72,14 @@ services:
   nginx:
     image: nginx:1.27-alpine
     depends_on:
+      init:
+        condition: service_completed_successfully
       app:
         condition: service_healthy
     ports:
       - "${APP_PORT:-80}:80"
     volumes:
-      - app_code:/var/www/html:ro
+      - public_files:/var/www/html/public:ro
       - public_storage:/var/www/html/public/storage:ro
     command:
       - /bin/sh
@@ -134,6 +149,8 @@ services:
       pgsql:
         condition: service_healthy
     command: ["php", "artisan", "queue:work", "--tries=3", "--timeout=90", "--sleep=3", "--max-time=3600"]
+    volumes:
+      - public_storage:/var/www/html/storage/app/public
     restart: unless-stopped
 
   scheduler:
@@ -143,6 +160,8 @@ services:
       app:
         condition: service_healthy
     command: ["sh", "-c", "while true; do php artisan schedule:run --no-interaction; sleep 60; done"]
+    volumes:
+      - public_storage:/var/www/html/storage/app/public
     restart: unless-stopped
 
   pgsql:
@@ -173,7 +192,7 @@ services:
       retries: 5
 
 volumes:
-  app_code:
+  public_files:
   pgsql_data:
   redis_data:
   public_storage:
