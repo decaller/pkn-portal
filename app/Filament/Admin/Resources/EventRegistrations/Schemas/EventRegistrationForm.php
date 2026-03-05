@@ -142,8 +142,8 @@ class EventRegistrationForm
                         ->disk('public')
                         ->visibility('public')
                         ->directory('payment-proofs')
-                        ->maxSize(4096)
-                        ->helperText(__('Upload a scanned copy or screenshot of the payment receipt (JPG, PNG, PDF). Max 4MB.'))
+                        ->maxSize(10240)
+                        ->helperText(__('Upload a scanned copy or screenshot of the payment receipt (JPG, PNG, PDF). Max 10MB.'))
                         ->columnSpanFull(),
                     Select::make('verified_by_user_id')
                         ->label(__('Verified by'))

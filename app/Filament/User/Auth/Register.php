@@ -91,7 +91,8 @@ class Register extends BaseRegister
                     ->disk('public')
                     ->visibility('public')
                     ->directory('organization-logos')
-                    ->helperText(__('Upload a square image (JPG, PNG). Recommended size: 256x256 pixels. Max 2MB.'))
+                    ->maxSize(10240)
+                    ->helperText(__('Upload a square image (JPG, PNG). Recommended size: 256x256 pixels. Max 10MB.'))
                     ->imageEditor()
                     ->visible(
                         fn (Get $get): bool => $get('registration_type') ===

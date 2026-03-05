@@ -112,6 +112,7 @@ class RegisterEvent extends BaseRegister
                     ->visibility('public')
                     ->directory('organization-logos')
                     ->imageEditor()
+                    ->maxSize(10240)
                     ->visible(
                         fn (Get $get): bool => $get('registration_type') ===
                             'new',

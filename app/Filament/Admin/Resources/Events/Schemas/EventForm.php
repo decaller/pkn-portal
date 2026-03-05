@@ -144,7 +144,8 @@ class EventForm
                         ->imageResizeMode('cover')
                         ->imageResizeTargetWidth('1200')
                         ->directory('event-covers') // Cover image goes in a generic folder
-                        ->helperText(__('Upload an image (JPG, PNG). Recommended size: 1200x630 pixels. Max 2MB.')),
+                        ->maxSize(1048576)
+                        ->helperText(__('Upload an image (JPG, PNG). Recommended size: 1200x630 pixels. Max 1GB.')),
                 ])
                 ->columnSpanFull(),
 
@@ -157,7 +158,8 @@ class EventForm
                         ->directory('event-proposals')
                         ->downloadable()
                         ->openable()
-                        ->helperText(__('Upload a PDF or Image (JPG, PNG). Max 5MB per file.')),
+                        ->maxSize(1048576)
+                        ->helperText(__('Upload a PDF or Image (JPG, PNG). Max 1GB per file.')),
 
                     FileUpload::make('documentation')
                         ->label(__('Event Documentation'))
@@ -168,7 +170,8 @@ class EventForm
                         ->downloadable()
                         ->openable()
                         ->panelLayout('grid')
-                        ->helperText(__('Upload PDFs or Images (JPG, PNG). Max 5MB per file.')),
+                        ->maxSize(1048576)
+                        ->helperText(__('Upload PDFs or Images (JPG, PNG). Max 1GB per file.')),
                 ])
                 ->columnSpanFull(),
 
@@ -265,7 +268,8 @@ class EventForm
                                         ->preserveFilenames()
                                         ->reorderable()
                                         ->downloadable()
-                                        ->helperText(__('Upload presentation files or documents (PDF, PPTX, DOCX, ZIP). Max 10MB per file.'))
+                                        ->maxSize(1048576)
+                                        ->helperText(__('Upload presentation files or documents (PDF, PPTX, DOCX, ZIP). Max 1GB per file.'))
                                         ->columnSpanFull(),
 
                                     Repeater::make('links')

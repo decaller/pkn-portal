@@ -57,6 +57,7 @@ COPY --from=vendor /app/vendor ./vendor
 COPY . .
 COPY --from=frontend /app/public/build ./public/build
 COPY docker/production/php/conf.d/opcache.ini /usr/local/etc/php/conf.d/99-opcache.ini
+COPY docker/production/php/conf.d/uploads.ini /usr/local/etc/php/conf.d/99-uploads.ini
 COPY docker/production/entrypoint.sh /usr/local/bin/entrypoint
 
 RUN chmod +x /usr/local/bin/entrypoint \

@@ -257,8 +257,8 @@ class ViewEventRegistration extends ViewRecord
                         ->disk('public')
                         ->visibility('public')
                         ->directory('payment-proofs')
-                        ->maxSize(4096)
-                        ->helperText(__('Upload a scanned copy or screenshot of your payment receipt (JPG, PNG, PDF). Max 4MB.'))
+                        ->maxSize(10240)
+                        ->helperText(__('Upload a scanned copy or screenshot of your payment receipt (JPG, PNG, PDF). Max 10MB.'))
                         ->required(),
                 ])
                 ->action(function (array $data): void {

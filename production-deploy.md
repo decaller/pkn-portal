@@ -14,7 +14,7 @@ This project publishes production images to GitHub Container Registry (GHCR) usi
 2. Push to `main`.
 3. Confirm workflow **Docker Image CI/CD** succeeds in GitHub Actions.
 4. Confirm package exists at:
-   - `ghcr.io/<github-username-or-org>/<repo>:latest`
+    - `ghcr.io/<github-username-or-org>/<repo>:latest`
 
 ## 3. Set GHCR Package Public
 
@@ -33,20 +33,45 @@ If package is Public, Portainer does not need GHCR credentials to pull.
 2. Use repository/compose method and point to `docker-compose.prod.yml`.
 3. Add environment values from `.env.production.example`.
 4. Set:
-   - `IMAGE_NAME=ghcr.io/<github-username-or-org>/<repo>`
-   - `APP_KEY=<generated Laravel key>`
-   - `RUN_MIGRATIONS=true` for first deployment only.
+    - `IMAGE_NAME=ghcr.io/<github-username-or-org>/<repo>`
+    - `APP_KEY=<generated Laravel key>`
+    - `RUN_MIGRATIONS=true` for first deployment only.
 
 ## 5. Deploy and Verify
 
 1. Deploy stack.
 2. Wait until all services are healthy (`app`, `nginx`, `worker`, `scheduler`, `pgsql`, `redis`).
 3. Open container logs and verify:
-   - app boots normally,
-   - migrations succeed,
-   - worker processes jobs.
+    - app boots normally,
+    - migrations succeed,
+    - worker processes jobs.
 
-## 6. Updating Later
+## 6. Create Super Admin User
+
+Run tinker inside the `app` container:
+
+```bash
+docker exec -it <app-container-name> php artisan tinker
+```
+
+Then create the user:
+
+```php
+$user = \App\Models\User::create([
+    'name' => 'Admin',
+    'email' => 'admin@karakternabawiyah.com',
+    'password' => 'change-me',
+    'is_super_admin' => true,
+]);
+```
+
+Or promote an existing user:
+
+```php
+\App\Models\User::where('email', 'existing@example.com')->update(['is_super_admin' => true]);
+```
+
+## 7. Updating Later
 
 1. Merge changes to `main`.
 2. Wait for a new GHCR image (`latest`) to be published by Actions.
