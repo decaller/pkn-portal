@@ -18,6 +18,10 @@ It supports three main audiences:
 - Tailwind CSS / Vite
 - Laravel Sail (local Docker development)
 
+## Testing & Quality Assurance
+
+- **User Journey Manual Test**: Detailed manual test plan covering core user flows is available in [user-journey-manual-test.md](user-journey-manual-test.md).
+
 ## Panels and URLs
 
 Default panel paths:
@@ -77,16 +81,19 @@ cp .env.example .env
 ## Useful Commands
 
 - Run tests:
+
 ```bash
 ./vendor/bin/sail artisan test
 ```
 
 - Format code:
+
 ```bash
 ./vendor/bin/sail php ./vendor/bin/pint
 ```
 
 - Queue worker (manual):
+
 ```bash
 ./vendor/bin/sail artisan queue:work
 ```
@@ -141,8 +148,8 @@ docker compose -f docker-compose.prod.yml logs -f app nginx worker scheduler
 ### Notes
 
 - `entrypoint.sh` runs:
-  - `php artisan optimize`
-  - `php artisan filament:optimize`
+    - `php artisan optimize`
+    - `php artisan filament:optimize`
 - Queue worker and scheduler run in dedicated containers.
 - Nginx serves `public/` and forwards PHP to the `app` container.
 
