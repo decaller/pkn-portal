@@ -32,7 +32,16 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         if (config('app.env') === 'production') {
-            URL::forceScheme('https');
+            $appUrl = rtrim((string) config('app.url'), '/');
+
+            if ($appUrl !== '') {
+                // Force canonical host/port from APP_URL to avoid wrong redirects like https://host:80.
+                URL::forceRootUrl($appUrl);
+            }
+
+            if (str_starts_with($appUrl, 'https://')) {
+                URL::forceScheme('https');
+            }
         }
 
         Event::observe(EventObserver::class);
