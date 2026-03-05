@@ -89,6 +89,12 @@ services:
                 try_files $$uri $$uri/ /index.php?$$query_string;
             }
 
+            location = /nginx-health {
+                access_log off;
+                add_header Content-Type text/plain;
+                return 200 'ok';
+            }
+
             location = /favicon.ico { access_log off; log_not_found off; }
             location = /robots.txt  { access_log off; log_not_found off; }
             error_page 404 /index.php;
@@ -115,7 +121,7 @@ services:
         exec nginx -g 'daemon off;'
     restart: unless-stopped
     healthcheck:
-      test: ["CMD", "wget", "--no-verbose", "--spider", "http://localhost/up"]
+      test: ["CMD", "wget", "--no-verbose", "--spider", "http://localhost/nginx-health"]
       interval: 30s
       timeout: 5s
       retries: 3
