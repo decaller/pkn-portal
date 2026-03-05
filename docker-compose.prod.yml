@@ -1,10 +1,9 @@
-# this is the komodo compose file, you have to build the image first in komodo
-
+# Production Compose Configuration
 services:
   app:
-    # Komodo will build the image. Ensure the Build 'Image Name' matches this.
-    image: pkn-portal:latest
-    pull_policy: never
+    # Pull the image from the registry instead of building it natively.
+    image: ${IMAGE_NAME:-ghcr.io/username/pkn-portal}:latest
+    pull_policy: always
     env_file:
       - .env
     depends_on:
@@ -42,8 +41,8 @@ services:
       retries: 3
 
   worker:
-    image: pkn-portal:latest
-    pull_policy: never
+    image: ${IMAGE_NAME:-ghcr.io/username/pkn-portal}:latest
+    pull_policy: always
     env_file:
       - .env
     depends_on:
@@ -57,8 +56,8 @@ services:
     restart: unless-stopped
 
   scheduler:
-    image: pkn-portal:latest
-    pull_policy: never
+    image: ${IMAGE_NAME:-ghcr.io/username/pkn-portal}:latest
+    pull_policy: always
     env_file:
       - .env
     depends_on:

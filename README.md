@@ -100,7 +100,7 @@ cp .env.example .env
 
 ## Deployment (Docker, Production)
 
-This repository includes a production Docker setup aligned with Filament deployment guidance.
+This repository includes a production Docker setup aligned with Filament deployment guidance. For a comprehensive step-by-step guide on deploying this stack using Portainer and GitHub Actions, please refer to [production-deploy.md](production-deploy.md).
 
 ### Files
 
