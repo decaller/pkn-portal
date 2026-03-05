@@ -84,6 +84,10 @@ services:
             if ($$forwarded_proto = "") {
                 set $$forwarded_proto $$scheme;
             }
+            set $$forwarded_port $$http_x_forwarded_port;
+            if ($$forwarded_port = "") {
+                set $$forwarded_port $$server_port;
+            }
 
             location / {
                 try_files $$uri $$uri/ /index.php?$$query_string;
@@ -105,11 +109,9 @@ services:
                 include fastcgi_params;
                 fastcgi_param SCRIPT_FILENAME $$realpath_root$$fastcgi_script_name;
                 fastcgi_param HTTP_X_FORWARDED_PROTO $$forwarded_proto;
-                fastcgi_param HTTP_X_FORWARDED_HOST $$http_host;
-                fastcgi_param HTTP_X_FORWARDED_PORT $$server_port;
+                fastcgi_param HTTP_X_FORWARDED_HOST $$host;
+                fastcgi_param HTTP_X_FORWARDED_PORT $$forwarded_port;
                 fastcgi_param HTTP_X_FORWARDED_FOR $$proxy_add_x_forwarded_for;
-                fastcgi_param HTTPS on;
-                fastcgi_param SERVER_PORT 443;
             }
 
             location ~ /\.(?!well-known).* {
