@@ -3,7 +3,6 @@
 namespace App\Filament\Shared\Schemas;
 
 use App\Models\Event;
-use Filament\Infolists\Components\ImageEntry;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\ViewEntry;
@@ -86,11 +85,16 @@ class EventInfolist
                     Group::make([
                         Section::make(__('Promotional Image'))
                             ->schema([
-                                ImageEntry::make('cover_image')->hiddenLabel(),
-                                ImageEntry::make('photos')
+                                ViewEntry::make('cover_image')
                                     ->hiddenLabel()
-                                    ->stacked()
-                                    ->circular(),
+                                    ->view('filament.infolists.components.image-zoom'),
+                                ViewEntry::make('photos')
+                                    ->hiddenLabel()
+                                    ->view('filament.infolists.components.image-zoom')
+                                    ->viewData([
+                                        'stacked' => true,
+                                        'circular' => true,
+                                    ]),
                             ]),
                         Section::make(__('Additional Documents'))
                             ->schema([
@@ -215,7 +219,7 @@ HTML;
                             ->columnSpanFull(),
                     ])
                     ->columnSpanFull()
-                    ->visible(fn ($record) => filled($record?->documentation) && $record?->event_date !== null && $record?->event_date >= now()->startOfDay()),
+                    ->visible(fn ($record) => filled($record?->documentation)),
             ]);
     }
 }
