@@ -1,7 +1,10 @@
 # syntax=docker/dockerfile:1.7
 
-FROM composer:2 AS vendor
+FROM php:8.4-cli-alpine AS vendor
 WORKDIR /app
+RUN apk add --no-cache git unzip libzip-dev \
+    && docker-php-ext-install -j"$(nproc)" zip
+COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 COPY composer.json composer.lock ./
 RUN composer install \
     --no-dev \
@@ -9,7 +12,6 @@ RUN composer install \
     --no-progress \
     --prefer-dist \
     --optimize-autoloader \
-    --ignore-platform-reqs \
     --no-scripts
 
 FROM node:22-alpine AS frontend
@@ -20,7 +22,7 @@ COPY . .
 COPY --from=vendor /app/vendor ./vendor
 RUN npm run build
 
-FROM php:8.2-fpm-alpine AS app
+FROM php:8.4-fpm-alpine AS app
 
 WORKDIR /var/www/html
 
@@ -34,6 +36,7 @@ RUN apk add --no-cache \
     freetype-dev \
     libwebp-dev \
     libzip-dev \
+    libxml2-dev \
     oniguruma-dev \
     postgresql-dev \
     unzip
@@ -44,6 +47,7 @@ RUN docker-php-ext-configure gd \
     --with-webp \
     && docker-php-ext-install -j"$(nproc)" \
     bcmath \
+    dom \
     exif \
     gd \
     intl \
