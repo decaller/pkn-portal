@@ -2,8 +2,8 @@
 
 FROM php:8.4-cli-alpine AS vendor
 WORKDIR /app
-RUN apk add --no-cache git unzip libzip-dev \
-    && docker-php-ext-install -j"$(nproc)" zip
+RUN apk add --no-cache git unzip libzip-dev icu-dev \
+    && docker-php-ext-install -j"$(nproc)" zip intl
 COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 COPY composer.json composer.lock ./
 RUN composer install \
