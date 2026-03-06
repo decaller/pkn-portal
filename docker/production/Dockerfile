@@ -17,6 +17,7 @@ WORKDIR /app
 COPY package*.json ./
 RUN npm ci
 COPY . .
+COPY --from=vendor /app/vendor ./vendor
 RUN npm run build
 
 FROM php:8.2-fpm-alpine AS app
