@@ -14,10 +14,13 @@
 
             $isImage = in_array($ext, ['jpg', 'jpeg', 'png', 'gif', 'webp']);
             $isPdf = $ext === 'pdf';
-            $isDoc = in_array($ext, ['doc', 'docx', 'ppt', 'pptx', 'xls', 'xlsx']);
+            $isXls = in_array($ext, ['xls', 'xlsx']);
+            $isPpt = in_array($ext, ['ppt', 'pptx']);
+            $isDoc = in_array($ext, ['doc', 'docx']);
+            $isOffice = $isDoc || $isXls || $isPpt;
 
             // Changed view.aspx to embed.aspx for iframe compatibility
-            $viewerUrl = $isDoc
+            $viewerUrl = $isOffice
                 ? 'https://view.officeapps.live.com/op/embed.aspx?src=' . urlencode($fileUrl)
                 : $fileUrl;
 
@@ -32,8 +35,12 @@
                 <div class="p-3 rounded-lg shrink-0 bg-gray-100 dark:bg-gray-800">
                     @if($isPdf)
                         <x-filament::icon icon="heroicon-o-document-text" class="w-8 h-8 text-danger-500" />
+                    @elseif($isXls)
+                        <x-filament::icon icon="heroicon-o-table-cells" class="w-8 h-8 text-success-600" />
+                    @elseif($isPpt)
+                        <x-filament::icon icon="heroicon-o-presentation-chart-bar" class="w-8 h-8 text-warning-500" />
                     @elseif($isDoc)
-                        <x-filament::icon icon="heroicon-o-table-cells" class="w-8 h-8 text-success-500" />
+                        <x-filament::icon icon="heroicon-o-document-text" class="w-8 h-8 text-info-500" />
                     @elseif($isImage)
                         <x-filament::icon icon="heroicon-o-photo" class="w-8 h-8 text-primary-500" />
                     @else
@@ -43,7 +50,8 @@
 
                 {{-- File Name and Size --}}
                 <div class="flex-1 min-w-0">
-                    <h3 class="text-sm font-medium whitespace-nowrap overflow-hidden text-ellipsis text-gray-900 dark:text-white m-0" title="{{ basename($file) }}">
+                    <h3 class="text-sm font-medium whitespace-nowrap overflow-hidden text-ellipsis text-gray-900 dark:text-white m-0"
+                        title="{{ basename($file) }}">
                         {{ basename($file) }}
                     </h3>
                     <p class="text-xs mt-1 uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-0">
@@ -74,9 +82,11 @@
                     </x-slot>
 
                     {{-- Modal Content --}}
-                    <div class="flex items-center justify-center p-8 rounded-xl border border-dashed border-gray-300 dark:border-gray-700 min-h-[60vh] relative overflow-hidden bg-gray-50 dark:bg-gray-800/50">
+                    <div
+                        class="flex items-center justify-center p-8 rounded-xl border border-dashed border-gray-300 dark:border-gray-700 min-h-[60vh] relative overflow-hidden bg-gray-50 dark:bg-gray-800/50">
                         @if($isImage)
-                            <img src="{{ $viewerUrl }}" class="max-w-full max-h-full object-contain absolute inset-0 m-auto p-4" />
+                            <img src="{{ $viewerUrl }}"
+                                class="max-w-full max-h-full object-contain absolute inset-0 m-auto p-4" />
                         @else
                             <iframe src="{{ $viewerUrl }}" class="w-full h-full border-0 absolute inset-0"></iframe>
                         @endif
