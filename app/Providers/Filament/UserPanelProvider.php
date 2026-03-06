@@ -35,6 +35,7 @@ class UserPanelProvider extends PanelProvider
         return $panel
             ->id('user')
             ->path('user')
+            ->viteTheme('resources/css/filament/user/theme.css')
             ->brandName('PKN User Panel')
             ->login(Login::class)
             ->registration(RegisterEvent::class)
@@ -68,8 +69,12 @@ class UserPanelProvider extends PanelProvider
                 fn () => view('filament.user.log-listener'),
             )
             ->renderHook(
-                'panels::topbar.end',
+                'panels::global-search.after',
                 fn () => view('filament.components.whatsapp-contact-topbar'),
+            )
+            ->renderHook(
+                'panels::global-search.after',
+                fn () => view('filament.user.notification-bell'),
             )
             ->middleware([
                 EncryptCookies::class,
@@ -88,7 +93,8 @@ class UserPanelProvider extends PanelProvider
                 FilamentLanguageSwitcherPlugin::make()
                     ->locales(['en', 'id'])
                     ->rememberLocale()
-                    ->showOnAuthPages(),
+                    ->showOnAuthPages()
+                    ->renderHook('panels::topbar.start'),
             ]);
     }
 }

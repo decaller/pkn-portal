@@ -35,7 +35,7 @@ class EventInfolist
                             ->schema([
                                 TextEntry::make('title')->weight('bold')->size('lg'),
                                 TextEntry::make('description')->markdown()->prose(),
-                                TextEntry::make('event_date')->date('d M Y')->icon('heroicon-m-calendar-days'),
+                                TextEntry::make('event_date')->date('d M Y')->placeholder('-')->icon('heroicon-m-calendar-days'),
                                 TextEntry::make('event_type')
                                     ->badge()
                                     ->color('primary')
@@ -215,7 +215,7 @@ HTML;
                             ->columnSpanFull(),
                     ])
                     ->columnSpanFull()
-                    ->visible(fn ($record) => filled($record?->documentation) && $record?->event_date >= now()->startOfDay()),
+                    ->visible(fn ($record) => filled($record?->documentation) && $record?->event_date !== null && $record?->event_date >= now()->startOfDay()),
             ]);
     }
 }

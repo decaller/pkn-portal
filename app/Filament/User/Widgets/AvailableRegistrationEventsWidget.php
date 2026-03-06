@@ -53,6 +53,7 @@ class AvailableRegistrationEventsWidget extends TableWidget
                         TextColumn::make('event_date')
                             ->label(__('Date'))
                             ->date('d M Y')
+                            ->placeholder('-')
                             ->icon('heroicon-m-calendar')
                             ->color('gray')
                             ->size('sm'),

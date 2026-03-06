@@ -32,6 +32,7 @@ class AdminPanelProvider extends PanelProvider
             ->default()
             ->id('admin')
             ->path('admin')
+            ->viteTheme('resources/css/filament/admin/theme.css')
             ->brandName('PKN Admin Panel')
             ->login()
             ->tenant(Organization::class, 'slug', 'organization')
@@ -76,7 +77,8 @@ class AdminPanelProvider extends PanelProvider
                 FilamentLanguageSwitcherPlugin::make()
                     ->locales(['en', 'id'])
                     ->rememberLocale()
-                    ->showOnAuthPages(),
+                    ->showOnAuthPages()
+                    ->renderHook('panels::topbar.start'),
             ]);
     }
 }

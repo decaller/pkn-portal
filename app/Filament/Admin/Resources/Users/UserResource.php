@@ -3,6 +3,7 @@
 namespace App\Filament\Admin\Resources\Users;
 
 use App\Filament\Admin\Resources\Users\Pages\EditUser;
+use App\Filament\Admin\Resources\Users\Pages\ListUserActivities;
 use App\Filament\Admin\Resources\Users\Pages\ListUsers;
 use App\Filament\Admin\Resources\Users\Pages\ViewUser;
 use App\Filament\Admin\Resources\Users\Schemas\UserForm;
@@ -64,6 +65,7 @@ class UserResource extends Resource
         return [
             'index' => ListUsers::route('/'),
             'view' => ViewUser::route('/{record}'),
+            'activities' => ListUserActivities::route('/{record}/activities'),
             'edit' => EditUser::route('/{record}/edit'),
         ];
     }

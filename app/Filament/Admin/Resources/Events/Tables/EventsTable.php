@@ -3,6 +3,8 @@
 namespace App\Filament\Admin\Resources\Events\Tables;
 
 use App\Enums\EventType;
+use App\Filament\Admin\Resources\Events\EventResource;
+use Filament\Actions\Action;
 use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
@@ -33,6 +35,7 @@ class EventsTable
                 TextColumn::make('event_date')
                     ->date('d M Y') // Example: 16 Feb 2026
                     ->sortable()
+                    ->placeholder('-')
                     ->label(__('Event Date')),
 
                 TextColumn::make('event_type')
@@ -79,7 +82,14 @@ class EventsTable
             ->filters([
                 //
             ])
-            ->recordActions([ViewAction::make(), EditAction::make()])
+            ->recordActions([
+                ViewAction::make(),
+                EditAction::make(),
+                Action::make('activities')
+                    ->label(__('Activities'))
+                    ->icon('heroicon-o-clock')
+                    ->url(fn ($record) => EventResource::getUrl('activities', ['record' => $record])),
+            ])
             ->toolbarActions([
                 BulkActionGroup::make([DeleteBulkAction::make()]),
             ]);

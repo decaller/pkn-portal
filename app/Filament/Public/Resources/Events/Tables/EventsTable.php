@@ -21,7 +21,7 @@ class EventsTable
                     ->searchable()
                     ->sortable()
                     ->weight('bold'),
-                TextColumn::make('event_date')->date('d M Y')->label(__('Event Date'))->sortable(),
+                TextColumn::make('event_date')->date('d M Y')->placeholder('-')->label(__('Event Date'))->sortable(),
                 TextColumn::make('event_type')
                     ->label(__('Type'))
                     ->badge()
@@ -51,7 +51,7 @@ class EventsTable
                     ->label(__('Register'))
                     ->icon('heroicon-o-ticket')
                     ->color('success')
-                    ->visible(fn (Event $record): bool => $record->allow_registration && $record->event_date >= now()->toDateString() && ! $record->isFull())
+                    ->visible(fn (Event $record): bool => $record->allow_registration && $record->event_date !== null && $record->event_date >= now()->toDateString() && ! $record->isFull())
                     ->url(fn (Event $record): string => '/user/register?event_id='.$record->getKey()),
             ]);
     }

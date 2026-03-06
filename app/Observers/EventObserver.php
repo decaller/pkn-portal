@@ -2,13 +2,15 @@
 
 namespace App\Observers;
 
-use App\Models\Event;
 use App\Models\Document;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Log;
-
+use App\Models\Event;
+use App\Models\User;
+use App\Notifications\NewEventOpenForRegistrationNotification;
+use App\Notifications\PastEventPostedOrUpdatedNotification;
 use App\Services\TikaService;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class EventObserver
 {
@@ -27,7 +29,17 @@ class EventObserver
      */
     public function updated(Event $event): void
     {
-        //
+        // Notify all users when registration opens
+        if ($event->wasChanged('allow_registration') && $event->allow_registration) {
+            $this->notifyAllUsers(new NewEventOpenForRegistrationNotification($event));
+        }
+
+        // Notify all users when a past event is published or updated while published
+        if ($event->event_date?->isPast()) {
+            if ($event->is_published && ($event->wasChanged('is_published') || $event->wasChanged('title') || $event->wasChanged('description') || $event->wasChanged('photos') || $event->wasChanged('documentation'))) {
+                $this->notifyAllUsers(new PastEventPostedOrUpdatedNotification($event));
+            }
+        }
     }
 
     /**
@@ -64,116 +76,133 @@ class EventObserver
         // 2. Loop through every session in the JSON
         foreach ($event->rundown as $session) {
             // Check if this session has files
-            if (!empty($session["session_files"])) {
+            if (! empty($session['session_files'])) {
                 // Filament stores files as an array of paths: ['events/graduation/file.pdf']
-                foreach ($session["session_files"] as $filePath) {
+                foreach ($session['session_files'] as $filePath) {
                     try {
                         // 1. Check if record exists in DB already
-                        if (Document::where("file_path", $filePath)->exists()) {
+                        if (Document::where('file_path', $filePath)->exists()) {
                             continue;
                         }
 
-                        $disk = "public";
+                        $disk = 'public';
 
-                        if (!Storage::disk($disk)->exists($filePath)) {
+                        if (! Storage::disk($disk)->exists($filePath)) {
                             usleep(250000);
                         }
 
-                        if (!Storage::disk($disk)->exists($filePath)) {
+                        if (! Storage::disk($disk)->exists($filePath)) {
                             Log::warning(
                                 "Tika skipped: file not found after retry for {$filePath}",
                             );
+
                             continue;
                         }
 
                         // 3. THE MAGIC: Check if this file is already in Documents
-                        $exists = Document::where("file_path", $filePath)->exists();
+                        $exists = Document::where('file_path', $filePath)->exists();
 
                         $fileContent = Storage::disk($disk)->get($filePath);
 
-                        if (!$fileContent) {
+                        if (! $fileContent) {
                             Log::error(
                                 "Tika Error: Could not retrieve file content for {$filePath}",
                             );
+
                             continue;
                         }
 
                         // 2. Scan with Tika
                         $extraction = $this->tika->extractText($fileContent);
 
-                        if (!$exists) {
+                        if (! $exists) {
                             Document::create([
-                                "event_id" => $event->id,
-                                "session_slug" => $session["slug"] ?? Str::slug($session["title"]),
-                                "title" => $session["title"] . " Attachment",
-                                "slug" => Str::slug($event->title . "-" . Str::random(5)),
-                                "file_path" => $filePath,
-                                "original_filename" => basename($filePath),
-                                "content" => $extraction["content"] ?? null,
-                                "mime_type" => $extraction["mime_type"] ?? null,
-                                "metadata" => $extraction["metadata"] ?? [],
-                                "description" => "Auto-extracted from Session: " . ($session["title"] ?? "Untitled"),
+                                'event_id' => $event->id,
+                                'session_slug' => $session['slug'] ?? Str::slug($session['title']),
+                                'title' => $session['title'].' Attachment',
+                                'slug' => Str::slug($event->title.'-'.Str::random(5)),
+                                'file_path' => $filePath,
+                                'original_filename' => basename($filePath),
+                                'content' => $extraction['content'] ?? null,
+                                'mime_type' => $extraction['mime_type'] ?? null,
+                                'metadata' => $extraction['metadata'] ?? [],
+                                'description' => 'Auto-extracted from Session: '.($session['title'] ?? 'Untitled'),
                             ]);
 
                             Log::info("Auto-created document for file: {$filePath}");
                         }
                     } catch (\Exception $e) {
-                        Log::error("Observer failed for {$filePath}: " . $e->getMessage());
+                        Log::error("Observer failed for {$filePath}: ".$e->getMessage());
                     }
                 }
             }
         }
 
         // 3. Process root event documentation files as well
-        if (!empty($event->documentation)) {
+        if (! empty($event->documentation)) {
             foreach ($event->documentation as $filePath) {
                 try {
-                    if (Document::where("file_path", $filePath)->exists()) {
+                    if (Document::where('file_path', $filePath)->exists()) {
                         continue;
                     }
 
-                    $disk = "public";
+                    $disk = 'public';
 
-                    if (!Storage::disk($disk)->exists($filePath)) {
+                    if (! Storage::disk($disk)->exists($filePath)) {
                         usleep(250000);
                     }
 
-                    if (!Storage::disk($disk)->exists($filePath)) {
+                    if (! Storage::disk($disk)->exists($filePath)) {
                         Log::warning(
                             "Tika skipped: documentation file not found after retry for {$filePath}",
                         );
+
                         continue;
                     }
 
                     $fileContent = Storage::disk($disk)->get($filePath);
 
-                    if (!$fileContent) {
+                    if (! $fileContent) {
                         Log::error(
                             "Tika Error: Could not retrieve documentation file content for {$filePath}",
                         );
+
                         continue;
                     }
 
                     $extraction = $this->tika->extractText($fileContent);
 
                     Document::create([
-                        "event_id" => $event->id,
-                        "session_slug" => 'general-documentation',
-                        "title" => "Event Documentation",
-                        "slug" => Str::slug($event->title . "-doc-" . Str::random(5)),
-                        "file_path" => $filePath,
-                        "original_filename" => basename($filePath),
-                        "content" => $extraction["content"] ?? null,
-                        "mime_type" => $extraction["mime_type"] ?? null,
-                        "metadata" => $extraction["metadata"] ?? [],
-                        "description" => "Auto-extracted from Event Documentation",
+                        'event_id' => $event->id,
+                        'session_slug' => 'general-documentation',
+                        'title' => 'Event Documentation',
+                        'slug' => Str::slug($event->title.'-doc-'.Str::random(5)),
+                        'file_path' => $filePath,
+                        'original_filename' => basename($filePath),
+                        'content' => $extraction['content'] ?? null,
+                        'mime_type' => $extraction['mime_type'] ?? null,
+                        'metadata' => $extraction['metadata'] ?? [],
+                        'description' => 'Auto-extracted from Event Documentation',
                     ]);
 
                     Log::info("Auto-created document for documentation file: {$filePath}");
                 } catch (\Exception $e) {
-                    Log::error("Observer failed for documentation {$filePath}: " . $e->getMessage());
+                    Log::error("Observer failed for documentation {$filePath}: ".$e->getMessage());
                 }
             }
         }
+    }
+
+    private function notifyAllUsers(object $notification): void
+    {
+        User::query()->whereHas('organizations')->chunkById(100, function ($users) use ($notification): void {
+            foreach ($users as $user) {
+                try {
+                    $user->notify(clone $notification);
+                } catch (\Exception $e) {
+                    Log::error("Failed to send notification to user {$user->id}: ".$e->getMessage());
+                }
+            }
+        });
     }
 }

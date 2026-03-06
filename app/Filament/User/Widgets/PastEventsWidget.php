@@ -33,7 +33,7 @@ class PastEventsWidget extends TableWidget
             )
             ->columns([
                 TextColumn::make('title')->weight('bold')->limit(40),
-                TextColumn::make('event_date')->date('d M Y')->sortable(),
+                TextColumn::make('event_date')->date('d M Y')->placeholder('-')->sortable(),
             ])
             ->recordUrl(
                 fn (Event $record): string => EventResource::getUrl('view', [

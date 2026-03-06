@@ -4,6 +4,8 @@ namespace App\Filament\Admin\Resources\EventRegistrations\Tables;
 
 use App\Enums\PaymentStatus;
 use App\Enums\RegistrationStatus;
+use App\Filament\Admin\Resources\EventRegistrations\EventRegistrationResource;
+use Filament\Actions\Action;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
@@ -58,6 +60,13 @@ class EventRegistrationsTable
                 ),
             ])
             ->defaultSort('created_at', 'desc')
-            ->recordActions([ViewAction::make(), EditAction::make()]);
+            ->recordActions([
+                ViewAction::make(),
+                EditAction::make(),
+                Action::make('activities')
+                    ->label(__('Activities'))
+                    ->icon('heroicon-o-clock')
+                    ->url(fn ($record) => EventRegistrationResource::getUrl('activities', ['record' => $record])),
+            ]);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Filament\Admin\Resources\News;
 use App\Filament\Admin\Resources\News\Pages\CreateNews;
 use App\Filament\Admin\Resources\News\Pages\EditNews;
 use App\Filament\Admin\Resources\News\Pages\ListNews;
+use App\Filament\Admin\Resources\News\Pages\ListNewsActivities;
 use App\Filament\Admin\Resources\News\Pages\ViewNews;
 use App\Filament\Admin\Resources\News\Schemas\NewsForm;
 use App\Filament\Shared\Schemas\NewsInfolist;
@@ -57,6 +58,7 @@ class NewsResource extends Resource
             'index' => ListNews::route('/'),
             'create' => CreateNews::route('/create'),
             'view' => ViewNews::route('/{record}'),
+            'activities' => ListNewsActivities::route('/{record}/activities'),
             'edit' => EditNews::route('/{record}/edit'),
         ];
     }

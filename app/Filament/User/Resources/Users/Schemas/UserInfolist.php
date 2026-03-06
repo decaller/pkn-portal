@@ -40,7 +40,7 @@ class UserInfolist
                                 $allEventIds = $eventIds->merge($participantEventIds)->unique()->filter();
 
                                 if ($allEventIds->isEmpty()) {
-                                    return null;
+                                    return '';
                                 }
 
                                 return Event::whereIn('id', $allEventIds)->pluck('title')->join(', ');

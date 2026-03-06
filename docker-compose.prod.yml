@@ -61,6 +61,7 @@ services:
         condition: service_healthy
     volumes:
       - public_storage:/var/www/html/storage/app/public
+      - livewire_tmp:/var/www/html/storage/app/livewire-tmp
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "php", "artisan", "about"]
@@ -151,6 +152,7 @@ services:
     command: ["php", "artisan", "queue:work", "--tries=3", "--timeout=90", "--sleep=3", "--max-time=3600"]
     volumes:
       - public_storage:/var/www/html/storage/app/public
+      - livewire_tmp:/var/www/html/storage/app/livewire-tmp
     restart: unless-stopped
 
   scheduler:
@@ -162,6 +164,7 @@ services:
     command: ["sh", "-c", "while true; do php artisan schedule:run --no-interaction; sleep 60; done"]
     volumes:
       - public_storage:/var/www/html/storage/app/public
+      - livewire_tmp:/var/www/html/storage/app/livewire-tmp
     restart: unless-stopped
 
   pgsql:
@@ -196,3 +199,4 @@ volumes:
   pgsql_data:
   redis_data:
   public_storage:
+  livewire_tmp:

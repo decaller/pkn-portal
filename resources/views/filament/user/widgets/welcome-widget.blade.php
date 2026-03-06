@@ -1,12 +1,11 @@
 <x-filament-widgets::widget>
     <x-filament::section>
-        <div style="display: flex; flex-direction: column; gap: 1rem;">
-            <div style="display: flex; flex-direction: column; gap: 0.25rem;">
-                <h2 class="text-gray-900 dark:text-white"
-                    style="font-size: 1.25rem; font-weight: 600; line-height: 1.75rem; margin: 0;">
+        <div class="flex flex-col gap-4">
+            <div class="flex flex-col gap-1">
+                <h2 class="text-gray-900 dark:text-white text-xl font-semibold leading-7 m-0">
                     {{ __('Welcome') }}, {{ auth()->user()?->name ?? __('User') }}
                 </h2>
-                <p class="text-gray-600 dark:text-gray-400" style="font-size: 0.875rem; margin: 0;">
+                <p class="text-gray-600 dark:text-gray-400 text-sm m-0">
                     {{ __('Manage your event registrations from this dashboard.') }}
                 </p>
             </div>
@@ -19,15 +18,14 @@
                     $isComplete = $isVerified && $added >= $max;
                 @endphp
 
-                <div class="bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700"
-                    style="padding: 1rem; border-radius: 0.5rem; border-width: 1px; border-style: solid; margin-top: 1rem; display: flex; align-items: center; justify-content: space-between; gap: 1rem; width: 100%; box-sizing: border-box;">
-                    <div style="flex: 1 1 0%; min-width: 0; padding-right: 1rem;">
-                        <h3 class="text-gray-900 dark:text-gray-100"
-                            style="font-weight: 500; font-size: 1rem; margin: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                <div
+                    class="bg-gray-50 dark:bg-gray-800 border-gray-200 dark:border-gray-700 p-4 rounded-lg border border-solid mt-4 flex items-center justify-between gap-4 w-full box-border">
+                    <div class="flex-1 min-w-0 pr-4">
+                        <h3
+                            class="text-gray-900 dark:text-gray-100 font-medium text-base m-0 whitespace-nowrap overflow-hidden text-ellipsis">
                             {{ __('Latest Registration') }}: {{ $lastRegistration->event?->title ?? __('Event') }}
                         </h3>
-                        <p class="text-gray-600 dark:text-gray-400"
-                            style="font-size: 0.875rem; margin-top: 0.25rem; margin-bottom: 0;">
+                        <p class="text-gray-600 dark:text-gray-400 text-sm mt-1 mb-0">
                             @if($isComplete)
                                 {{ __('Your registration is complete! You can now access the event page.') }}
                             @else
@@ -35,7 +33,7 @@
                             @endif
                         </p>
                     </div>
-                    <div style="flex: none; display: flex; align-items: center; justify-content: flex-end;">
+                    <div class="flex-none flex items-center justify-end">
                         @if($isComplete)
                             <x-filament::button tag="a"
                                 href="{{ \App\Filament\User\Resources\Events\EventResource::getUrl('view', ['record' => $lastRegistration->event_id]) }}">

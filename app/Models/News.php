@@ -4,9 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class News extends Model
 {
+    use LogsActivity;
 
     /**
      * The attributes that are mass assignable.
@@ -19,6 +22,11 @@ class News extends Model
         'is_published',
         'event_id',
     ];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()->logFillable();
+    }
 
     public function event(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {

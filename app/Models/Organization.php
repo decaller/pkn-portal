@@ -3,26 +3,33 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
-use Illuminate\Database\Eloquent\Model;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Organization extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
 
-    protected $fillable = ["name", "slug", "logo", "admin_user_id"];
+    protected $fillable = ['name', 'slug', 'logo', 'admin_user_id'];
+
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()->logFillable();
+    }
 
     public function admin(): BelongsTo
     {
-        return $this->belongsTo(User::class, "admin_user_id");
+        return $this->belongsTo(User::class, 'admin_user_id');
     }
 
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class)
-            ->withPivot("role")
+            ->withPivot('role')
             ->withTimestamps();
     }
 

@@ -27,6 +27,7 @@ class PublicPanelProvider extends PanelProvider
         return $panel
             ->id('public')
             ->path('public')
+            ->viteTheme('resources/css/filament/public/theme.css')
             ->brandName('PKN Public Panel')
             ->colors([
                 'primary' => Color::Amber,
@@ -42,7 +43,7 @@ class PublicPanelProvider extends PanelProvider
                 AvailableRegistrationEventsWidget::class,
             ])
             ->renderHook(
-                'panels::topbar.end',
+                'panels::global-search.after',
                 fn () => view('filament.components.whatsapp-contact-topbar'),
             )
             ->middleware([
@@ -64,7 +65,8 @@ class PublicPanelProvider extends PanelProvider
                 FilamentLanguageSwitcherPlugin::make()
                     ->locales(['en', 'id'])
                     ->rememberLocale()
-                    ->showOnAuthPages(),
+                    ->showOnAuthPages()
+                    ->renderHook('panels::topbar.start'),
             ]);
     }
 }

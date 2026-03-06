@@ -3,6 +3,7 @@
 namespace App\Filament\User\Resources\Users;
 
 use App\Filament\User\Resources\Users\Pages\EditUser;
+use App\Filament\User\Resources\Users\Pages\ListUserActivities;
 use App\Filament\User\Resources\Users\Pages\ListUsers;
 use App\Filament\User\Resources\Users\Pages\ViewUser;
 use App\Filament\User\Resources\Users\Schemas\UserForm;
@@ -78,7 +79,37 @@ class UserResource extends Resource
         return [
             'index' => ListUsers::route('/'),
             'view' => ViewUser::route('/{record}'),
+            'activities' => ListUserActivities::route('/{record}/activities'),
             'edit' => EditUser::route('/{record}/edit'),
         ];
+    }
+
+    /**
+     * Determines if the current user can view the activity log of a given user.
+     *
+     * - Super admins can see everyone.
+     * - Org admins can see members of their organizations.
+     * - Regular users can only see their own activity.
+     */
+    public static function canViewActivities(\App\Models\User $target): bool
+    {
+        /** @var \App\Models\User|null $auth */
+        $auth = auth()->user();
+
+        if (! $auth) {
+            return false;
+        }
+
+        if ($auth->isMainAdmin()) {
+            return true;
+        }
+
+        if ($auth->getKey() === $target->getKey()) {
+            return true;
+        }
+
+        $authOrgIds = $auth->organizations()->wherePivot('role', 'admin')->pluck('organizations.id');
+
+        return $target->organizations()->whereIn('organizations.id', $authOrgIds)->exists();
     }
 }

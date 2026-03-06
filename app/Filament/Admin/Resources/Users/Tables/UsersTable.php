@@ -2,7 +2,9 @@
 
 namespace App\Filament\Admin\Resources\Users\Tables;
 
+use App\Filament\Admin\Resources\Users\UserResource;
 use App\Models\User;
+use Filament\Actions\Action;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\IconColumn;
@@ -48,6 +50,10 @@ class UsersTable
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),
+                Action::make('activities')
+                    ->label(__('Activities'))
+                    ->icon('heroicon-o-clock')
+                    ->url(fn ($record) => UserResource::getUrl('activities', ['record' => $record])),
             ]);
     }
 }

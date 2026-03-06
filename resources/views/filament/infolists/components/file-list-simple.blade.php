@@ -1,131 +1,4 @@
-<style>
-    /* Structural Layout */
-    .file-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-        gap: 1.5rem;
-    }
-
-    .file-card {
-        display: flex;
-        flex-direction: column;
-        height: 100%;
-    }
-
-    .file-header {
-        display: flex;
-        align-items: flex-start;
-        gap: 1rem;
-        margin-bottom: 1rem;
-    }
-
-    .file-info {
-        flex: 1;
-        min-width: 0;
-    }
-
-    .file-spacer {
-        flex-grow: 1;
-    }
-
-    .file-btn-container {
-        flex: 1;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-
-    .file-modal-img {
-        max-width: 100%;
-        max-height: 100%;
-        object-fit: contain;
-        position: absolute;
-        inset: 0;
-        margin: auto;
-        padding: 1rem;
-    }
-
-    .file-modal-iframe {
-        width: 100%;
-        height: 100%;
-        border: 0;
-        position: absolute;
-        inset: 0;
-    }
-
-    /* Colors (Light Mode) */
-    .file-icon-box {
-        padding: 0.75rem;
-        border-radius: 0.5rem;
-        flex-shrink: 0;
-        background-color: #f3f4f6;
-    }
-
-    .file-title {
-        font-size: 0.875rem;
-        font-weight: 500;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        color: #111827;
-        margin: 0;
-    }
-
-    .file-ext {
-        font-size: 0.75rem;
-        margin-top: 0.25rem;
-        text-transform: uppercase;
-        letter-spacing: 0.025em;
-        color: #6b7280;
-        margin-bottom: 0;
-    }
-
-    .file-actions {
-        display: flex;
-        align-items: center;
-        gap: 0.75rem;
-        padding-top: 1rem;
-        margin-top: 1rem;
-        border-top: 1px solid #e5e7eb;
-    }
-
-    .file-modal-bg {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 2rem;
-        border-radius: 0.75rem;
-        border: 1px dashed #d1d5db;
-        min-height: 60vh;
-        position: relative;
-        overflow: hidden;
-        background-color: #f9fafb;
-    }
-
-    /* Colors (Dark Mode Overrides) */
-    .dark .file-icon-box {
-        background-color: #1f2937;
-    }
-
-    .dark .file-title {
-        color: #ffffff;
-    }
-
-    .dark .file-ext {
-        color: #9ca3af;
-    }
-
-    .dark .file-actions {
-        border-top-color: rgba(255, 255, 255, 0.1);
-    }
-
-    .dark .file-modal-bg {
-        background-color: #1f2937;
-        border-color: #374151;
-    }
-</style>
-
-<div class="file-grid">
+<div class="grid grid-cols-[repeat(auto-fit,minmax(280px,1fr))] gap-6">
     @foreach ((array) $getState() as $file)
         @php
             if (empty($file))
@@ -151,46 +24,46 @@
             $fileId = md5($fileUrl); // Unique ID for modal
         @endphp
 
-        <x-filament::section class="file-card">
+        <x-filament::section class="flex flex-col h-full">
             {{-- Card Header: Icon and File Info --}}
-            <div class="file-header">
+            <div class="flex items-start gap-4 mb-4">
 
                 {{-- File Type Icon --}}
-                <div class="file-icon-box">
+                <div class="p-3 rounded-lg shrink-0 bg-gray-100 dark:bg-gray-800">
                     @if($isPdf)
-                        <x-filament::icon icon="heroicon-o-document-text" style="width: 2rem; height: 2rem; color: #ef4444;" />
+                        <x-filament::icon icon="heroicon-o-document-text" class="w-8 h-8 text-danger-500" />
                     @elseif($isDoc)
-                        <x-filament::icon icon="heroicon-o-table-cells" style="width: 2rem; height: 2rem; color: #10b981;" />
+                        <x-filament::icon icon="heroicon-o-table-cells" class="w-8 h-8 text-success-500" />
                     @elseif($isImage)
-                        <x-filament::icon icon="heroicon-o-photo" style="width: 2rem; height: 2rem; color: #3b82f6;" />
+                        <x-filament::icon icon="heroicon-o-photo" class="w-8 h-8 text-primary-500" />
                     @else
-                        <x-filament::icon icon="heroicon-o-document" style="width: 2rem; height: 2rem; color: #6b7280;" />
+                        <x-filament::icon icon="heroicon-o-document" class="w-8 h-8 text-gray-500" />
                     @endif
                 </div>
 
                 {{-- File Name and Size --}}
-                <div class="file-info">
-                    <h3 class="file-title" title="{{ basename($file) }}">
+                <div class="flex-1 min-w-0">
+                    <h3 class="text-sm font-medium whitespace-nowrap overflow-hidden text-ellipsis text-gray-900 dark:text-white m-0" title="{{ basename($file) }}">
                         {{ basename($file) }}
                     </h3>
-                    <p class="file-ext">
+                    <p class="text-xs mt-1 uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-0">
                         {{ strtoupper($ext) }}
                     </p>
                 </div>
             </div>
 
             {{-- Spacer to push buttons to the bottom if file names wrap --}}
-            <div class="file-spacer"></div>
+            <div class="flex-grow"></div>
 
             {{-- Card Actions: Buttons --}}
-            <div class="file-actions">
+            <div class="flex items-center gap-3 pt-4 mt-4 border-t border-gray-200 dark:border-white/10">
 
                 {{-- Preview Modal --}}
                 <x-filament::modal id="preview-modal-{{ $fileId }}" width="5xl">
                     <x-slot name="trigger">
                         {{-- Trigger Button --}}
-                        <div class="file-btn-container">
-                            <x-filament::button color="gray" size="sm" icon="heroicon-m-eye" style="width: 100%;">
+                        <div class="flex-1 flex items-center justify-center">
+                            <x-filament::button color="gray" size="sm" icon="heroicon-m-eye" class="w-full justify-center">
                                 Preview
                             </x-filament::button>
                         </div>
@@ -201,11 +74,11 @@
                     </x-slot>
 
                     {{-- Modal Content --}}
-                    <div class="file-modal-bg">
+                    <div class="flex items-center justify-center p-8 rounded-xl border border-dashed border-gray-300 dark:border-gray-700 min-h-[60vh] relative overflow-hidden bg-gray-50 dark:bg-gray-800/50">
                         @if($isImage)
-                            <img src="{{ $viewerUrl }}" class="file-modal-img" />
+                            <img src="{{ $viewerUrl }}" class="max-w-full max-h-full object-contain absolute inset-0 m-auto p-4" />
                         @else
-                            <iframe src="{{ $viewerUrl }}" class="file-modal-iframe"></iframe>
+                            <iframe src="{{ $viewerUrl }}" class="w-full h-full border-0 absolute inset-0"></iframe>
                         @endif
                     </div>
 
@@ -220,9 +93,9 @@
                 </x-filament::modal>
 
                 {{-- Download Button --}}
-                <div class="file-btn-container">
+                <div class="flex-1 flex items-center justify-center">
                     <x-filament::button color="primary" size="sm" icon="heroicon-m-arrow-down-tray" tag="a"
-                        href="{{ $fileUrl }}" download="{{ basename($file) }}" style="width: 100%;">
+                        href="{{ $fileUrl }}" download="{{ basename($file) }}" class="w-full justify-center">
                         Download
                     </x-filament::button>
                 </div>

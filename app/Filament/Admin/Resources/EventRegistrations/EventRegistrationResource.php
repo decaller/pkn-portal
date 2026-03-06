@@ -4,6 +4,7 @@ namespace App\Filament\Admin\Resources\EventRegistrations;
 
 use App\Filament\Admin\Resources\EventRegistrations\Pages\CreateEventRegistration;
 use App\Filament\Admin\Resources\EventRegistrations\Pages\EditEventRegistration;
+use App\Filament\Admin\Resources\EventRegistrations\Pages\ListEventRegistrationActivities;
 use App\Filament\Admin\Resources\EventRegistrations\Pages\ListEventRegistrations;
 use App\Filament\Admin\Resources\EventRegistrations\Pages\ViewEventRegistration;
 use App\Filament\Admin\Resources\EventRegistrations\Schemas\EventRegistrationForm;
@@ -83,6 +84,7 @@ class EventRegistrationResource extends Resource
             'index' => ListEventRegistrations::route('/'),
             'create' => CreateEventRegistration::route('/create'),
             'view' => ViewEventRegistration::route('/{record}'),
+            'activities' => ListEventRegistrationActivities::route('/{record}/activities'),
             'edit' => EditEventRegistration::route('/{record}/edit'),
         ];
     }

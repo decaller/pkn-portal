@@ -117,6 +117,20 @@ Dokumen ini menguraikan langkah-langkah pengujian manual untuk memverifikasi alu
     - [ ] Pastikan tombol berubah secara dinamis (mis., berubah menjadi tautan "Halaman Acara" setelah pembayaran diverifikasi dan peserta sudah lengkap ditambahkan).
     - [ ] Setelah admin menyetujui pembayaran di sistem, pastikan status langsung berubah menjadi "Disetujui" (Approved) di tampilan pengguna pengguna.
 
+### 2.6 Notifikasi & Aktivitas (Notification Bell)
+
+- **Tautan:** Ikon Lonceng (Bell Icon) di Header (Topbar) Dashboard
+- **Biasa:**
+    - [ ] Pastikan ikon Notifikasi muncul di area navigasi atas (topbar) ketika user berhasil login.
+    - [ ] Lakukan pendaftaran acara baru. Pastikan indikator notifikasi belum dibaca (unread badge) bertambah di ikon lonceng.
+    - [ ] Klik ikon lonceng untuk melihat daftar notifikasi aktivitas terbaru.
+    - [ ] Klik sebuah notifikasi atau tombol aksi di dalamnya; pastikan notifikasinya berubah menjadi 'sudah dibaca' (read) dan badge unread berkurang.
+    - [ ] Klik "Tandai semua sudah dibaca" (Mark all as read); pastikan semua notifikasi terkini berubah statusnya.
+    - [ ] Saat status registrasi diubah menjadi "Disetujui" oleh Admin, pastikan pemberitahuan/notifikasi tentang persetujuan tersebut muncul untuk pengguna terkait.
+- **Kasus Ekstrem:**
+    - [ ] **Notifikasi Berkala (Cronjob):** (Jika diuji menggunakan command) Simulasikan berjalannya _scheduler_ pengingat pembayaran; pastikan user yang registrasinya tertunda (pending) mendapatkan notifikasi peringatan.
+    - [ ] **Kosongkan Notifikasi:** Coba fitur hapus (clear) atau pastikan tampilan _empty state_ terlihat bagus jika tidak ada notifikasi sama sekali.
+
 ### 🚫 Batasan (Hal yang tidak boleh bisa Anda lakukan)
 
 - [ ] Mengakses Dashboard Admin (`/admin`).
@@ -186,6 +200,16 @@ Dokumen ini menguraikan langkah-langkah pengujian manual untuk memverifikasi alu
     - [ ] Edit artikel berita yang sudah ada.
     - [ ] Hapus artikel.
     - [ ] Pastikan semua konten diperbarui secara akurat di halaman Utama/Publik.
+
+### 3.6 Log Aktivitas (Activity Logs) & Sistem Audit
+
+- **Tautan:** Bagian/Relation Manager Aktivitas (Activity Log) pada Detail Data (misal: di view Event Registrations)
+- **Biasa:**
+    - [ ] Buka halaman View/Detail dari sebuah data pendaftaran acara (Event Registration) atau entri lain yang mendukung log (seperti data pengguna/organisasi).
+    - [ ] Periksa riwayat modul Log Aktivitas (Activity Timeline).
+    - [ ] Pastikan tindakan seperti persetujuan (Approve) atau penolakan (Reject) pendaftaran terekam jelas, lengkap dengan stempel waktu (timestamp) dan nama admin yang mengeksekusinya.
+- **Kasus Ekstrem:**
+    - [ ] **Riwayat Update Ganda:** Lakukan beberapa kali perubahan (Edit) atas satu data yang sama dalam waktu singkat; pastikan log aktivitas mencatat rentetan perubahan tersebut dengan akurat (rekaman _before_ dan _after_).
 
 ### 🚫 Batasan (Hal yang tidak diperbolehkan bagi admin)
 

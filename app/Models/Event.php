@@ -8,16 +8,23 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Validation\ValidationException;
+use Spatie\Activitylog\LogOptions;
+use Spatie\Activitylog\Traits\LogsActivity;
 
 class Event extends Model
 {
-    use HasFactory;
+    use HasFactory, LogsActivity;
 
     // 1. Allow mass assignment
     protected $guarded = [];
 
+    public function getActivitylogOptions(): LogOptions
+    {
+        return LogOptions::defaults()->logFillable();
+    }
+
     protected $casts = [
-        'event_date' => 'date',
+        'event_date' => 'date:Y-m-d',
         'event_type' => EventType::class,
         'is_published' => 'boolean',
         'allow_registration' => 'boolean',
@@ -36,7 +43,7 @@ class Event extends Model
                 return;
             }
 
-            if (($event->isDirty('event_date') || $event->isDirty('allow_registration')) 
+            if (($event->isDirty('event_date') || $event->isDirty('allow_registration'))
                 && $event->event_date->isBefore(now()->startOfDay())) {
                 throw ValidationException::withMessages([
                     'event_date' => 'Event date cannot be in the past when registration is enabled.',
