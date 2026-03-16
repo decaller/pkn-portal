@@ -13,7 +13,9 @@
 
 pest()->extend(Tests\TestCase::class)
  // ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
-    ->in('Feature');
+    ->in('Feature', 'Browser');
+
+pest()->browser()->timeout(30000);
 
 /*
 |--------------------------------------------------------------------------
