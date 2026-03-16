@@ -48,6 +48,14 @@ class DocumentForm
                         ->preload()
                         ->nullable(),
 
+                    FileUpload::make('cover_image')
+                        ->label(__('Cover Image'))
+                        ->image()
+                        ->disk('public')
+                        ->directory('document-covers')
+                        ->imageEditor()
+                        ->helperText(__('Custom thumbnail for this document. If empty, a file type icon will be used.')),
+
                     TagsInput::make('tags')
                         ->placeholder(__('Add tags...'))
                         ->suggestions(
