@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>laravel/laravel – Atlas – 14 Models, 4 Commands, 108 Routes, 3 Services, 5 Notifications, 1 Middlewares, 0 Form Requests, 0 Events, 1 Controllers, 0 Resources, 1 Jobs</title>
+    <title>laravel/laravel – Atlas – 14 Models, 4 Commands, 108 Routes, 3 Services, 5 Notifications, 2 Middlewares, 0 Form Requests, 0 Events, 1 Controllers, 0 Resources, 1 Jobs</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script>
@@ -206,7 +206,7 @@
                         </div>
                         <div>
                             <h1 class="text-xl font-bold text-gray-900 dark:text-white">laravel/laravel</h1>
-                            <p class="text-sm text-gray-500 dark:text-gray-400">Atlas - 16/03/2026 18:26</p>
+                            <p class="text-sm text-gray-500 dark:text-gray-400">Atlas - 16/03/2026 18:45</p>
                         </div>
                     </div>
                     <button id="dark-mode-toggle-mobile" onclick="toggleDarkMode()" 
@@ -281,7 +281,7 @@
                                 <span class="text-lg">🔄</span>
                                 <span class="font-medium">Middlewares</span>
                             </div>
-                            <span class="count-badge px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400">1</span>
+                            <span class="count-badge px-2 py-1 text-xs font-semibold rounded-full bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-400">2</span>
                         </a>
                     
                     
@@ -4439,6 +4439,10 @@
                                                                 auth:sanctum
                                                             </button>
                                                                                                                     <button class="route-filter-middleware text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-yellow-50 dark:hover:bg-yellow-900/20"
+                                                                    data-filter-middleware="cacheResponse">
+                                                                cacheResponse
+                                                            </button>
+                                                                                                                    <button class="route-filter-middleware text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-yellow-50 dark:hover:bg-yellow-900/20"
                                                                     data-filter-middleware="filament.actions">
                                                                 filament.actions
                                                             </button>
@@ -4453,6 +4457,10 @@
                                                                                                                     <button class="route-filter-middleware text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-yellow-50 dark:hover:bg-yellow-900/20"
                                                                     data-filter-middleware="panel:user">
                                                                 panel:user
+                                                            </button>
+                                                                                                                    <button class="route-filter-middleware text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-yellow-50 dark:hover:bg-yellow-900/20"
+                                                                    data-filter-middleware="throttle:30,1">
+                                                                throttle:30,1
                                                             </button>
                                                                                                                     <button class="route-filter-middleware text-xs px-2 py-1 rounded border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-yellow-50 dark:hover:bg-yellow-900/20"
                                                                     data-filter-middleware="throttle:60,1">
@@ -4477,7 +4485,7 @@
                                      data-route-type="web"
                                      data-route-methods="GET"
                                      data-route-prefix=""
-                                     data-route-middleware="web">
+                                     data-route-middleware="web,throttle:60,1,cacheResponse">
                                     <div class="bg-white rounded-lg shadow-sm p-4 mb-4 border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
 
     <div class="mb-4">
@@ -4516,7 +4524,7 @@
         <div class="min-h-[2rem]">
     <span class="block text-xs text-gray-400 dark:text-gray-500 font-semibold mb-1">🛡️ Middlewares</span>
     
-                        <code class="text-xs">1 middlewares</code>
+                        <code class="text-xs">3 middlewares</code>
             </div>
     </div>
 
@@ -4541,13 +4549,19 @@
                 <div class="flex items-center mb-3">
                     <span class="text-sm mr-2">🛡️</span>
                     <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Applied Middlewares (1)
+                        Applied Middlewares (3)
                     </h4>
                 </div>
                 <div class="bg-gray-50 dark:bg-gray-700/50 rounded p-3">
                     <div class="flex flex-wrap gap-2">
                                                     <span class="text-xs px-2 py-1 rounded-full bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-200 font-medium">
                                 web
+                            </span>
+                                                    <span class="text-xs px-2 py-1 rounded-full bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-200 font-medium">
+                                throttle:60,1
+                            </span>
+                                                    <span class="text-xs px-2 py-1 rounded-full bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-200 font-medium">
+                                cacheResponse
                             </span>
                                             </div>
                 </div>
@@ -4580,11 +4594,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -4685,11 +4699,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -4853,11 +4867,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -12895,11 +12909,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -13018,11 +13032,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -13153,11 +13167,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -13288,11 +13302,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -13408,11 +13422,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -13531,11 +13545,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -13636,11 +13650,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -13741,11 +13755,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -13846,11 +13860,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -13958,11 +13972,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -14070,11 +14084,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -14182,11 +14196,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -14309,11 +14323,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -14436,11 +14450,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -14566,11 +14580,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -14582,7 +14596,7 @@
                                      data-route-type="web"
                                      data-route-methods="GET"
                                      data-route-prefix=""
-                                     data-route-middleware="web">
+                                     data-route-middleware="web,throttle:30,1">
                                     <div class="bg-white rounded-lg shadow-sm p-4 mb-4 border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
 
     <div class="mb-4">
@@ -14621,7 +14635,7 @@
         <div class="min-h-[2rem]">
     <span class="block text-xs text-gray-400 dark:text-gray-500 font-semibold mb-1">🛡️ Middlewares</span>
     
-                        <code class="text-xs">1 middlewares</code>
+                        <code class="text-xs">2 middlewares</code>
             </div>
     </div>
 
@@ -14647,13 +14661,16 @@
                 <div class="flex items-center mb-3">
                     <span class="text-sm mr-2">🛡️</span>
                     <h4 class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Applied Middlewares (1)
+                        Applied Middlewares (2)
                     </h4>
                 </div>
                 <div class="bg-gray-50 dark:bg-gray-700/50 rounded p-3">
                     <div class="flex flex-wrap gap-2">
                                                     <span class="text-xs px-2 py-1 rounded-full bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-200 font-medium">
                                 web
+                            </span>
+                                                    <span class="text-xs px-2 py-1 rounded-full bg-yellow-100 text-yellow-700 dark:bg-yellow-900 dark:text-yellow-200 font-medium">
+                                throttle:30,1
                             </span>
                                             </div>
                 </div>
@@ -14686,11 +14703,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -14806,11 +14823,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -14971,11 +14988,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -15136,11 +15153,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -15301,11 +15318,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -15466,11 +15483,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -15631,11 +15648,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -15796,11 +15813,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -15961,11 +15978,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -16126,11 +16143,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -16246,11 +16263,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -16389,11 +16406,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -16494,11 +16511,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -16599,11 +16616,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -16704,11 +16721,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -16872,11 +16889,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -17037,11 +17054,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -17205,11 +17222,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -17373,11 +17390,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -17538,11 +17555,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -17709,11 +17726,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -17880,11 +17897,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -18051,11 +18068,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -18222,11 +18239,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -18393,11 +18410,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -18564,11 +18581,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -18735,11 +18752,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -18906,11 +18923,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -19077,11 +19094,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -19248,11 +19265,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -19419,11 +19436,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -19590,11 +19607,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -19761,11 +19778,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -19932,11 +19949,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -20103,11 +20120,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -20274,11 +20291,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -20445,11 +20462,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -20616,11 +20633,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -20787,11 +20804,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -20958,11 +20975,11 @@
                     <div class="space-y-1 text-right md:text-left">
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>💾</span>
-                    <span>2.3 KB</span>
+                    <span>2.4 KB</span>
                 </div>
                 <div class="flex items-center justify-end md:justify-start space-x-1">
                     <span>🕒</span>
-                    <span>16/03/2026 05:38</span>
+                    <span>16/03/2026 18:36</span>
                 </div>
             </div>
             </div>
@@ -24972,13 +24989,278 @@ if (typeof handleMethodsScroll === 'undefined') {
                                 <span class="text-3xl">🔄</span>
                                 <div>
                                     <h1 class="text-3xl font-bold text-gray-900 dark:text-white">Middlewares</h1>
-                                    <p class="text-gray-600 dark:text-gray-400">1 middleware classes found in your application</p>
+                                    <p class="text-gray-600 dark:text-gray-400">2 middleware classes found in your application</p>
                                 </div>
                             </div>
                         </div>
                         
                         <div class="grid gap-6 md:grid-cols-2 xl:grid-cols-3 items-start">
                                                             <div class="bg-white rounded-lg shadow-sm p-4 mb-4 border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
+
+    <div class="mb-4">
+    <div class="flex items-center justify-between mb-2">
+        <h2 class="text-lg font-semibold text-gray-800 dark:text-gray-200 truncate max-w-[70%]">
+            🛡️ SecurityHeaders
+        </h2>
+                    <span class="text-xs font-bold px-2 py-1 rounded-full bg-gray-100 text-gray-600 dark:bg-gray-700 dark:text-gray-300">
+                Standard
+            </span>
+            </div>
+    
+            <div class="mb-2">
+            <p class="text-sm text-gray-600 dark:text-gray-400 font-mono">
+                📦 App\Http\Middleware
+            </p>
+        </div>
+        
+    
+    <div class="border-t border-gray-200 dark:border-gray-600"></div>
+</div>
+    
+    
+    
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+        
+        <div class="min-h-[2rem]">
+    <span class="block text-xs text-gray-400 dark:text-gray-500 font-semibold mb-1">⚡ Terminable</span>
+    
+                        <code class="text-xs">No</code>
+            </div>
+
+        
+        <div class="min-h-[2rem]">
+    <span class="block text-xs text-gray-400 dark:text-gray-500 font-semibold mb-1">🧩 Dependencies</span>
+    
+                        <code class="text-xs">0 dependencies</code>
+            </div>
+
+        
+        <div class="min-h-[2rem]">
+    <span class="block text-xs text-gray-400 dark:text-gray-500 font-semibold mb-1">⚙️ Parameters</span>
+    
+                        <code class="text-xs">0 parameters</code>
+            </div>
+    </div>
+
+    
+    <div class="space-y-6">
+        
+        
+        
+            </div>
+
+    
+    <div class="mt-6 space-y-4">
+        
+        <div class="mb-3">
+    <button 
+        onclick="toggleSection('methods-middleware-9948b031e9d2a39e695d445721fa5e2c')" 
+        class="flex items-center justify-between w-full text-left hover:bg-gray-50 dark:hover:bg-gray-700/50 rounded p-2 transition-colors duration-200 group"
+    >
+        <h4 class="text-xs font-medium text-gray-700 dark:text-gray-300 flex items-center">
+            <span class="text-sm mr-2">⚙️</span>
+            Methods
+            <span class="ml-2 text-xs bg-gray-200 dark:bg-gray-700 dark:text-gray-100 text-gray-800 px-1.5 py-0.5 rounded">
+                1
+            </span>
+        </h4>
+        <div class="flex items-center space-x-2">
+            <span id="text-methods-middleware-9948b031e9d2a39e695d445721fa5e2c" class="text-xs text-gray-500 dark:text-gray-400 group-hover:text-gray-700 dark:group-hover:text-gray-300">
+                Show
+            </span>
+            <span id="icon-methods-middleware-9948b031e9d2a39e695d445721fa5e2c" class="text-xs text-gray-500 transform transition-transform duration-200 ">
+                ▼
+            </span>
+        </div>
+    </button>
+    
+    <div id="methods-middleware-9948b031e9d2a39e695d445721fa5e2c" class="mt-2 hidden">
+        <div class="relative">
+            <div class="space-y-1 max-h-64 overflow-y-auto scrollbar-hide hover:scrollbar-show" 
+                 onscroll="handleMethodsScroll('methods-middleware-9948b031e9d2a39e695d445721fa5e2c')">
+                                    <div class="text-xs bg-blue-50 dark:bg-blue-900/20 rounded p-2 border-l-2 border-blue-200 dark:border-blue-700">
+                        <div class="flex items-start justify-between">
+                            <div class="font-mono flex-1">
+                                <div class="flex items-center space-x-2 mb-1">
+                                                                            <span class="text-blue-600 dark:text-blue-400 font-semibold">handle()</span>
+                                                                                                            </div>
+                                
+                                                                    <div class="text-gray-600 dark:text-gray-400 text-xs mb-1">
+                                        Parameters: 
+                                                                                                                                                                                                                                    <span class="text-purple-600 dark:text-purple-400">Illuminate\Http\Request</span>
+                                                                                                <span class="text-blue-600 dark:text-blue-400">$$request</span>
+                                                                                                                                ,                                                                                                                                                 <span class="text-purple-600 dark:text-purple-400">Closure</span>
+                                                                                                <span class="text-blue-600 dark:text-blue-400">$$next</span>
+                                                                                                                        </div>
+                                                                
+                                                            </div>
+                            
+                            <div class="ml-3 flex-shrink-0">
+                                                            </div>
+                        </div>
+                    </div>
+                            </div>
+            
+            <!-- Fade gradient at bottom -->
+            <div id="fade-methods-middleware-9948b031e9d2a39e695d445721fa5e2c" class="absolute bottom-0 left-0 right-0 h-6 bg-gradient-to-t from-white dark:from-gray-800 to-transparent pointer-events-none opacity-0 transition-opacity duration-200"></div>
+        </div>
+        
+            </div>
+</div>
+
+<script>
+if (typeof toggleSection === 'undefined') {
+    function toggleSection(sectionId) {
+        const section = document.getElementById(sectionId);
+        const icon = document.getElementById('icon-' + sectionId);
+        const textSpan = document.getElementById('text-' + sectionId);
+        
+        if (section && icon && textSpan) {
+            if (section.classList.contains('hidden')) {
+                section.classList.remove('hidden');
+                icon.classList.add('rotate-180');
+                textSpan.textContent = 'Hide';
+                
+                // Check scroll state after showing
+                setTimeout(() => {
+                    handleMethodsScroll(sectionId);
+                }, 100);
+            } else {
+                section.classList.add('hidden');
+                icon.classList.remove('rotate-180');
+                textSpan.textContent = 'Show';
+            }
+        }
+    }
+}
+
+if (typeof handleMethodsScroll === 'undefined') {
+    function handleMethodsScroll(sectionId) {
+        const section = document.getElementById(sectionId);
+        if (!section) return;
+        
+        const scrollContainer = section.querySelector('[onscroll]');
+        const fadeElement = document.getElementById('fade-' + sectionId);
+        
+        if (scrollContainer && fadeElement) {
+            const isScrollable = scrollContainer.scrollHeight > scrollContainer.clientHeight;
+            const isAtBottom = scrollContainer.scrollTop + scrollContainer.clientHeight >= scrollContainer.scrollHeight - 5;
+            
+            if (isScrollable && !isAtBottom) {
+                fadeElement.classList.remove('opacity-0');
+                fadeElement.classList.add('opacity-100');
+            } else {
+                fadeElement.classList.remove('opacity-100');
+                fadeElement.classList.add('opacity-0');
+            }
+        }
+    }
+    
+    // Check scroll state on load
+    document.addEventListener('DOMContentLoaded', function() {
+        const methodsSections = document.querySelectorAll('[id^="methods-"]');
+        methodsSections.forEach(section => {
+            if (!section.classList.contains('hidden')) {
+                handleMethodsScroll(section.id);
+            }
+        });
+    });
+}
+</script>
+
+        
+        <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+        <h4 class="text-sm font-semibold text-gray-900 dark:text-white mb-4 flex items-center">
+            <span class="mr-2">🔄</span>
+            Flow & Dependencies
+        </h4>
+        
+        <div class="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+                            <div class="min-h-[4rem] bg-gray-50 dark:bg-gray-800 rounded-lg p-3">
+                    <div class="flex items-center mb-2">
+                        <span class="text-sm mr-2">🏛️</span>
+                        <span class="text-sm font-medium text-gray-700 dark:text-gray-300">Facades</span>
+                    </div>
+                    <div class="space-y-1">
+                                                    <div class="text-xs">
+                                <code>Middleware</code>
+                            </div>
+                                                    <div class="text-xs">
+                                <code>Request</code>
+                            </div>
+                                                    <div class="text-xs">
+                                <code>Response</code>
+                            </div>
+                                            </div>
+                </div>
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+        </div>
+
+        
+            </div>
+    </div>
+
+    
+    <div class="mt-4 pt-3 border-t border-gray-100 dark:border-gray-600">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-2 text-xs text-gray-500 dark:text-gray-400">
+        
+        <div class="space-y-1">
+            <div class="flex items-center space-x-1">
+                <span>🏷️</span>
+                <span class="font-mono truncate">App\Http\Middleware\SecurityHeaders</span>
+            </div>
+                            <div class="flex items-center space-x-1">
+                    <span>📄</span>
+                    <span class="font-mono text-[10px] truncate">SecurityHeaders.php</span>
+                </div>
+                    </div>
+        
+        
+                    <div class="space-y-1 text-right md:text-left">
+                <div class="flex items-center justify-end md:justify-start space-x-1">
+                    <span>💾</span>
+                    <span>1.0 KB</span>
+                </div>
+                <div class="flex items-center justify-end md:justify-start space-x-1">
+                    <span>🕒</span>
+                    <span>16/03/2026 18:36</span>
+                </div>
+            </div>
+            </div>
+</div>
+</div>                                                            <div class="bg-white rounded-lg shadow-sm p-4 mb-4 border border-gray-200 dark:bg-gray-800 dark:border-gray-700">
 
     <div class="mb-4">
     <div class="flex items-center justify-between mb-2">

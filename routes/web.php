@@ -7,7 +7,7 @@ use App\Services\InvoicePdfService;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 
-Route::view('/', 'home')->name('home');
+Route::view('/', 'home')->middleware(['throttle:60,1', 'cacheResponse'])->name('home');
 
 Route::get('/locale/{locale}', function (string $locale) {
     $supportedLocales = ['en', 'id'];
@@ -17,7 +17,7 @@ Route::get('/locale/{locale}', function (string $locale) {
     }
 
     return redirect()->back();
-})->name('locale.switch');
+})->middleware('throttle:30,1')->name('locale.switch');
 
 Route::get(
     '/login',

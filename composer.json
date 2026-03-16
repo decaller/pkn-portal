@@ -17,7 +17,8 @@
         "pxlrbt/filament-activity-log": "^2.1",
         "rupadana/filament-api-service": "dev-copilot/update-to-filament-v5#533a7a6c1c230c7bfaab749029e94d63662257b2 as 4.0.99",
         "spatie/laravel-activitylog": "^4.12",
-        "spatie/laravel-permission": "^6.0"
+        "spatie/laravel-permission": "^6.0",
+        "spatie/laravel-responsecache": "^8.3"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",
