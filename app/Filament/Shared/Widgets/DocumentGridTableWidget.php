@@ -81,11 +81,7 @@ class DocumentGridTableWidget extends TableWidget
 
         $contentGrid = ['sm' => 1, 'md' => 3];
 
-        $query = $query->latest();
-
-        if ($isRelated) {
-            $query->limit(3);
-        }
+        $query = $query->latest()->limit(3);
 
         $table = $table
             ->query($query)
@@ -141,11 +137,7 @@ class DocumentGridTableWidget extends TableWidget
             ->emptyStateHeading($emptyHeading)
             ->headerActions($this->headerActions());
 
-        if ($isRelated) {
-            $table->paginated(false);
-        }
-
-        return $table;
+        return $table->paginated(false);
     }
 
     /**
