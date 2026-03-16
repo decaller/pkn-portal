@@ -2,6 +2,7 @@
 
 namespace App\Filament\Admin\Resources\Users\Schemas;
 
+use App\Models\Event;
 use App\Models\User;
 use Filament\Infolists\Components\IconEntry;
 use Filament\Infolists\Components\TextEntry;
@@ -40,7 +41,7 @@ class UserInfolist
                             ->state(function (User $record): string {
                                 // We are looking for registrations where this user is the booker,
                                 // OR where they are listed as a participant.
-                                $events = \App\Models\Event::whereHas('registrations', function ($query) use ($record) {
+                                $events = Event::whereHas('registrations', function ($query) use ($record) {
                                     $query->where('booker_user_id', $record->id)
                                         ->orWhereHas('participants', function ($participantQuery) use ($record) {
                                             $participantQuery->where('user_id', $record->id);
@@ -62,7 +63,7 @@ class UserInfolist
                                     return '-';
                                 }
 
-                                $pastEvents = \App\Models\Event::whereIn('id', $record->past_events)->get();
+                                $pastEvents = Event::whereIn('id', $record->past_events)->get();
 
                                 return $pastEvents->map(fn ($event) => $event->title)->join(', ');
                             })

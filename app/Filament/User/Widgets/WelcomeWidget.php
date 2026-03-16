@@ -2,6 +2,7 @@
 
 namespace App\Filament\User\Widgets;
 
+use App\Models\EventRegistration;
 use Filament\Widgets\Widget;
 
 class WelcomeWidget extends Widget
@@ -15,7 +16,7 @@ class WelcomeWidget extends Widget
     protected function getViewData(): array
     {
         return [
-            'lastRegistration' => \App\Models\EventRegistration::with(['participants', 'event'])
+            'lastRegistration' => EventRegistration::with(['participants', 'event'])
                 ->where('booker_user_id', auth()->id())
                 ->latest()
                 ->first(),

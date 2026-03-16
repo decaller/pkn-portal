@@ -7,7 +7,7 @@ use App\Models\User;
 
 class RegistrationParticipantPolicy
 {
-    public function before(User $user, string $ability): bool|null
+    public function before(User $user, string $ability): ?bool
     {
         if ($user->isMainAdmin()) {
             return true;
@@ -25,7 +25,7 @@ class RegistrationParticipantPolicy
         User $user,
         RegistrationParticipant $registrationParticipant,
     ): bool {
-        return $user->can("view", $registrationParticipant->registration);
+        return $user->can('view', $registrationParticipant->registration);
     }
 
     public function create(User $user): bool
@@ -37,14 +37,14 @@ class RegistrationParticipantPolicy
         User $user,
         RegistrationParticipant $registrationParticipant,
     ): bool {
-        return $user->can("update", $registrationParticipant->registration);
+        return $user->can('update', $registrationParticipant->registration);
     }
 
     public function delete(
         User $user,
         RegistrationParticipant $registrationParticipant,
     ): bool {
-        if (!$user->can("update", $registrationParticipant->registration)) {
+        if (! $user->can('update', $registrationParticipant->registration)) {
             return false;
         }
 

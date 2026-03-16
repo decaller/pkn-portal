@@ -44,7 +44,7 @@ class Login extends BaseLogin
         return [
             $this->getHelpAction(),
             $this->getAuthenticateFormAction(),
-            
+
         ];
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Filament\Shared\Tables;
 
+use App\Models\Invoice;
 use Filament\Actions\Action;
 use Filament\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
@@ -77,7 +78,7 @@ class InvoicesTable
                 Action::make('download')
                     ->label(__('Download PDF'))
                     ->icon('heroicon-o-document-arrow-down')
-                    ->url(fn (\App\Models\Invoice $record): string => route('invoices.download', $record))
+                    ->url(fn (Invoice $record): string => route('invoices.download', $record))
                     ->openUrlInNewTab(),
                 ViewAction::make(),
             ]);

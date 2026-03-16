@@ -2,10 +2,12 @@
 
 namespace App\Filament\Admin\Resources\EventRegistrations\Pages;
 
+use App\Enums\PaymentStatus;
 use App\Filament\Admin\Resources\EventRegistrations\EventRegistrationResource;
 use App\Filament\Admin\Resources\Users\UserResource;
 use App\Models\EventRegistration;
 use Filament\Actions\Action;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\EditRecord;
 
 class EditEventRegistration extends EditRecord
@@ -19,7 +21,7 @@ class EditEventRegistration extends EditRecord
                 ->label(__('Verify Payment'))
                 ->icon('heroicon-o-check-circle')
                 ->color('success')
-                ->visible(fn (EventRegistration $record): bool => $record->payment_status === \App\Enums\PaymentStatus::Submitted)
+                ->visible(fn (EventRegistration $record): bool => $record->payment_status === PaymentStatus::Submitted)
                 ->requiresConfirmation()
                 ->modalHeading(__('Verify Payment'))
                 ->modalDescription(__('Are you absolutely sure you want to verify this payment? The user will be fully confirmed for this event.'))
@@ -27,7 +29,7 @@ class EditEventRegistration extends EditRecord
                 ->action(function (EventRegistration $record) {
                     $record->verifyPayment(auth()->user());
 
-                    \Filament\Notifications\Notification::make()
+                    Notification::make()
                         ->title(__('Payment Verified'))
                         ->success()
                         ->send();

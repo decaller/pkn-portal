@@ -4,8 +4,10 @@ namespace App\Filament\Admin\Resources\Invoices\Tables;
 
 use App\Enums\InvoiceStatus;
 use App\Enums\PaymentStatus;
+use App\Models\Invoice;
 use Filament\Actions\Action;
 use Filament\Actions\ViewAction;
+use Filament\Notifications\Notification;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -72,18 +74,18 @@ class InvoicesTable
                     ->label(__('Verify'))
                     ->icon('heroicon-o-check-circle')
                     ->color('success')
-                    ->visible(fn (\App\Models\Invoice $record): bool => $record->registration && $record->registration->payment_status === PaymentStatus::Submitted)
+                    ->visible(fn (Invoice $record): bool => $record->registration && $record->registration->payment_status === PaymentStatus::Submitted)
                     ->requiresConfirmation()
                     ->modalHeading(__('Verify Payment'))
                     ->modalDescription(__('Are you sure you want to completely verify this invoice payment? The registration will be marked as paid.'))
                     ->modalSubmitActionLabel(__('Yes, mark as Verified'))
-                    ->action(function (\App\Models\Invoice $record) {
+                    ->action(function (Invoice $record) {
                         $registration = $record->registration;
                         if ($registration) {
                             $registration->verifyPayment(auth()->user());
                         }
 
-                        \Filament\Notifications\Notification::make()
+                        Notification::make()
                             ->title(__('Payment Verified'))
                             ->success()
                             ->send();
@@ -91,7 +93,7 @@ class InvoicesTable
                 Action::make('download')
                     ->label(__('Download PDF'))
                     ->icon('heroicon-o-document-arrow-down')
-                    ->url(fn (\App\Models\Invoice $record): string => route('invoices.download', $record))
+                    ->url(fn (Invoice $record): string => route('invoices.download', $record))
                     ->openUrlInNewTab(),
                 ViewAction::make(),
             ]);

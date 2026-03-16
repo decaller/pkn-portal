@@ -4,6 +4,7 @@ namespace App\Filament\User\Auth;
 
 use App\Enums\PaymentStatus;
 use App\Enums\RegistrationStatus;
+use App\Filament\User\Resources\EventRegistrations\EventRegistrationResource;
 use App\Filament\User\Resources\EventRegistrations\Schemas\EventRegistrationForm;
 use App\Models\Event;
 use App\Models\EventRegistration;
@@ -11,6 +12,7 @@ use App\Models\Organization;
 use App\Models\Setting;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
+use Filament\Auth\Http\Responses\Contracts\RegistrationResponse;
 use Filament\Auth\Pages\Register as BaseRegister;
 use Filament\Forms\Components\Checkbox;
 use Filament\Forms\Components\CheckboxList;
@@ -22,11 +24,13 @@ use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Schema;
 use Filament\Support\Enums\Width;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\ValidationException;
+use Livewire\Features\SupportRedirects\Redirector;
 
 class RegisterEvent extends BaseRegister
 {
@@ -179,18 +183,18 @@ class RegisterEvent extends BaseRegister
             ->visible(fn (): bool => filled(Setting::defaultContactWhatsAppUrl()));
     }
 
-    public function register(): ?\Filament\Auth\Http\Responses\Contracts\RegistrationResponse
+    public function register(): ?RegistrationResponse
     {
         $response = parent::register();
 
         if ($this->createdRegistration) {
-            return new class($this) implements \Filament\Auth\Http\Responses\Contracts\RegistrationResponse
+            return new class($this) implements RegistrationResponse
             {
                 public function __construct(
-                    private \App\Filament\User\Auth\RegisterEvent $page
+                    private RegisterEvent $page
                 ) {}
 
-                public function toResponse($request): \Illuminate\Http\RedirectResponse|\Livewire\Features\SupportRedirects\Redirector
+                public function toResponse($request): RedirectResponse|Redirector
                 {
                     return redirect()->to($this->page->getRedirectUrl());
                 }
@@ -293,7 +297,7 @@ class RegisterEvent extends BaseRegister
         if ($this->createdRegistration) {
             $tenant = $this->createdRegistration->organization ?? filament()->getTenant();
 
-            return \App\Filament\User\Resources\EventRegistrations\EventRegistrationResource::getUrl('view', [
+            return EventRegistrationResource::getUrl('view', [
                 'tenant' => $tenant,
                 'record' => $this->createdRegistration,
             ]);

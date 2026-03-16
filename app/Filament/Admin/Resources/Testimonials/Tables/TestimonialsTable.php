@@ -6,6 +6,7 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 
 class TestimonialsTable
@@ -31,7 +32,7 @@ class TestimonialsTable
                     ->badge()
                     ->color('warning')
                     ->icon('heroicon-m-star'),
-                \Filament\Tables\Columns\ToggleColumn::make('is_approved')
+                ToggleColumn::make('is_approved')
                     ->label(__('Approved')),
                 TextColumn::make('created_at')
                     ->translateLabel()

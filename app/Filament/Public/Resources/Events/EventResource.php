@@ -3,6 +3,7 @@
 namespace App\Filament\Public\Resources\Events;
 
 use App\Filament\Public\Resources\Events\Pages\ListEvents;
+use App\Filament\Public\Resources\Events\Pages\ViewEvent;
 use App\Filament\Public\Resources\Events\Tables\EventsTable;
 use App\Filament\Shared\Schemas\EventInfolist;
 use App\Models\Event;
@@ -68,7 +69,7 @@ class EventResource extends Resource
     {
         return [
             'index' => ListEvents::route('/'),
-            'view' => \App\Filament\Public\Resources\Events\Pages\ViewEvent::route('/{record}'),
+            'view' => ViewEvent::route('/{record}'),
         ];
     }
 }

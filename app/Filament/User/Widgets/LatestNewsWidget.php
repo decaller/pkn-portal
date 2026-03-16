@@ -3,6 +3,9 @@
 namespace App\Filament\User\Widgets;
 
 use App\Models\News;
+use Filament\Actions\ViewAction;
+use Filament\Infolists\Components\ImageEntry;
+use Filament\Infolists\Components\TextEntry;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\TextColumn;
@@ -53,20 +56,20 @@ class LatestNewsWidget extends TableWidget
             ->paginated(false)
             ->emptyStateHeading(__('No published news yet.'))
             ->actions([
-                \Filament\Actions\ViewAction::make('view_news')
+                ViewAction::make('view_news')
                     ->label(__('Read Article'))
                     ->modalHeading(fn ($record) => $record->title)
                     ->infolist([
-                        \Filament\Infolists\Components\ImageEntry::make('thumbnail')
+                        ImageEntry::make('thumbnail')
                             ->hiddenLabel()
                             ->extraImgAttributes(['class' => 'rounded-xl w-full object-cover max-h-96'])
                             ->columnSpanFull(),
-                        \Filament\Infolists\Components\TextEntry::make('created_at')
+                        TextEntry::make('created_at')
                             ->hiddenLabel()
                             ->date('F j, Y, g:i a')
                             ->color('gray')
                             ->columnSpanFull(),
-                        \Filament\Infolists\Components\TextEntry::make('content')
+                        TextEntry::make('content')
                             ->hiddenLabel()
                             ->html()
                             ->prose()

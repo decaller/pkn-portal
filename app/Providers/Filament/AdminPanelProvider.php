@@ -2,6 +2,8 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Admin\Widgets\LatestEventRegistrationsWidget;
+use App\Filament\Admin\Widgets\LatestEventsWidget;
 use App\Filament\Pages\Tenancy\EditOrganizationProfile;
 use App\Filament\Pages\Tenancy\RegisterOrganization;
 use App\Models\Organization;
@@ -57,8 +59,8 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 AccountWidget::class,
                 FilamentInfoWidget::class,
-                \App\Filament\Admin\Widgets\LatestEventsWidget::class,
-                \App\Filament\Admin\Widgets\LatestEventRegistrationsWidget::class,
+                LatestEventsWidget::class,
+                LatestEventRegistrationsWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,

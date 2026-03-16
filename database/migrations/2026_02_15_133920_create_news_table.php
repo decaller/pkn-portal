@@ -19,7 +19,7 @@ return new class extends Migration
             $table->boolean('is_published')->default(true);
             $table->timestamps();
         });
-    }   
+    }
 
     /**
      * Reverse the migrations.

@@ -2,10 +2,12 @@
 
 namespace Database\Factories;
 
+use App\Models\Organization;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
- * @extends \Illuminate\Database\Eloquent\Factories\Factory<\App\Models\Organization>
+ * @extends Factory<Organization>
  */
 class OrganizationFactory extends Factory
 {
@@ -19,7 +21,7 @@ class OrganizationFactory extends Factory
         return [
             'name' => $this->faker->company(),
             'slug' => $this->faker->unique()->slug(),
-            'admin_user_id' => \App\Models\User::factory(),
+            'admin_user_id' => User::factory(),
         ];
     }
 }

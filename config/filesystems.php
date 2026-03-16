@@ -57,8 +57,8 @@ return [
             // THE SMART ENDPOINT:
             // If the code is running in the terminal (Tinker/Observer), use 'minio'.
             // If the code is rendering a page for the browser (Filament), use 'localhost'.
-            'endpoint' => (app()->runningInConsole() || app()->runningUnitTests()) 
-                ? env('AWS_ENDPOINT', 'http://minio:9000') 
+            'endpoint' => (app()->runningInConsole() || app()->runningUnitTests())
+                ? env('AWS_ENDPOINT', 'http://minio:9000')
                 : str_replace('minio', 'localhost', env('AWS_ENDPOINT', 'http://minio:9000')),
             'use_path_style_endpoint' => env('AWS_USE_PATH_STYLE_ENDPOINT', false), // This is critical for MinIO!
             'throw' => false,

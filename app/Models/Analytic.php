@@ -1,9 +1,10 @@
 <?php
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\MorphTo;
 
 class Analytic extends Model
 {
@@ -14,6 +15,7 @@ class Analytic extends Model
     {
         return $this->belongsTo(User::class);
     }
+
     public function trackable(): MorphTo
     {
         return $this->morphTo();

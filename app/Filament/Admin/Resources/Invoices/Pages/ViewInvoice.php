@@ -4,6 +4,7 @@ namespace App\Filament\Admin\Resources\Invoices\Pages;
 
 use App\Filament\Admin\Resources\EventRegistrations\EventRegistrationResource;
 use App\Filament\Admin\Resources\Invoices\InvoiceResource;
+use App\Models\Invoice;
 use App\Services\InvoicePdfService;
 use Filament\Actions\Action;
 use Filament\Resources\Pages\ViewRecord;
@@ -28,7 +29,7 @@ class ViewInvoice extends ViewRecord
                 ->label(__('View Registration'))
                 ->icon('heroicon-o-ticket')
                 ->color('gray')
-                ->url(fn (\App\Models\Invoice $record): string => EventRegistrationResource::getUrl('view', ['record' => $record->event_registration_id])),
+                ->url(fn (Invoice $record): string => EventRegistrationResource::getUrl('view', ['record' => $record->event_registration_id])),
 
         ];
     }

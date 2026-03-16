@@ -2,6 +2,7 @@
 
 namespace App\Filament\Admin\Resources\EventRegistrations\Pages;
 
+use App\Enums\PaymentStatus;
 use App\Enums\RegistrationStatus;
 use App\Filament\Admin\Resources\EventRegistrations\EventRegistrationResource;
 use App\Filament\Admin\Resources\Users\UserResource;
@@ -32,7 +33,7 @@ class ViewEventRegistration extends ViewRecord
                 ->label(__('Verify Payment'))
                 ->icon('heroicon-o-check-circle')
                 ->color('success')
-                ->visible(fn (EventRegistration $record): bool => $record->payment_status === \App\Enums\PaymentStatus::Submitted)
+                ->visible(fn (EventRegistration $record): bool => $record->payment_status === PaymentStatus::Submitted)
                 ->requiresConfirmation()
                 ->modalHeading(__('Verify Payment'))
                 ->modalDescription(__('Are you absolutely sure you want to verify this payment? The user will be fully confirmed for this event.'))
@@ -40,7 +41,7 @@ class ViewEventRegistration extends ViewRecord
                 ->action(function (EventRegistration $record) {
                     $record->verifyPayment(auth()->user());
 
-                    \Filament\Notifications\Notification::make()
+                    Notification::make()
                         ->title(__('Payment Verified'))
                         ->success()
                         ->send();

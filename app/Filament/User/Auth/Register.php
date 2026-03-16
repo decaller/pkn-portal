@@ -8,6 +8,7 @@ use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Auth\Pages\Register as BaseRegister;
 use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Utilities\Get;
@@ -115,7 +116,7 @@ class Register extends BaseRegister
                     ->helperText(__('Minimum 8 characters. Your password will be used so you can upload your payment proof and add participant details later.'))
                     ->dehydrateStateUsing(fn ($state) => Hash::make($state))
                     ->same('passwordConfirmation'),
-                \Filament\Forms\Components\Placeholder::make('account_benefits')
+                Placeholder::make('account_benefits')
                     ->label('')
                     ->content(__('By creating a PKN Portal account, you can easily register for future events, download your invoices, access your certificates, and manage your organization\'s members all in one place.')),
                 // TextInput::make("passwordConfirmation")

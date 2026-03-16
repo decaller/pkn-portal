@@ -3,6 +3,7 @@
 namespace App\Filament\Public\Resources\Events\Pages;
 
 use App\Filament\Public\Resources\Events\EventResource;
+use Filament\Actions\Action;
 use Filament\Resources\Pages\ViewRecord;
 
 class ViewEvent extends ViewRecord
@@ -12,7 +13,7 @@ class ViewEvent extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            \Filament\Actions\Action::make('register')
+            Action::make('register')
                 ->label('Register Now')
                 ->icon('heroicon-m-ticket')
                 ->color('success')

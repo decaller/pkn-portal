@@ -4,12 +4,12 @@ use App\Filament\Admin\Resources\Events\Schemas\EventInfolist;
 use App\Models\Event;
 use App\Models\Invoice;
 use App\Services\InvoicePdfService;
-use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Route;
 
-Route::view("/", "home")->name("home");
+Route::view('/', 'home')->name('home');
 
-Route::get("/locale/{locale}", function (string $locale) {
+Route::get('/locale/{locale}', function (string $locale) {
     $supportedLocales = ['en', 'id'];
 
     if (in_array($locale, $supportedLocales, true)) {
@@ -17,31 +17,31 @@ Route::get("/locale/{locale}", function (string $locale) {
     }
 
     return redirect()->back();
-})->name("locale.switch");
+})->name('locale.switch');
 
 Route::get(
-    "/login",
-    fn() => redirect()->route("filament.user.auth.login"),
-)->name("login");
+    '/login',
+    fn () => redirect()->route('filament.user.auth.login'),
+)->name('login');
 Route::get(
-    "/register",
-    fn() => redirect()->route("filament.user.auth.register"),
-)->name("register");
+    '/register',
+    fn () => redirect()->route('filament.user.auth.register'),
+)->name('register');
 
-Route::middleware("auth")
-    ->get("/invoices/{invoice}/download", function (
+Route::middleware('auth')
+    ->get('/invoices/{invoice}/download', function (
         Invoice $invoice,
         InvoicePdfService $service,
     ) {
-        $invoice->loadMissing("registration");
-        Gate::authorize("view", $invoice->registration);
+        $invoice->loadMissing('registration');
+        Gate::authorize('view', $invoice->registration);
 
         return $service->download($invoice);
     })
-    ->name("invoices.download");
+    ->name('invoices.download');
 
-Route::middleware("auth")
-    ->get("/admin/events/{event}/participants/download", function (Event $event) {
+Route::middleware('auth')
+    ->get('/admin/events/{event}/participants/download', function (Event $event) {
         abort_unless((bool) auth()->user()?->isMainAdmin(), 403);
 
         $rows = EventInfolist::participantsTableRows($event);
@@ -74,4 +74,4 @@ Route::middleware("auth")
             'Content-Type' => 'text/csv; charset=UTF-8',
         ]);
     })
-    ->name("admin.events.participants.download");
+    ->name('admin.events.participants.download');

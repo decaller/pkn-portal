@@ -10,14 +10,14 @@ class InvoicePdfService
 {
     public function download(Invoice $invoice): Response
     {
-        $invoice->loadMissing(["items", "registration.event"]);
+        $invoice->loadMissing(['items', 'registration.event']);
 
-        $fileName = str_replace(["/", "\\"], "-", $invoice->invoice_number) . ".pdf";
+        $fileName = str_replace(['/', '\\'], '-', $invoice->invoice_number).'.pdf';
 
-        return Pdf::loadView("invoices.pdf", [
-            "invoice" => $invoice,
+        return Pdf::loadView('invoices.pdf', [
+            'invoice' => $invoice,
         ])
-            ->setPaper("a4")
+            ->setPaper('a4')
             ->download($fileName);
     }
 }

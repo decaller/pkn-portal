@@ -2,6 +2,7 @@
 
 namespace App\Filament\Admin\Resources\EventRegistrations;
 
+use App\Enums\PaymentStatus;
 use App\Filament\Admin\Resources\EventRegistrations\Pages\CreateEventRegistration;
 use App\Filament\Admin\Resources\EventRegistrations\Pages\EditEventRegistration;
 use App\Filament\Admin\Resources\EventRegistrations\Pages\ListEventRegistrationActivities;
@@ -38,7 +39,7 @@ class EventRegistrationResource extends Resource
 
     public static function getNavigationBadge(): ?string
     {
-        return static::getModel()::where('payment_status', \App\Enums\PaymentStatus::Submitted)->count() ?: null;
+        return static::getModel()::where('payment_status', PaymentStatus::Submitted)->count() ?: null;
     }
 
     public static function getNavigationBadgeColor(): string|array|null

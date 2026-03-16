@@ -3,6 +3,7 @@
 namespace App\Filament\Admin\Resources\Events\Schemas;
 
 use App\Enums\EventType;
+use App\Models\Event;
 use Filament\Forms\Components\Builder;
 use Filament\Forms\Components\Builder\Block;
 use Filament\Forms\Components\DatePicker;
@@ -125,7 +126,7 @@ class EventForm
                     TagsInput::make('tags')
                         ->placeholder(__('Add tags...'))
                         ->suggestions(
-                            fn () => \App\Models\Event::pluck('tags')
+                            fn () => Event::pluck('tags')
                                 ->flatten()
                                 ->filter()
                                 ->unique()

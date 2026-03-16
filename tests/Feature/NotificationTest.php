@@ -3,6 +3,7 @@
 use App\Console\Commands\SendParticipantSlotRemindersCommand;
 use App\Console\Commands\SendPaymentReminderNotificationsCommand;
 use App\Enums\PaymentStatus;
+use App\Enums\RegistrationStatus;
 use App\Models\Event;
 use App\Models\EventRegistration;
 use App\Models\Organization;
@@ -33,7 +34,7 @@ it('sends a payment upload reminder when a registration is created', function ()
         'booker_user_id' => $user->id,
         'package_breakdown' => [['package_name' => 'General', 'quantity' => 1, 'unit_price' => 0]],
         'total_amount' => 0,
-        'status' => \App\Enums\RegistrationStatus::Draft,
+        'status' => RegistrationStatus::Draft,
         'payment_status' => PaymentStatus::Unpaid,
     ]);
 
@@ -57,7 +58,7 @@ it('sends a payment approved notification when payment status changes to Verifie
         'booker_user_id' => $user->id,
         'package_breakdown' => [['package_name' => 'General', 'quantity' => 1, 'unit_price' => 0]],
         'total_amount' => 0,
-        'status' => \App\Enums\RegistrationStatus::Draft,
+        'status' => RegistrationStatus::Draft,
         'payment_status' => PaymentStatus::Unpaid,
     ]);
 
@@ -100,7 +101,7 @@ it('sends payment reminders via the scheduled command', function () {
         'booker_user_id' => $user->id,
         'package_breakdown' => [['package_name' => 'General', 'quantity' => 1, 'unit_price' => 0]],
         'total_amount' => 0,
-        'status' => \App\Enums\RegistrationStatus::Draft,
+        'status' => RegistrationStatus::Draft,
         'payment_status' => PaymentStatus::Unpaid,
     ]);
 
@@ -129,7 +130,7 @@ it('sends participant slot reminders via the scheduled command when spots are em
         'booker_user_id' => $user->id,
         'package_breakdown' => [['package_name' => 'General', 'quantity' => 2, 'unit_price' => 0]],
         'total_amount' => 0,
-        'status' => \App\Enums\RegistrationStatus::Draft,
+        'status' => RegistrationStatus::Draft,
         'payment_status' => PaymentStatus::Unpaid,
     ]);
 

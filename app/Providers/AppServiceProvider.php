@@ -2,11 +2,11 @@
 
 namespace App\Providers;
 
-use App\Models\EventRegistration;
-use Illuminate\Support\ServiceProvider;
 use App\Models\Event;
+use App\Models\EventRegistration;
 use App\Models\Organization;
 use App\Models\RegistrationParticipant;
+use App\Models\User;
 use App\Observers\EventObserver;
 use App\Observers\EventRegistrationObserver;
 use App\Policies\EventRegistrationPolicy;
@@ -15,6 +15,7 @@ use App\Policies\RegistrationParticipantPolicy;
 use App\Policies\UserPolicy;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -53,6 +54,6 @@ class AppServiceProvider extends ServiceProvider
             RegistrationParticipant::class,
             RegistrationParticipantPolicy::class,
         );
-        Gate::policy(\App\Models\User::class, UserPolicy::class);
+        Gate::policy(User::class, UserPolicy::class);
     }
 }

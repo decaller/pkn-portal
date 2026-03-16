@@ -91,9 +91,9 @@ class UserResource extends Resource
      * - Org admins can see members of their organizations.
      * - Regular users can only see their own activity.
      */
-    public static function canViewActivities(\App\Models\User $target): bool
+    public static function canViewActivities(User $target): bool
     {
-        /** @var \App\Models\User|null $auth */
+        /** @var User|null $auth */
         $auth = auth()->user();
 
         if (! $auth) {

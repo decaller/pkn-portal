@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
@@ -14,12 +14,12 @@ class RegistrationParticipant extends Model
     use HasFactory;
 
     protected $fillable = [
-        "registration_id",
-        "user_id",
-        "name",
-        "email",
-        "phone",
-        "notes",
+        'registration_id',
+        'user_id',
+        'name',
+        'email',
+        'phone',
+        'notes',
     ];
 
     protected static function booted(): void
@@ -30,22 +30,21 @@ class RegistrationParticipant extends Model
 
         static::deleting(function (RegistrationParticipant $participant): void {
             if (
-                !$participant->registration ||
+                ! $participant->registration ||
                 $participant->registration->canRemoveParticipants()
             ) {
                 return;
             }
 
             throw ValidationException::withMessages([
-                "participant" =>
-                    "Participants cannot be removed after payment has been submitted.",
+                'participant' => 'Participants cannot be removed after payment has been submitted.',
             ]);
         });
     }
 
     public function registration(): BelongsTo
     {
-        return $this->belongsTo(EventRegistration::class, "registration_id");
+        return $this->belongsTo(EventRegistration::class, 'registration_id');
     }
 
     public function user(): BelongsTo
@@ -58,7 +57,7 @@ class RegistrationParticipant extends Model
         if ($this->user_id) {
             $existingUser = User::find($this->user_id);
 
-            if (!$existingUser) {
+            if (! $existingUser) {
                 return;
             }
 
@@ -68,13 +67,13 @@ class RegistrationParticipant extends Model
             return;
         }
 
-        $email = $this->email ?: Str::uuid() . "@participant.local";
+        $email = $this->email ?: Str::uuid().'@participant.local';
 
         $user = User::firstOrCreate(
-            ["email" => $email],
+            ['email' => $email],
             [
-                "name" => $this->name ?: "Participant",
-                "password" => Hash::make(Str::random(40)),
+                'name' => $this->name ?: 'Participant',
+                'password' => Hash::make(Str::random(40)),
             ],
         );
 

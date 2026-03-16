@@ -2,6 +2,7 @@
 
 namespace App\Filament\Shared\Schemas;
 
+use App\Models\Document;
 use Filament\Forms\Components\KeyValue;
 use Filament\Forms\Components\TagsInput;
 use Filament\Forms\Components\Textarea;
@@ -21,7 +22,7 @@ class DocumentForm
                     TagsInput::make('tags')
                         ->placeholder(__('Add tags...'))
                         ->suggestions(
-                            fn () => \App\Models\Document::pluck('tags')
+                            fn () => Document::pluck('tags')
                                 ->flatten()
                                 ->unique()
                                 ->toArray(),

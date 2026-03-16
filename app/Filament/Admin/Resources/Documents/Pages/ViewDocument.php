@@ -4,6 +4,7 @@ namespace App\Filament\Admin\Resources\Documents\Pages;
 
 use App\Filament\Admin\Resources\Documents\DocumentResource;
 use App\Filament\Admin\Resources\Events\EventResource;
+use Filament\Actions\Action;
 use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
 use Illuminate\Support\Facades\Auth;
@@ -26,7 +27,7 @@ class ViewDocument extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            \Filament\Actions\Action::make('view_event')
+            Action::make('view_event')
                 ->label(__('View Related Event'))
                 ->icon('heroicon-o-link')
                 ->color('info')

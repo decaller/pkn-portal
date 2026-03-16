@@ -6,6 +6,8 @@ use App\Filament\Public\Resources\Events\EventResource;
 use App\Models\Event;
 use Filament\Actions\Action;
 use Filament\Actions\ViewAction;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget;
@@ -38,14 +40,14 @@ class AvailableRegistrationEventsWidget extends TableWidget
                 'xl' => 3,
             ])
             ->columns([
-                \Filament\Tables\Columns\Layout\Stack::make([
-                    \Filament\Tables\Columns\ImageColumn::make('cover_image')
+                Stack::make([
+                    ImageColumn::make('cover_image')
                         ->height('150px')
                         ->width('100%')
                         ->extraImgAttributes([
                             'class' => 'object-cover rounded-xl w-full',
                         ]),
-                    \Filament\Tables\Columns\Layout\Stack::make([
+                    Stack::make([
                         TextColumn::make('title')->label(__('Event'))->weight('bold')->size('lg'),
                         TextColumn::make('event_date')
                             ->label(__('Date'))

@@ -3,8 +3,11 @@
 namespace App\Models;
 
 use App\Enums\EventType;
+use App\Enums\PaymentStatus;
+use App\Enums\RegistrationStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
 use Illuminate\Validation\ValidationException;
@@ -63,7 +66,7 @@ class Event extends Model
         return $this->hasMany(EventRegistration::class);
     }
 
-    public function surveyTemplate(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    public function surveyTemplate(): BelongsTo
     {
         return $this->belongsTo(SurveyTemplate::class);
     }
@@ -88,8 +91,8 @@ class Event extends Model
     {
         // Total participants inside EventRegistrations that are either Submitted, Verified, or Paid.
         return $this->registrations()
-            ->whereIn('payment_status', [\App\Enums\PaymentStatus::Submitted, \App\Enums\PaymentStatus::Verified])
-            ->orWhere('status', \App\Enums\RegistrationStatus::Paid)
+            ->whereIn('payment_status', [PaymentStatus::Submitted, PaymentStatus::Verified])
+            ->orWhere('status', RegistrationStatus::Paid)
             ->withCount('participants')
             ->get()
             ->sum('participants_count');

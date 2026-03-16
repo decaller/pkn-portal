@@ -6,6 +6,9 @@ use Filament\Actions\BulkActionGroup;
 use Filament\Actions\DeleteBulkAction;
 use Filament\Actions\EditAction;
 use Filament\Actions\ViewAction;
+use Filament\Tables\Columns\ImageColumn;
+use Filament\Tables\Columns\Layout\Split;
+use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 
@@ -19,13 +22,13 @@ class NewsTable
                 'xl' => 3,
             ])
             ->columns([
-                \Filament\Tables\Columns\Layout\Stack::make([
-                    \Filament\Tables\Columns\ImageColumn::make('thumbnail')
+                Stack::make([
+                    ImageColumn::make('thumbnail')
                         ->height('200px')
                         ->width('100%')
                         ->extraImgAttributes(['class' => 'object-cover rounded-t-xl w-full']),
 
-                    \Filament\Tables\Columns\Layout\Stack::make([
+                    Stack::make([
                         TextColumn::make('title')
                             ->searchable()
                             ->sortable()
@@ -33,7 +36,7 @@ class NewsTable
                             ->size('lg')
                             ->limit(50),
 
-                        \Filament\Tables\Columns\Layout\Split::make([
+                        Split::make([
                             TextColumn::make('created_at')
                                 ->dateTime('M d, Y')
                                 ->color('gray')

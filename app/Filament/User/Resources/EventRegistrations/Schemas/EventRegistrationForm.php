@@ -5,8 +5,10 @@ namespace App\Filament\User\Resources\EventRegistrations\Schemas;
 use App\Enums\PaymentStatus;
 use App\Enums\RegistrationStatus;
 use App\Models\Event;
+use App\Models\EventRegistration;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Hidden;
+use Filament\Forms\Components\Placeholder;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\Textarea;
@@ -84,7 +86,7 @@ class EventRegistrationForm
                             ),
                         ),
                 ),
-            \Filament\Forms\Components\Placeholder::make('package_instructions')
+            Placeholder::make('package_instructions')
                 ->label('')
                 ->content(__('Select the registration packages and set the number of participants for each.')),
             Repeater::make('package_breakdown')
@@ -189,9 +191,9 @@ class EventRegistrationForm
 
                                     if ($maxQuota !== null) {
                                         // Calculate how many of this package have already been bought for this event
-                                        $bought = \App\Models\EventRegistration::where('event_id', $eventId)
-                                            ->whereIn('payment_status', [\App\Enums\PaymentStatus::Submitted, \App\Enums\PaymentStatus::Verified])
-                                            ->orWhere('status', \App\Enums\RegistrationStatus::Paid)
+                                        $bought = EventRegistration::where('event_id', $eventId)
+                                            ->whereIn('payment_status', [PaymentStatus::Submitted, PaymentStatus::Verified])
+                                            ->orWhere('status', RegistrationStatus::Paid)
                                             ->get()
                                             ->sum(function ($reg) use ($packageName) {
                                                 $breakdown = $reg->package_breakdown ?? [];

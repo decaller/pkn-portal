@@ -4,7 +4,14 @@ namespace App\Filament\User\Resources\Events\Pages;
 
 use App\Filament\User\Resources\EventRegistrations\EventRegistrationResource;
 use App\Filament\User\Resources\Events\EventResource;
+use App\Models\SurveyResponse;
+use App\Models\Testimonial;
 use Filament\Actions\Action;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\ToggleButtons;
+use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
 
 class ViewEvent extends ViewRecord
@@ -40,11 +47,11 @@ class ViewEvent extends ViewRecord
                         $type = $q['type'] ?? 'text';
 
                         if ($type === 'text') {
-                            $fields[] = \Filament\Forms\Components\TextInput::make($name)->label($label)->required();
+                            $fields[] = TextInput::make($name)->label($label)->required();
                         } elseif ($type === 'textarea') {
-                            $fields[] = \Filament\Forms\Components\Textarea::make($name)->label($label)->required();
+                            $fields[] = Textarea::make($name)->label($label)->required();
                         } elseif ($type === 'rating') {
-                            $fields[] = \Filament\Forms\Components\Select::make($name)->label($label)
+                            $fields[] = Select::make($name)->label($label)
                                 ->options([1 => '1 Star', 2 => '2 Stars', 3 => '3 Stars', 4 => '4 Stars', 5 => '5 Stars'])->required();
                         }
                     }
@@ -62,7 +69,7 @@ class ViewEvent extends ViewRecord
                         $answers[$q['question_text']] = $data['question_'.$index] ?? null;
                     }
 
-                    \App\Models\SurveyResponse::updateOrCreate(
+                    SurveyResponse::updateOrCreate(
                         [
                             'survey_template_id' => $template->id,
                             'event_id' => $this->record->id,
@@ -73,7 +80,7 @@ class ViewEvent extends ViewRecord
                         ]
                     );
 
-                    \Filament\Notifications\Notification::make()
+                    Notification::make()
                         ->title('Survey submitted')
                         ->success()
                         ->send();
@@ -91,11 +98,11 @@ class ViewEvent extends ViewRecord
                 ->icon('heroicon-o-star')
                 ->color('warning')
                 ->form([
-                    \Filament\Forms\Components\Textarea::make('content')
+                    Textarea::make('content')
                         ->required()
                         ->label('Your Feedback')
                         ->rows(4),
-                    \Filament\Forms\Components\ToggleButtons::make('rating')
+                    ToggleButtons::make('rating')
                         ->options([
                             1 => '1 Star',
                             2 => '2 Stars',
@@ -108,7 +115,7 @@ class ViewEvent extends ViewRecord
                         ->default(5),
                 ])
                 ->action(function (array $data) {
-                    \App\Models\Testimonial::create([
+                    Testimonial::create([
                         'event_id' => $this->record->id,
                         'user_id' => auth()->id(),
                         'content' => $data['content'],
@@ -116,7 +123,7 @@ class ViewEvent extends ViewRecord
                         'is_approved' => false,
                     ]);
 
-                    \Filament\Notifications\Notification::make()
+                    Notification::make()
                         ->title('Testimonial submitted')
                         ->body('Thank you for your feedback! It will be reviewed by an administrator.')
                         ->success()

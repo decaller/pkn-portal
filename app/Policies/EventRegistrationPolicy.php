@@ -9,7 +9,7 @@ use App\Models\User;
 
 class EventRegistrationPolicy
 {
-    public function before(User $user, string $ability): bool|null
+    public function before(User $user, string $ability): ?bool
     {
         if ($user->isMainAdmin()) {
             return true;
@@ -30,11 +30,11 @@ class EventRegistrationPolicy
         }
 
         // Allow participants to view the registration
-        if ($eventRegistration->participants()->where("user_id", $user->getKey())->exists()) {
+        if ($eventRegistration->participants()->where('user_id', $user->getKey())->exists()) {
             return true;
         }
 
-        if (!$eventRegistration->organization_id) {
+        if (! $eventRegistration->organization_id) {
             return false;
         }
 
