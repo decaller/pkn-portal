@@ -1,0 +1,43 @@
+{
+    "name": "PKN Portal Development",
+    "dockerComposeFile": [
+        "../compose.yaml",
+        "docker-compose.yml"
+    ],
+    "service": "laravel.test",
+    "workspaceFolder": "/var/www/html",
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "Google.geminicodeassist",
+                "openai.chatgpt",
+                "kilocode.kilo-code",
+                "GitHub.vscode-github-actions",
+                "amiralizadeh9480.laravel-extra-intellisense",
+                "onecentlin.laravel-blade",
+                "ryannhg.laravel-pint",
+                "open-southeners.laravel-pint",
+                "shufo.vscode-blade-formatter",
+                "bmewburn.vscode-intelephense-client",
+                "xdebug.php-debug",
+                "mikestead.dotenv",
+                "editorconfig.editorconfig"
+            ],
+            "settings": {
+                "php.validate.executablePath": "/usr/local/bin/php",
+                "laravel-pint.executablePath": "/var/www/html/vendor/bin/pint",
+                "files.insertFinalNewline": true,
+                "files.trimTrailingWhitespace": true
+            }
+        }
+    },
+    "forwardPorts": [
+        80,
+        5173,
+        5432,
+        6379,
+        7700
+    ],
+    "postCreateCommand": "cp .env.example .env && composer install && npm install && php artisan key:generate && php artisan migrate --seed",
+    "remoteUser": "sail"
+}
