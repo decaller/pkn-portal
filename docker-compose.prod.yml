@@ -30,6 +30,7 @@ x-laravel-env: &laravel-env
   REDIS_PASSWORD: ${REDIS_PASSWORD:-null}
   REDIS_PORT: ${REDIS_PORT:-6379}
   TIKA_URL: ${TIKA_URL}
+  LIBREOFFICE_URL: ${LIBREOFFICE_URL}
   VITE_APP_NAME: ${VITE_APP_NAME}
   RUN_MIGRATIONS: ${RUN_MIGRATIONS:-false}
 
@@ -58,6 +59,8 @@ services:
       pgsql:
         condition: service_healthy
       redis:
+        condition: service_healthy
+      libreoffice:
         condition: service_healthy
     volumes:
       - public_storage:/var/www/html/storage/app/public
@@ -151,6 +154,8 @@ services:
         condition: service_healthy
       tika:
         condition: service_healthy
+      libreoffice:
+        condition: service_healthy
     command: ["php", "artisan", "queue:work", "--tries=3", "--timeout=90", "--sleep=3", "--max-time=3600"]
     volumes:
       - public_storage:/var/www/html/storage/app/public
@@ -201,6 +206,16 @@ services:
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "wget", "--no-verbose", "--spider", "http://127.0.0.1:9998/tika"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  libreoffice:
+    image: collabora/code:latest
+    environment:
+      - "extra_params=--o:ssl.enable=false --o:ssl.termination=true"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--spider", "http://127.0.0.1:9980/cool/convert-to/png"]
       interval: 10s
       timeout: 5s
       retries: 5
