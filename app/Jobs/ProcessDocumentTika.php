@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\Document;
 use App\Models\Event;
+use App\Services\DocumentCoverService;
 use App\Services\TikaService;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -35,7 +36,7 @@ class ProcessDocumentTika implements ShouldBeUnique, ShouldQueue
     /**
      * Execute the job.
      */
-    public function handle(TikaService $tika): void
+    public function handle(TikaService $tika, DocumentCoverService $covers): void
     {
         $event = $this->eventId ? Event::find($this->eventId) : null;
 
@@ -54,47 +55,56 @@ class ProcessDocumentTika implements ShouldBeUnique, ShouldQueue
         // Debug log
         Log::debug("Tika Job checking: {$this->filePath}. Doc exists: ".($existingDocument ? 'Yes' : 'No').'. Content empty: '.(empty($existingDocument?->content) ? 'Yes' : 'No'));
 
-        if ($existingDocument && ! empty($existingDocument->content) && $existingDocument->updated_at?->timestamp >= $lastModified) {
-            Log::debug('Tika Job skipping: Document is up to date and has content.');
+        $shouldExtract = ! $existingDocument
+            || empty($existingDocument->content)
+            || $existingDocument->updated_at?->timestamp < $lastModified;
 
-            return;
-        }
+        $document = $existingDocument;
 
-        $fileContent = Storage::disk($disk)->get($this->filePath);
+        if ($shouldExtract) {
+            $fileContent = Storage::disk($disk)->get($this->filePath);
 
-        if (! $fileContent) {
-            Log::error("Tika Job Error: Could not retrieve file content for {$this->filePath}");
+            if (! $fileContent) {
+                Log::error("Tika Job Error: Could not retrieve file content for {$this->filePath}");
 
-            return;
-        }
+                return;
+            }
 
-        // Scan with Tika
-        $extraction = $tika->extractText($fileContent) ?? [
-            'content' => null,
-            'mime_type' => null,
-            'metadata' => [],
-        ];
+            // Scan with Tika
+            $extraction = $tika->extractText($fileContent) ?? [
+                'content' => null,
+                'mime_type' => null,
+                'metadata' => [],
+            ];
 
-        $payload = [
-            'event_id' => $event?->id,
-            'session_slug' => $this->sessionSlug ?? Str::slug($this->sessionTitle),
-            'title' => basename($this->filePath),
-            'file_path' => $this->filePath,
-            'original_filename' => basename($this->filePath),
-            'content' => $extraction['content'] ?? null,
-            'mime_type' => $extraction['mime_type'] ?? null,
-            'metadata' => $extraction['metadata'] ?? [],
-            'description' => "Auto-extracted from {$this->source}: ".($this->sessionTitle ?? 'Untitled'),
-        ];
+            $payload = [
+                'event_id' => $event?->id,
+                'session_slug' => $this->sessionSlug ?? Str::slug($this->sessionTitle),
+                'title' => basename($this->filePath),
+                'file_path' => $this->filePath,
+                'original_filename' => basename($this->filePath),
+                'content' => $extraction['content'] ?? null,
+                'mime_type' => $extraction['mime_type'] ?? null,
+                'metadata' => $extraction['metadata'] ?? [],
+                'description' => "Auto-extracted from {$this->source}: ".($this->sessionTitle ?? 'Untitled'),
+            ];
 
-        if ($existingDocument) {
-            $existingDocument->fill($payload)->save();
+            if ($existingDocument) {
+                $existingDocument->fill($payload)->save();
+                $document = $existingDocument;
+            } else {
+                $slugBase = $event ? $event->title : $this->sessionTitle;
+                $payload['slug'] = Str::slug($slugBase.'-'.Str::random(5));
+                $document = Document::create($payload);
+            }
+
+            Log::info("Auto-processed document via Job for file: {$this->filePath}");
         } else {
-            $slugBase = $event ? $event->title : $this->sessionTitle;
-            $payload['slug'] = Str::slug($slugBase.'-'.Str::random(5));
-            Document::create($payload);
+            Log::debug('Tika Job skipping content extraction: Document is up to date and has content.');
         }
 
-        Log::info("Auto-processed document via Job for file: {$this->filePath}");
+        if ($document) {
+            $covers->ensureCover($document, $lastModified);
+        }
     }
 }

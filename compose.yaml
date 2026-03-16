@@ -26,6 +26,7 @@ services:
             # - minio
             - meilisearch
             - pgsql
+            - libreoffice
     redis:
         image: 'redis:alpine'
         ports:
@@ -112,6 +113,14 @@ services:
             - '9998:9998'
         networks:
             - sail
+    libreoffice:
+        image: collabora/code:latest
+        environment:
+            - "extra_params=--o:ssl.enable=false --o:ssl.termination=true"
+        ports:
+            - '9980:9980'
+        networks:
+            - sail
     laravel.worker:
         build:
             context: './vendor/laravel/sail/runtimes/8.5'
@@ -131,6 +140,7 @@ services:
             - pgsql
             - redis
             - tika
+            - libreoffice
 networks:
     sail:
         driver: bridge

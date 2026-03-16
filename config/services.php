@@ -37,4 +37,7 @@ return [
     'tika' => [
         'url' => env('TIKA_URL', 'http://tika:9998'),
     ],
+    'libreoffice' => [
+        'url' => env('LIBREOFFICE_URL', 'http://libreoffice:9980'),
+    ],
 ];
