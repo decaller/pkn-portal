@@ -38,6 +38,8 @@ class TikaService
                     'metadata' => $data,
                 ];
             }
+
+            Log::warning('Tika returned non-successful response: '.$response->status());
         } catch (\Exception $e) {
             Log::error('Tika extraction failed: '.$e->getMessage());
         }

@@ -4,6 +4,7 @@ namespace App\Filament\Admin\Resources\Documents\Pages;
 
 use App\Filament\Admin\Resources\Documents\DocumentResource;
 use App\Filament\Admin\Resources\Documents\Widgets\TopViewedDocuments;
+use App\Filament\Shared\Widgets\FeaturedDocumentsWidget;
 use Filament\Actions\CreateAction;
 use Filament\Resources\Pages\ListRecords;
 
@@ -14,7 +15,7 @@ class ListDocuments extends ListRecords
     protected function getHeaderActions(): array
     {
         return [
-            // CreateAction::make(),
+            CreateAction::make(),
         ];
     }
 
@@ -22,6 +23,7 @@ class ListDocuments extends ListRecords
     {
         return [
             TopViewedDocuments::class,
+            FeaturedDocumentsWidget::class,
         ];
     }
 }

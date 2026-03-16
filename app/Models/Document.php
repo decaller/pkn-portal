@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Support\Str;
 
 class Document extends Model
 {
@@ -15,6 +16,15 @@ class Document extends Model
 
     // This line solves the MassAssignmentException
     protected $guarded = [];
+
+    protected static function booted(): void
+    {
+        static::creating(function (Document $document) {
+            if (empty($document->slug)) {
+                $document->slug = Str::slug(($document->title ?? 'doc').'-'.Str::random(5));
+            }
+        });
+    }
 
     protected $casts = [
         'metadata' => 'array',

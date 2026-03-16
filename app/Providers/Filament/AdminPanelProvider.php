@@ -6,6 +6,7 @@ use App\Filament\Admin\Widgets\LatestEventRegistrationsWidget;
 use App\Filament\Admin\Widgets\LatestEventsWidget;
 use App\Filament\Pages\Tenancy\EditOrganizationProfile;
 use App\Filament\Pages\Tenancy\RegisterOrganization;
+use App\Filament\Shared\Widgets\FeaturedDocumentsWidget;
 use App\Models\Organization;
 use CraftForge\FilamentLanguageSwitcher\FilamentLanguageSwitcherPlugin;
 use Filament\Http\Middleware\Authenticate;
@@ -61,6 +62,7 @@ class AdminPanelProvider extends PanelProvider
                 FilamentInfoWidget::class,
                 LatestEventsWidget::class,
                 LatestEventRegistrationsWidget::class,
+                FeaturedDocumentsWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,

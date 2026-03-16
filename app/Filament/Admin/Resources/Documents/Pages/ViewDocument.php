@@ -8,6 +8,7 @@ use Filament\Actions\Action;
 use Filament\Actions\EditAction;
 use Filament\Resources\Pages\ViewRecord;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class ViewDocument extends ViewRecord
 {
@@ -27,6 +28,12 @@ class ViewDocument extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
+            Action::make('download')
+                ->label(__('Download'))
+                ->icon('heroicon-o-arrow-down-tray')
+                ->color('success')
+                ->visible(fn (): bool => filled($this->record?->file_path))
+                ->action(fn () => Storage::disk('public')->download($this->record->file_path)),
             Action::make('view_event')
                 ->label(__('View Related Event'))
                 ->icon('heroicon-o-link')

@@ -5,14 +5,14 @@ namespace App\Jobs;
 use App\Models\Document;
 use App\Models\Event;
 use App\Services\TikaService;
-use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-class ProcessDocumentTika implements ShouldQueue, ShouldBeUnique
+class ProcessDocumentTika implements ShouldBeUnique, ShouldQueue
 {
     use Queueable;
 
@@ -25,7 +25,7 @@ class ProcessDocumentTika implements ShouldQueue, ShouldBeUnique
      * Create a new job instance.
      */
     public function __construct(
-        public int $eventId,
+        public ?int $eventId,
         public string $filePath,
         public string $sessionTitle,
         public ?string $sessionSlug = null,
@@ -37,11 +37,7 @@ class ProcessDocumentTika implements ShouldQueue, ShouldBeUnique
      */
     public function handle(TikaService $tika): void
     {
-        $event = Event::find($this->eventId);
-
-        if (! $event) {
-            return;
-        }
+        $event = $this->eventId ? Event::find($this->eventId) : null;
 
         $disk = 'public';
 
@@ -54,7 +50,13 @@ class ProcessDocumentTika implements ShouldQueue, ShouldBeUnique
 
         $existingDocument = Document::where('file_path', $this->filePath)->first();
         $lastModified = Storage::disk($disk)->lastModified($this->filePath);
-        if ($existingDocument && $existingDocument->updated_at?->timestamp >= $lastModified) {
+
+        // Debug log
+        Log::debug("Tika Job checking: {$this->filePath}. Doc exists: ".($existingDocument ? 'Yes' : 'No').'. Content empty: '.(empty($existingDocument?->content) ? 'Yes' : 'No'));
+
+        if ($existingDocument && ! empty($existingDocument->content) && $existingDocument->updated_at?->timestamp >= $lastModified) {
+            Log::debug('Tika Job skipping: Document is up to date and has content.');
+
             return;
         }
 
@@ -74,9 +76,9 @@ class ProcessDocumentTika implements ShouldQueue, ShouldBeUnique
         ];
 
         $payload = [
-            'event_id' => $event->id,
+            'event_id' => $event?->id,
             'session_slug' => $this->sessionSlug ?? Str::slug($this->sessionTitle),
-            'title' => $this->sessionTitle.' Attachment',
+            'title' => basename($this->filePath),
             'file_path' => $this->filePath,
             'original_filename' => basename($this->filePath),
             'content' => $extraction['content'] ?? null,
@@ -88,7 +90,8 @@ class ProcessDocumentTika implements ShouldQueue, ShouldBeUnique
         if ($existingDocument) {
             $existingDocument->fill($payload)->save();
         } else {
-            $payload['slug'] = Str::slug($event->title.'-'.Str::random(5));
+            $slugBase = $event ? $event->title : $this->sessionTitle;
+            $payload['slug'] = Str::slug($slugBase.'-'.Str::random(5));
             Document::create($payload);
         }
 

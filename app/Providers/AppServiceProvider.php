@@ -2,11 +2,13 @@
 
 namespace App\Providers;
 
+use App\Models\Document;
 use App\Models\Event;
 use App\Models\EventRegistration;
 use App\Models\Organization;
 use App\Models\RegistrationParticipant;
 use App\Models\User;
+use App\Observers\DocumentObserver;
 use App\Observers\EventObserver;
 use App\Observers\EventRegistrationObserver;
 use App\Policies\EventRegistrationPolicy;
@@ -46,6 +48,7 @@ class AppServiceProvider extends ServiceProvider
         }
 
         Event::observe(EventObserver::class);
+        Document::observe(DocumentObserver::class);
         EventRegistration::observe(EventRegistrationObserver::class);
 
         Gate::policy(Organization::class, OrganizationPolicy::class);

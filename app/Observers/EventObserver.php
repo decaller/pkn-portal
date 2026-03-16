@@ -2,14 +2,13 @@
 
 namespace App\Observers;
 
+use App\Jobs\ProcessDocumentTika;
 use App\Models\Document;
 use App\Models\Event;
 use App\Models\User;
 use App\Notifications\NewEventOpenForRegistrationNotification;
 use App\Notifications\PastEventPostedOrUpdatedNotification;
 use Illuminate\Support\Facades\Log;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Str;
 
 class EventObserver
 {
@@ -82,7 +81,7 @@ class EventObserver
                         $sessionFilePaths[] = $filePath;
 
                         Log::debug("Dispatching Tika job for file: {$filePath}");
-                        dispatch(new \App\Jobs\ProcessDocumentTika(
+                        dispatch(new ProcessDocumentTika(
                             eventId: $event->id,
                             filePath: $filePath,
                             sessionTitle: $data['title'] ?? 'Untitled',
@@ -94,7 +93,7 @@ class EventObserver
             }
         }
 
-        Log::debug("Found " . count($sessionFilePaths) . " total session files in rundown.");
+        Log::debug('Found '.count($sessionFilePaths).' total session files in rundown.');
 
         // Clean up documents for removed session files.
         $sessionFilePaths = array_values(array_unique($sessionFilePaths));

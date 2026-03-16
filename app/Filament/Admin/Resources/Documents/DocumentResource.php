@@ -2,6 +2,7 @@
 
 namespace App\Filament\Admin\Resources\Documents;
 
+use App\Filament\Admin\Resources\Documents\Pages\CreateDocument;
 use App\Filament\Admin\Resources\Documents\Pages\EditDocument;
 use App\Filament\Admin\Resources\Documents\Pages\ListDocuments;
 use App\Filament\Admin\Resources\Documents\Pages\ViewDocument;
@@ -26,6 +27,11 @@ class DocumentResource extends Resource
     public static function getNavigationGroup(): ?string
     {
         return __('Content Management');
+    }
+
+    public static function canCreate(): bool
+    {
+        return true;
     }
 
     public static function form(Schema $schema): Schema
@@ -54,6 +60,7 @@ class DocumentResource extends Resource
     {
         return [
             'index' => ListDocuments::route('/'),
+            'create' => CreateDocument::route('/create'),
             'view' => ViewDocument::route('/{record}'),
             'edit' => EditDocument::route('/{record}/edit'),
         ];

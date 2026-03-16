@@ -4,6 +4,7 @@ namespace App\Providers\Filament;
 
 use App\Filament\Pages\Tenancy\EditOrganizationProfile;
 use App\Filament\Pages\Tenancy\RegisterOrganization;
+use App\Filament\Shared\Widgets\FeaturedDocumentsWidget;
 use App\Filament\User\Auth\Login;
 use App\Filament\User\Auth\RegisterEvent;
 use App\Filament\User\Widgets\AvailableRegistrationEventsWidget;
@@ -63,6 +64,7 @@ class UserPanelProvider extends PanelProvider
                 AvailableRegistrationEventsWidget::class,
                 EventRegistrationsTableWidget::class,
                 LatestNewsWidget::class,
+                FeaturedDocumentsWidget::class,
             ])
             ->renderHook(
                 'panels::scripts.after',
