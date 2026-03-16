@@ -149,6 +149,8 @@ services:
         condition: service_healthy
       pgsql:
         condition: service_healthy
+      tika:
+        condition: service_healthy
     command: ["php", "artisan", "queue:work", "--tries=3", "--timeout=90", "--sleep=3", "--max-time=3600"]
     volumes:
       - public_storage:/var/www/html/storage/app/public
@@ -190,6 +192,15 @@ services:
     restart: unless-stopped
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  tika:
+    image: apache/tika:latest
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--spider", "http://127.0.0.1:9998/tika"]
       interval: 10s
       timeout: 5s
       retries: 5
