@@ -31,8 +31,7 @@ class FeaturedDocumentsWidget extends TableWidget
                 Document::query()
                     ->whereJsonContains('tags', 'featured')
                     ->where('is_active', true)
-                    ->latest()
-                    ->limit(6)
+                    ->inRandomOrder()
             )
             ->contentGrid([
                 'sm' => 1,
@@ -58,12 +57,12 @@ class FeaturedDocumentsWidget extends TableWidget
                             ->color('gray')
                             ->size('sm')
                             ->formatStateUsing(fn (?string $state): string => match (true) {
-                                str_contains($state ?? '', 'pdf') => 'PDF Document',
-                                str_contains($state ?? '', 'word') => 'Word Document',
-                                str_contains($state ?? '', 'excel') || str_contains($state ?? '', 'sheet') => 'Spreadsheet',
-                                str_contains($state ?? '', 'powerpoint') || str_contains($state ?? '', 'presentation') => 'Presentation',
-                                str_contains($state ?? '', 'image') => 'Image',
-                                default => 'Other File',
+                                str_contains($state ?? '', 'pdf') => __('PDF Document'),
+                                str_contains($state ?? '', 'word') => __('Word Document'),
+                                str_contains($state ?? '', 'excel') || str_contains($state ?? '', 'sheet') => __('Spreadsheet'),
+                                str_contains($state ?? '', 'powerpoint') || str_contains($state ?? '', 'presentation') => __('Presentation'),
+                                str_contains($state ?? '', 'image') => __('Image'),
+                                default => __('Other File'),
                             }),
                         TextColumn::make('created_at')
                             ->dateTime()
@@ -77,7 +76,7 @@ class FeaturedDocumentsWidget extends TableWidget
                     'class' => 'bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 h-full overflow-hidden transition-all hover:ring-2 hover:ring-primary-500',
                 ]),
             ])
-            ->paginated(false)
+            ->paginated([3, 6, 'all'])
             ->emptyStateHeading(__('No featured documents found.'))
             ->actions([
                 Action::make('view')

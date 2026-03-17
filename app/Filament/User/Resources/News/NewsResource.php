@@ -20,7 +20,7 @@ class NewsResource extends Resource
 
     protected static bool $isScopedToTenant = false;
 
-    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedRectangleStack;
+    protected static string|BackedEnum|null $navigationIcon = Heroicon::OutlinedNewspaper;
 
     public static function getNavigationGroup(): ?string
     {

@@ -27,30 +27,30 @@
 <body>
     <div class="row">
         <div class="left">
-            <h1>INVOICE</h1>
+            <h1>{{ __('INVOICE') }}</h1>
             <p class="muted">{{ $invoice->invoice_number }}</p>
         </div>
         <div class="right">
-            <p><strong>Issued:</strong> {{ optional($invoice->issued_at)->format('d M Y H:i') }}</p>
-            <p><strong>Due:</strong> {{ optional($invoice->due_at)->format('d M Y') ?? '-' }}</p>
-            <p><strong>Status:</strong> {{ ucfirst((string) $invoice->status?->value ?? (string) $invoice->status) }}</p>
-            <p><strong>Version:</strong> {{ $invoice->version }}</p>
+            <p><strong>{{ __('Issued') }}:</strong> {{ optional($invoice->issued_at)->format('d M Y H:i') }}</p>
+            <p><strong>{{ __('Due') }}:</strong> {{ optional($invoice->due_at)->format('d M Y') ?? '-' }}</p>
+            <p><strong>{{ __('Status') }}:</strong> {{ ucfirst((string) $invoice->status?->value ?? (string) $invoice->status) }}</p>
+            <p><strong>{{ __('Version') }}:</strong> {{ $invoice->version }}</p>
         </div>
         <div class="clear"></div>
     </div>
 
     <div class="row card">
         <div class="left">
-            <h3>Bill To</h3>
-            <p>{{ data_get($invoice->organization_snapshot, 'name', 'Personal registration') }}</p>
-            <p class="muted">Booker: {{ data_get($invoice->booker_snapshot, 'name', '-') }}</p>
+            <h3>{{ __('Bill To') }}</h3>
+            <p>{{ data_get($invoice->organization_snapshot, 'name', __('Personal registration')) }}</p>
+            <p class="muted">{{ __('Booker') }}: {{ data_get($invoice->booker_snapshot, 'name', '-') }}</p>
             <p class="muted">{{ data_get($invoice->booker_snapshot, 'email', '-') }}</p>
         </div>
         <div class="right">
-            <h3>Event</h3>
+            <h3>{{ __('Event') }}</h3>
             <p>{{ data_get($invoice->event_snapshot, 'title', '-') }}</p>
-            <p class="muted">Date: {{ data_get($invoice->event_snapshot, 'date', '-') }}</p>
-            <p class="muted">Type: {{ ucfirst((string) data_get($invoice->event_snapshot, 'type', '-')) }}</p>
+            <p class="muted">{{ __('Date') }}: {{ data_get($invoice->event_snapshot, 'date', '-') }}</p>
+            <p class="muted">{{ __('Type') }}: {{ ucfirst((string) data_get($invoice->event_snapshot, 'type', '-')) }}</p>
         </div>
         <div class="clear"></div>
     </div>
@@ -58,10 +58,10 @@
     <table class="grid">
         <thead>
             <tr>
-                <th style="width: 40%;">Package</th>
-                <th style="width: 15%;" class="num">Qty</th>
-                <th style="width: 20%;" class="num">Unit Price</th>
-                <th style="width: 25%;" class="num">Line Total</th>
+                <th style="width: 40%;">{{ __('Package') }}</th>
+                <th style="width: 15%;" class="num">{{ __('Qty') }}</th>
+                <th style="width: 20%;" class="num">{{ __('Unit Price') }}</th>
+                <th style="width: 25%;" class="num">{{ __('Line Total') }}</th>
             </tr>
         </thead>
         <tbody>
@@ -78,39 +78,39 @@
 
     <table class="totals">
         <tr>
-            <td class="label">Subtotal</td>
+            <td class="label">{{ __('Subtotal') }}</td>
             <td class="num">IDR {{ number_format((float) $invoice->subtotal, 0, ',', '.') }}</td>
         </tr>
         <tr>
-            <td class="label">Discount</td>
+            <td class="label">{{ __('Discount') }}</td>
             <td class="num">IDR {{ number_format((float) $invoice->discount_amount, 0, ',', '.') }}</td>
         </tr>
         <tr>
-            <td class="label">Tax</td>
+            <td class="label">{{ __('Tax') }}</td>
             <td class="num">IDR {{ number_format((float) $invoice->tax_amount, 0, ',', '.') }}</td>
         </tr>
         <tr>
-            <td class="label grand">Grand Total</td>
+            <td class="label grand">{{ __('Grand Total') }}</td>
             <td class="num grand">IDR {{ number_format((float) $invoice->total_amount, 0, ',', '.') }}</td>
         </tr>
     </table>
 
     @if($invoice->notes)
         <div class="row" style="margin-top: 14px;">
-            <h3>Notes</h3>
+            <h3>{{ __('Notes') }}</h3>
             <p>{{ $invoice->notes }}</p>
         </div>
     @endif
 
     @if($invoice->void_reason)
         <div class="row" style="margin-top: 10px;">
-            <h3>Void Reason</h3>
+            <h3>{{ __('Void Reason') }}</h3>
             <p>{{ $invoice->void_reason }}</p>
         </div>
     @endif
 
     <div class="footer">
-        Generated at {{ now()->format('d M Y H:i:s') }}
+        {{ __('Generated at') }} {{ now()->format('d M Y H:i:s') }}
     </div>
 </body>
 </html>

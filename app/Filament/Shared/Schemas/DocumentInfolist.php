@@ -7,7 +7,6 @@ use App\Filament\Public\Resources\Events\EventResource as PublicEventResource;
 use App\Models\Document;
 use Filament\Facades\Filament;
 use Filament\Infolists\Components\ImageEntry;
-use Filament\Infolists\Components\KeyValueEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\ViewEntry;
 use Filament\Schemas\Components\Section;
@@ -107,8 +106,8 @@ class DocumentInfolist
                                     return '-';
                                 }
 
-                                return '<pre class="text-xs overflow-auto max-h-60 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">' .
-                                    e(json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)) .
+                                return '<pre class="text-xs overflow-auto max-h-60 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">'.
+                                    e(json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)).
                                     '</pre>';
                             })
                             ->html()

@@ -48,11 +48,10 @@
                 }
 
                 var current = root.getAttribute('data-theme');
-                var isId = root.getAttribute('lang') === 'id';
                 if (current === 'forest') {
-                    button.textContent = isId ? 'Ubah ke Mode Terang' : 'Switch to Light Mode';
+                    button.textContent = "{{ __('Switch to Light Mode') }}";
                 } else {
-                    button.textContent = isId ? 'Ubah ke Mode Gelap' : 'Switch to Dark Mode';
+                    button.textContent = "{{ __('Switch to Dark Mode') }}";
                 }
             };
 
@@ -93,7 +92,7 @@
     use Illuminate\Support\Facades\Storage;
     use Illuminate\Support\Str;
 
-    $tr = fn (string $en, string $id): string => app()->getLocale() === 'id' ? $id : $en;
+
 
     $upcomingEvents = Event::query()
         ->where('is_published', true)
@@ -161,15 +160,15 @@
             <div class="flex flex-wrap items-center justify-between gap-4">
                 <a href="{{ route('home') }}" class="text-2xl font-bold leading-none">PKN <span class="font-medium">PORTAL</span></a>
                 <nav class="flex flex-wrap items-center gap-5 text-sm uppercase tracking-wide text-base-content/70">
-                    <a href="{{ route('filament.public.resources.events.index') }}" class="hover:text-base-content">{{ $tr('Events', 'Acara') }}</a>
-                    <a href="{{ route('filament.public.resources.news.index') }}" class="hover:text-base-content">{{ $tr('News', 'Berita') }}</a>
-                    <a href="{{ route('filament.user.auth.login') }}" class="hover:text-base-content">{{ $tr('User Login', 'Masuk User') }}</a>
-                    <a href="{{ route('filament.admin.auth.login') }}" class="hover:text-base-content">Admin</a>
+                    <a href="{{ route('filament.public.resources.events.index') }}" class="hover:text-base-content">{{ __('Events') }}</a>
+                    <a href="{{ route('filament.public.resources.news.index') }}" class="hover:text-base-content">{{ __('News') }}</a>
+                    <a href="{{ route('filament.user.auth.login') }}" class="hover:text-base-content">{{ __('User Login') }}</a>
+                    <a href="{{ route('filament.admin.auth.login') }}" class="hover:text-base-content">{{ __('Admin Login') }}</a>
                 </nav>
                 <div class="flex items-center gap-2">
                     @if ($contactNumber && $contactWhatsAppUrl)
                         <a href="{{ $contactWhatsAppUrl }}" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-xs bg-white text-base-content hover:bg-base-100">
-                            {{ $tr('Help', 'Bantuan') }}
+                            {{ __('Help') }}
                         </a>
                     @endif
                     <div class="join">
@@ -183,28 +182,28 @@
         <main>
             <section class="mb-12 border-b border-base-300 pb-8">
                 <nav class="mb-5 flex items-center gap-2 text-xs uppercase tracking-wide text-base-content/50">
-                    <span>{{ $tr('Home', 'Beranda') }}</span>
+                    <span>{{ __('Home') }}</span>
                     <span>/</span>
-                    <span class="text-base-content/80">{{ $tr('Events', 'Acara') }}</span>
+                    <span class="text-base-content/80">{{ __('Events') }}</span>
                 </nav>
 
                 <div class="grid gap-6 md:grid-cols-[1fr_auto] md:items-end">
                     <div>
-                        <h1 class="text-5xl font-bold leading-none md:text-7xl">{{ $tr('Events', 'Acara') }}</h1>
+                        <h1 class="text-5xl font-bold leading-none md:text-7xl">{{ __('Events') }}</h1>
                         <p class="mt-5 max-w-2xl text-sm text-base-content/70 md:text-base">
-                            {{ $tr('University events take place throughout the year, from educational showcases to public lectures, national tours and one-off exhibitions.', 'Acara berlangsung sepanjang tahun, dari showcase pendidikan hingga kuliah umum, tur nasional, dan pameran khusus.') }}
+                            {{ __('University events take place throughout the year, from educational showcases to public lectures, national tours and one-off exhibitions.') }}
                         </p>
                     </div>
                     <div class="hidden md:block">
-                        <span class="outline-title text-7xl font-bold uppercase opacity-30 md:text-9xl">{{ $tr('Events', 'Acara') }}</span>
+                        <span class="outline-title text-7xl font-bold uppercase opacity-30 md:text-9xl">{{ __('Events') }}</span>
                     </div>
                 </div>
             </section>
 
             <section class="mb-12">
                 <div class="mb-5 flex items-center justify-between border-b border-base-300 pb-2">
-                    <h2 class="text-2xl font-bold uppercase">{{ $tr('Upcoming', 'Mendatang') }}</h2>
-                    <a href="{{ route('filament.public.resources.events.index') }}" class="text-xs uppercase tracking-wider text-base-content/70 hover:text-base-content">{{ $tr('See all events', 'Lihat semua acara') }}</a>
+                    <h2 class="text-2xl font-bold uppercase">{{ __('Upcoming') }}</h2>
+                    <a href="{{ route('filament.public.resources.events.index') }}" class="text-xs uppercase tracking-wider text-base-content/70 hover:text-base-content">{{ __('See all events') }}</a>
                 </div>
 
                 @if ($upcomingEvents->isNotEmpty())
@@ -212,40 +211,40 @@
                         @foreach ($upcomingEvents as $event)
                             <article class="border border-base-300 bg-base-100">
                                 <div class="p-4">
-                                    <p class="mb-1 text-[11px] uppercase tracking-[0.18em] text-base-content/60">{{ $eventLocation($event) ?: $tr('Location TBA', 'Lokasi menyusul') }}</p>
+                                    <p class="mb-1 text-[11px] uppercase tracking-[0.18em] text-base-content/60">{{ $eventLocation($event) ?: __('Location TBA') }}</p>
                                     <h4 class="line-clamp-2 text-2xl font-bold leading-tight">{{ $event->title }}</h4>
                                     <div class="mt-3 flex items-center justify-between text-xs uppercase tracking-wide text-base-content/70">
                                         <span>{{ $event->event_date?->format('d M Y') }}</span>
-                                        <span>{{ $daysUntilEvent($event) }} {{ $tr('days left', 'hari lagi') }}</span>
+                                        <span>{{ $daysUntilEvent($event) }} {{ __('days left') }}</span>
                                     </div>
                                 </div>
                                 <figure class="h-56 w-full bg-base-300">
                                     @if ($eventImageUrl($event->cover_image))
                                         <img src="{{ $eventImageUrl($event->cover_image) }}" alt="{{ $event->title }}" class="h-full w-full object-cover" />
                                     @else
-                                        <div class="flex h-full w-full items-center justify-center text-base-content/50">{{ $tr('No image', 'Tidak ada gambar') }}</div>
+                                        <div class="flex h-full w-full items-center justify-center text-base-content/50">{{ __('No image') }}</div>
                                     @endif
                                 </figure>
                                 <div class="flex border-t border-base-300 text-[10px] uppercase tracking-wider">
                                     @if ($event->allow_registration)
-                                        <a href="{{ route('filament.user.auth.register', ['event_id' => $event->getKey()]) }}" class="flex-1 px-3 py-2 text-center hover:bg-base-200">{{ $tr('Register', 'Daftar') }}</a>
-                                        <a href="{{ route('filament.public.resources.events.view', ['record' => $event]) }}" class="flex-1 border-l border-base-300 px-3 py-2 text-center hover:bg-base-200">{{ $tr('More info', 'Detail') }}</a>
+                                        <a href="{{ route('filament.user.auth.register', ['event_id' => $event->getKey()]) }}" class="flex-1 px-3 py-2 text-center hover:bg-base-200">{{ __('Register') }}</a>
+                                        <a href="{{ route('filament.public.resources.events.view', ['record' => $event]) }}" class="flex-1 border-l border-base-300 px-3 py-2 text-center hover:bg-base-200">{{ __('More info') }}</a>
                                     @else
-                                        <a href="{{ route('filament.public.resources.events.view', ['record' => $event]) }}" class="w-full px-3 py-2 text-center hover:bg-base-200">{{ $tr('More info', 'Detail') }}</a>
+                                        <a href="{{ route('filament.public.resources.events.view', ['record' => $event]) }}" class="w-full px-3 py-2 text-center hover:bg-base-200">{{ __('More info') }}</a>
                                     @endif
                                 </div>
                             </article>
                         @endforeach
                     </div>
                 @else
-                    <div class="alert"><span>{{ $tr('No upcoming events published yet.', 'Belum ada acara mendatang yang dipublikasikan.') }}</span></div>
+                    <div class="alert"><span>{{ __('No upcoming events published yet.') }}</span></div>
                 @endif
             </section>
 
             <section class="mb-12">
                 <div class="mb-5 flex items-center justify-between border-b border-base-300 pb-2">
-                    <h2 class="text-2xl font-bold uppercase">{{ $tr('Latest News', 'Berita Terbaru') }}</h2>
-                    <a href="{{ route('filament.public.resources.news.index') }}" class="text-xs uppercase tracking-wider text-base-content/70 hover:text-base-content">{{ $tr('View all', 'Lihat semua') }}</a>
+                    <h2 class="text-2xl font-bold uppercase">{{ __('Latest News') }}</h2>
+                    <a href="{{ route('filament.public.resources.news.index') }}" class="text-xs uppercase tracking-wider text-base-content/70 hover:text-base-content">{{ __('View all') }}</a>
                 </div>
                 <div class="grid gap-4 md:grid-cols-3">
                     @forelse ($latestNews as $news)
@@ -254,42 +253,42 @@
                             <h3 class="mt-2 line-clamp-2 text-xl font-bold leading-tight">{{ $news->title }}</h3>
                             <p class="mt-3 text-sm text-base-content/75">{{ Str::limit(strip_tags($news->content), 130) }}</p>
                             <div class="mt-4 border-t border-base-300 pt-3 text-right">
-                                <a href="{{ route('filament.public.resources.news.view', ['record' => $news]) }}" class="text-xs uppercase tracking-wider hover:underline">{{ $tr('Read more', 'Baca selengkapnya') }}</a>
+                                <a href="{{ route('filament.public.resources.news.view', ['record' => $news]) }}" class="text-xs uppercase tracking-wider hover:underline">{{ __('Read more') }}</a>
                             </div>
                         </article>
                     @empty
-                        <div class="alert md:col-span-3"><span>{{ $tr('No published news yet.', 'Belum ada berita yang dipublikasikan.') }}</span></div>
+                        <div class="alert md:col-span-3"><span>{{ __('No published news yet.') }}</span></div>
                     @endforelse
                 </div>
             </section>
 
             <section class="mb-12">
                 <div class="mb-5 flex items-center justify-between border-b border-base-300 pb-2">
-                    <h2 class="text-2xl font-bold uppercase">{{ $tr('Past Events', 'Acara Lampau') }}</h2>
-                    <a href="{{ route('filament.public.resources.events.index') }}" class="text-xs uppercase tracking-wider text-base-content/70 hover:text-base-content">{{ $tr('Browse archive', 'Lihat arsip') }}</a>
+                    <h2 class="text-2xl font-bold uppercase">{{ __('Past Events') }}</h2>
+                    <a href="{{ route('filament.public.resources.events.index') }}" class="text-xs uppercase tracking-wider text-base-content/70 hover:text-base-content">{{ __('Browse archive') }}</a>
                 </div>
                 <div class="grid gap-4 md:grid-cols-3">
                     @forelse ($pastEvents as $event)
                         <article class="border border-base-300 bg-base-100">
                             <div class="p-4">
-                                <p class="text-[11px] uppercase tracking-[0.18em] text-base-content/60">{{ $eventLocation($event) ?: $tr('Location TBA', 'Lokasi menyusul') }}</p>
+                                <p class="text-[11px] uppercase tracking-[0.18em] text-base-content/60">{{ $eventLocation($event) ?: __('Location TBA') }}</p>
                                 <h3 class="mt-2 line-clamp-2 text-lg font-bold leading-tight">{{ $event->title }}</h3>
                                 <div class="mt-3 flex items-center justify-between text-xs uppercase tracking-wide text-base-content/70">
                                     <span>{{ $event->event_date?->format('d M Y') }}</span>
-                                    <span>{{ $daysSinceEvent($event) }} {{ $tr('days ago', 'hari lalu') }}</span>
+                                    <span>{{ $daysSinceEvent($event) }} {{ __('days ago') }}</span>
                                 </div>
                             </div>
                             <figure class="h-40 w-full bg-base-300">
                                 @if ($eventImageUrl($event->cover_image))
                                     <img src="{{ $eventImageUrl($event->cover_image) }}" alt="{{ $event->title }}" class="h-full w-full object-cover grayscale" />
                                 @else
-                                    <div class="flex h-full w-full items-center justify-center text-base-content/50">{{ $tr('No image', 'Tidak ada gambar') }}</div>
+                                    <div class="flex h-full w-full items-center justify-center text-base-content/50">{{ __('No image') }}</div>
                                 @endif
                             </figure>
-                            <a href="{{ route('filament.public.resources.events.view', ['record' => $event]) }}" class="block border-t border-base-300 px-3 py-2 text-center text-[10px] uppercase tracking-wider hover:bg-base-200">{{ $tr('View recap', 'Lihat ringkasan') }}</a>
+                            <a href="{{ route('filament.public.resources.events.view', ['record' => $event]) }}" class="block border-t border-base-300 px-3 py-2 text-center text-[10px] uppercase tracking-wider hover:bg-base-200">{{ __('View recap') }}</a>
                         </article>
                     @empty
-                        <div class="alert md:col-span-3"><span>{{ $tr('No past events yet.', 'Belum ada acara lampau.') }}</span></div>
+                        <div class="alert md:col-span-3"><span>{{ __('No past events yet.') }}</span></div>
                     @endforelse
                 </div>
             </section>
@@ -297,14 +296,14 @@
             <section class="mb-12 border border-base-300 bg-base-100 p-6 md:p-8">
                 <div class="grid gap-6 md:grid-cols-2 md:items-center">
                     <div>
-                        <p class="text-xs uppercase tracking-[0.2em] text-base-content/60">{{ $tr('Join the portal', 'Gabung portal') }}</p>
-                        <h3 class="mt-2 text-3xl font-bold md:text-4xl">{{ $tr('Manage participants, files, and event access faster.', 'Kelola peserta, berkas, dan akses acara lebih cepat.') }}</h3>
-                        <p class="mt-3 text-sm text-base-content/70">{{ $tr('Members get access to digital files from previous events and easier participant management in one dashboard.', 'Member mendapatkan akses file digital acara sebelumnya dan manajemen peserta yang lebih mudah dalam satu dashboard.') }}</p>
+                        <p class="text-xs uppercase tracking-[0.2em] text-base-content/60">{{ __('Join the portal') }}</p>
+                        <h3 class="mt-2 text-3xl font-bold md:text-4xl">{{ __('Manage participants, files, and event access faster.') }}</h3>
+                        <p class="mt-3 text-sm text-base-content/70">{{ __('Members get access to digital files from previous events and easier participant management in one dashboard.') }}</p>
                     </div>
                     <div class="grid gap-2 sm:grid-cols-2">
-                        <a href="{{ route('filament.user.auth.register') }}" class="btn btn-primary sm:col-span-2">{{ $tr('Sign Up', 'Daftar') }}</a>
-                        <a href="{{ route('filament.user.auth.login') }}" class="btn btn-outline">{{ $tr('User Login', 'Masuk User') }}</a>
-                        <a href="{{ route('filament.admin.auth.login') }}" class="btn btn-outline">Admin Login</a>
+                        <a href="{{ route('filament.user.auth.register') }}" class="btn btn-primary sm:col-span-2">{{ __('Sign Up') }}</a>
+                        <a href="{{ route('filament.user.auth.login') }}" class="btn btn-outline">{{ __('User Login') }}</a>
+                        <a href="{{ route('filament.admin.auth.login') }}" class="btn btn-outline">{{ __('Admin Login') }}</a>
                     </div>
                 </div>
             </section>
@@ -314,25 +313,25 @@
             <div class="grid gap-6 md:grid-cols-3">
                 <div>
                     <p class="text-xl font-bold">PKN Portal</p>
-                    <p class="mt-2 text-sm text-base-content/70">{{ $tr('Public events, user registrations, and admin operations in one platform.', 'Acara publik, registrasi user, dan operasional admin dalam satu platform.') }}</p>
+                    <p class="mt-2 text-sm text-base-content/70">{{ __('Public events, user registrations, and admin operations in one platform.') }}</p>
                 </div>
                 <div>
-                    <p class="text-sm font-semibold uppercase tracking-wide">{{ $tr('Quick Links', 'Tautan Cepat') }}</p>
+                    <p class="text-sm font-semibold uppercase tracking-wide">{{ __('Quick Links') }}</p>
                     <div class="mt-3 flex flex-col gap-2 text-sm text-base-content/80">
-                        <a href="{{ route('filament.public.pages.dashboard') }}" class="hover:underline">{{ $tr('Public Panel', 'Panel Publik') }}</a>
-                        <a href="{{ route('filament.user.auth.login') }}" class="hover:underline">{{ $tr('User Login', 'Masuk User') }}</a>
-                        <a href="{{ route('filament.user.auth.register') }}" class="hover:underline">{{ $tr('User Register', 'Daftar User') }}</a>
-                        <a href="{{ route('filament.admin.auth.login') }}" class="hover:underline">Admin Login</a>
+                        <a href="{{ route('filament.public.pages.dashboard') }}" class="hover:underline">{{ __('Public Panel') }}</a>
+                        <a href="{{ route('filament.user.auth.login') }}" class="hover:underline">{{ __('User Login') }}</a>
+                        <a href="{{ route('filament.user.auth.register') }}" class="hover:underline">{{ __('User Register') }}</a>
+                        <a href="{{ route('filament.admin.auth.login') }}" class="hover:underline">{{ __('Admin Login') }}</a>
                     </div>
                 </div>
                 <div class="flex items-start md:justify-end">
                     <div class="flex flex-col items-stretch gap-2">
                         @if ($contactNumber && $contactWhatsAppUrl)
                             <a href="{{ $contactWhatsAppUrl }}" target="_blank" rel="noopener noreferrer" class="btn btn-outline btn-sm bg-white text-base-content hover:bg-base-100">
-                                {{ $tr('Help', 'Bantuan') }}
+                                {{ __('Help') }}
                             </a>
                         @endif
-                        <button id="theme-toggle" type="button" class="btn btn-outline btn-sm">Switch to Dark Mode</button>
+                        <button id="theme-toggle" type="button" class="btn btn-outline btn-sm">{{ __('Switch to Dark Mode') }}</button>
                     </div>
                 </div>
             </div>

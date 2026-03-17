@@ -1,6 +1,7 @@
 <?php
 
 use App\Filament\Admin\Resources\Documents\Pages\CreateDocument;
+use App\Filament\Admin\Resources\Documents\Pages\ViewDocument;
 use App\Models\Document;
 use App\Models\Organization;
 use App\Models\User;
@@ -79,7 +80,7 @@ it('can render the document view page', function () {
         'slug' => 'test-document',
     ]);
 
-    Livewire::test(\App\Filament\Admin\Resources\Documents\Pages\ViewDocument::class, [
+    Livewire::test(ViewDocument::class, [
         'record' => $document->getKey(),
         'tenant' => $this->tenant->slug,
     ])
