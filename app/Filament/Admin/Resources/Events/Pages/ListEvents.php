@@ -21,7 +21,7 @@ class ListEvents extends ListRecords
     protected function getHeaderWidgets(): array
     {
         return [
-            TopViewedEvents::class,
+            // TopViewedEvents::class,
         ];
     }
 }

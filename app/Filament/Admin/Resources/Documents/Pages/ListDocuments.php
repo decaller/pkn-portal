@@ -22,7 +22,7 @@ class ListDocuments extends ListRecords
     protected function getHeaderWidgets(): array
     {
         return [
-            TopViewedDocuments::class,
+            // TopViewedDocuments::class,
             FeaturedDocumentsWidget::class,
         ];
     }

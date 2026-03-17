@@ -6,6 +6,8 @@ use App\Filament\Admin\Resources\Events\EventResource as AdminEventResource;
 use App\Filament\Public\Resources\Events\EventResource as PublicEventResource;
 use App\Models\Document;
 use Filament\Facades\Filament;
+use Filament\Infolists\Components\ImageEntry;
+use Filament\Infolists\Components\KeyValueEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\ViewEntry;
 use Filament\Schemas\Components\Section;
@@ -32,6 +34,12 @@ class DocumentInfolist
                             ->weight('bold')
                             ->size('lg')
                             ->columnSpanFull(),
+                        ImageEntry::make('cover_image')
+                            ->label(__('Cover Image'))
+                            ->disk('public')
+                            ->visibility('public')
+                            ->columnSpanFull()
+                            ->visible(fn ($record) => filled($record->cover_image)),
                         TextEntry::make('description')
                             ->label(__('Description'))
                             ->placeholder('-')
@@ -47,7 +55,6 @@ class DocumentInfolist
                         TextEntry::make('tags')
                             ->label(__('Keywords'))
                             ->badge()
-                            ->separator(',')
                             ->visible(fn ($state) => filled($state)),
                         TextEntry::make('event.title')
                             ->label(__('Related Event'))
@@ -85,6 +92,7 @@ class DocumentInfolist
                 Section::make(__('Extracted Content (Tika)'))
                     ->description(__('Technical metadata and full text identified by Apache Tika.'))
                     ->collapsible()
+                    ->collapsed()
                     ->schema([
                         TextEntry::make('content')
                             ->label(__('Extracted Text'))
@@ -94,8 +102,16 @@ class DocumentInfolist
                             ->visible(fn ($state) => filled($state)),
                         TextEntry::make('metadata')
                             ->label(__('Technical Metadata'))
-                            ->listWithLineBreaks()
-                            ->bulleted()
+                            ->formatStateUsing(function ($state) {
+                                if (empty($state)) {
+                                    return '-';
+                                }
+
+                                return '<pre class="text-xs overflow-auto max-h-60 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">' .
+                                    e(json_encode($state, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES)) .
+                                    '</pre>';
+                            })
+                            ->html()
                             ->columnSpanFull(),
                     ])
                     ->visible(fn () => Filament::getCurrentPanel()?->getId() === 'admin')

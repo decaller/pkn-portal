@@ -35,10 +35,11 @@ class DocumentForm
                 ->visible(fn ($record) => $record === null || ! $record->exists),
 
             Section::make(__('General Information'))
+                ->collapsible()
                 ->schema([
                     TextInput::make('title')
-                        ->required()
-                        ->helperText(__('Enter a descriptive title for this document.')),
+                        ->placeholder(__('Auto-extracted from file...'))
+                        ->helperText(__('Optional. Title will be automatically extracted from the file metadata if left empty.')),
 
                     Select::make('event_id')
                         ->relationship('event', 'title')
@@ -71,6 +72,7 @@ class DocumentForm
             Section::make(__('Extracted Content'))
                 ->description(__('Content read by Apache Tika'))
                 ->collapsible()
+                ->collapsed()
                 ->schema([
                     ViewField::make('file_path_preview')
                         ->label(__('File Preview'))

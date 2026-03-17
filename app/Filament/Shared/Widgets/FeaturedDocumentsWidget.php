@@ -44,7 +44,7 @@ class FeaturedDocumentsWidget extends TableWidget
                     ViewColumn::make('cover_image')
                         ->view('filament.tables.columns.document-cover-image')
                         ->extraAttributes([
-                            'class' => 'w-full h-40 object-cover rounded-t-xl overflow-hidden',
+                            'class' => 'w-full h-[200px] rounded-t-xl overflow-hidden',
                         ]),
                     Stack::make([
                         TextColumn::make('title')

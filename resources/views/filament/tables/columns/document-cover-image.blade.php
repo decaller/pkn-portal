@@ -1,4 +1,4 @@
-<div class="w-full h-full relative group">
+<div class="w-full h-[200px] relative group overflow-hidden">
     @php
         $record = $getRecord();
         $coverImage = $record->cover_image;

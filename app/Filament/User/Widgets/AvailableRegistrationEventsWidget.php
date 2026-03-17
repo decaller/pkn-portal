@@ -43,7 +43,7 @@ class AvailableRegistrationEventsWidget extends TableWidget
             ->columns([
                 Stack::make([
                     ImageColumn::make('cover_image')
-                        ->height('150px')
+                        ->height('350px')
                         ->width('100%')
                         ->extraImgAttributes([
                             'class' => 'object-cover rounded-xl w-full',

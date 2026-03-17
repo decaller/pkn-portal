@@ -21,7 +21,7 @@ class ListNews extends ListRecords
     protected function getHeaderWidgets(): array
     {
         return [
-            TopViewedNews::class,
+            // TopViewedNews::class,
         ];
     }
 }
