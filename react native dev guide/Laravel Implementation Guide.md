@@ -40,7 +40,11 @@ Expose the following resources using `rupadana/filament-api-service`:
 
 ### c. Invoices & Registrations
 - **Read-only** access via native API.
-- **Creation** triggered via WebView (using Magic Link).
+- **Payment Initiation**: 
+    - Implement `GET /api/v1/invoices/{invoice}/snap-token`.
+    - Auth: `auth:sanctum`.
+    - Logic: Call `InvoicePaymentService::createOrReuseSnapPayment($invoice)` and return just the `snap_token`.
+- **Hybrid Fallback**: Creation and payment can also be triggered via WebView (using Magic Link).
 
 ## 4. Global API Refinements
 

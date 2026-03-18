@@ -5,9 +5,14 @@ namespace App\Filament\User\Resources\EventRegistrations\Tables;
 use App\Enums\PaymentStatus;
 use App\Enums\RegistrationStatus;
 use App\Filament\User\Resources\EventRegistrations\EventRegistrationResource;
-use Filament\Actions\ViewAction;
+use App\Models\EventRegistration;
+use App\Services\Payments\InvoicePaymentService;
+use Filament\Notifications\Notification;
+use Filament\Tables\Actions\Action;
+use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
+use Throwable;
 
 class EventRegistrationsTable
 {
@@ -39,6 +44,36 @@ class EventRegistrationsTable
             ])
             ->defaultSort('created_at', 'desc')
             ->recordActions([
+                Action::make('pay_now')
+                    ->label(fn (EventRegistration $record): string => ($record->latestInvoice?->hasActivePaymentAttempt() ?? false)
+                        ? __('Continue Payment')
+                        : __('Pay Now'))
+                    ->icon('heroicon-o-credit-card')
+                    ->color('success')
+                    ->visible(fn (EventRegistration $record): bool => $record->latestInvoice?->canStartGatewayPayment() ?? false)
+                    ->action(function (EventRegistration $record, $livewire): void {
+                        try {
+                            $invoice = $record->latestInvoice;
+
+                            if (! $invoice) {
+                                throw new \RuntimeException('No invoice found');
+                            }
+
+                            $payment = app(InvoicePaymentService::class)->createOrReuseSnapPayment($invoice);
+
+                            Notification::make()
+                                ->title(__('Payment session created'))
+                                ->success()
+                                ->send();
+
+                            $livewire->dispatch('open-midtrans-snap', token: $payment->snap_token);
+                        } catch (Throwable) {
+                            Notification::make()
+                                ->title(__('Unable to start payment'))
+                                ->danger()
+                                ->send();
+                        }
+                    }),
                 ViewAction::make(),
             ]);
     }

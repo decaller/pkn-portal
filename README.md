@@ -46,9 +46,9 @@ Home page is served at `/` and links into the panels.
 
 ## Payments
 
-- New payments are initiated from invoice screens through Midtrans Snap.
-- Payment completion is webhook-driven. Frontend Snap callbacks only refresh the UI.
-- Historical manual `payment_proof_path` records remain readable, but the manual upload and admin verification flow is retired for new payments.
+- New payments are strictly initiated from invoice or registration screens through Midtrans Snap.
+- Payment completion is entirely webhook-driven. Frontend Snap callbacks (on the web) or deep links (from mobile) only serve to refresh the UI.
+- Historical manual `payment_proof_path` records remain readable for legacy registrations, but the manual upload and admin verification flow is now fully retired.
 
 ### Required payment environment variables
 

@@ -339,43 +339,43 @@ The app uses **Bottom Tab Navigation** for primary areas and **Stack Navigation*
 - Back -> return to previous list position
 
 ### I. Invoice Detail Screen
-**Purpose:** Help users understand what they owe and what action is required.
+**Purpose:** Help users understand what they owe and initiate payment.
 
 **Layout order:**
 1. Invoice status card
 2. Amount summary
 3. Line items
-4. Payment instructions / proof state
+4. Payment session state (if active)
 5. Action buttons
 
 **Detailed UI elements:**
 - Status card:
   - invoice number
-  - badge: `Unpaid`, `Pending Verification`, `Paid`, `Expired`
+  - badge: `Unpaid`, `Pending Payment`, `Paid`, `Expired`
   - due date
 - Amount block:
   - subtotal
-  - fees if any
+  - fees/discount
   - total payable
-- Line items list:
-  - package name
-  - quantity
-  - amount
-- Payment proof block:
-  - uploaded/not uploaded state
-  - last submitted timestamp
-  - verification note if available
 - Action area:
-  - `Upload Payment Proof`
-  - `Download Invoice`
-  - `Contact Support` if needed
+  - `Pay Now` / `Continue Payment` (Initiates Midtrans Snap)
+  - `Download PDF`
+  - `Contact Support`
 
 **Primary interactions:**
-- Tap `Upload Payment Proof` -> request magic-link -> open Payment WebView
-- Tap `Download Invoice` -> open temp file URL or native browser/file handler
-- Tap linked registration reference -> Registration Detail if implemented
+- Tap `Pay Now` -> request Snap token -> open Midtrans Snap Modal (Native SDK or WebView)
+- Tap `Download PDF` -> open temp file URL
 
-### J. Notifications Screen
+#### [Slide] Invoice Payment Flow (Midtrans Snap)
+1. User opens Registrations tab.
+2. User taps a registration with `Unpaid` status.
+3. Registration Detail opens.
+4. User taps the linked invoice or `Pay Now` button.
+5. App requests Snap token from `/api/v1/invoices/{id}/snap-token`.
+6. App opens Midtrans Snap modal.
+7. User completes payment on Midtrans gateway.
+8. Midtrans sends webhook to backend.
+9. App detects completion (via listener or polling) and refreshes state.
 **Purpose:** Give users a single place to review system updates and reminders.
 
 **Detailed UI elements:**
@@ -488,19 +488,16 @@ The app uses **Bottom Tab Navigation** for primary areas and **Stack Navigation*
    - `Continue Registration`
    - or linked registration summary
 
-### D. Invoice Payment Proof Flow
+### D. Invoice Payment Flow (Midtrans Snap)
 1. User opens Registrations tab.
-2. User taps a registration with unpaid or pending payment status.
+2. User taps a registration with unpaid or pending status.
 3. Registration Detail opens.
-4. User taps the linked invoice block.
-5. Invoice Detail opens.
-6. User taps `Upload Payment Proof`.
-7. App requests magic-link.
-8. Payment WebView modal opens.
-9. User uploads proof in portal flow.
-10. Portal redirects to `pknportal://action-success?type=payment`.
-11. App closes modal and refreshes registrations and invoices.
-12. Invoice Detail updates to `Pending Verification`.
+4. User taps the linked invoice or 'Pay Now' button.
+5. App requests Snap token from Backend API.
+6. App opens Midtrans Snap modal (via Native SDK or WebView).
+7. On payment completion, Midtrans notifies the backend via webhook.
+8. App detects the completion (via listener or polling) and refreshes native state.
+9. Invoice Detail updates to `Paid`.
 
 ### E. Notification Deep-Link Flow
 1. User opens Notifications from Dashboard or Profile.

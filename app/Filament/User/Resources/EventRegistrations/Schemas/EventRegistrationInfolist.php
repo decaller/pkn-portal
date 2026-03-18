@@ -5,8 +5,10 @@ namespace App\Filament\User\Resources\EventRegistrations\Schemas;
 use App\Enums\InvoiceStatus;
 use App\Enums\PaymentStatus;
 use App\Enums\RegistrationStatus;
+use App\Models\EventRegistration;
 use App\Models\InvoicePayment;
 use App\Models\RegistrationParticipant;
+use App\Services\Payments\InvoicePaymentService;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
 use Filament\Forms\Components\TextInput;
@@ -104,6 +106,38 @@ class EventRegistrationInfolist
                 ])
                 ->columns(2),
             Section::make(__('How to Pay'))
+                ->headerActions([
+                    Action::make('pay_now')
+                        ->label(fn (EventRegistration $record): string => ($record->latestInvoice?->hasActivePaymentAttempt() ?? false)
+                            ? __('Continue Payment')
+                            : __('Pay Now'))
+                        ->icon('heroicon-o-credit-card')
+                        ->color('success')
+                        ->visible(fn (EventRegistration $record): bool => $record->latestInvoice?->canStartGatewayPayment() ?? false)
+                        ->action(function (EventRegistration $record, $livewire): void {
+                            try {
+                                $invoice = $record->latestInvoice;
+
+                                if (! $invoice) {
+                                    throw new \RuntimeException('No invoice found');
+                                }
+
+                                $payment = app(InvoicePaymentService::class)->createOrReuseSnapPayment($invoice);
+
+                                Notification::make()
+                                    ->title(__('Payment session created'))
+                                    ->success()
+                                    ->send();
+
+                                $livewire->dispatch('open-midtrans-snap', token: $payment->snap_token);
+                            } catch (\Throwable) {
+                                Notification::make()
+                                    ->title(__('Unable to start payment'))
+                                    ->danger()
+                                    ->send();
+                            }
+                        }),
+                ])
                 ->schema([
                     TextEntry::make('event.payment_instructions')
                         ->label('')
