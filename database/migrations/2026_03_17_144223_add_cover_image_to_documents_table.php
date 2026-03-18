@@ -11,9 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
+        if (! Schema::hasTable('documents')) {
+            return;
+        }
+
         Schema::table('documents', function (Blueprint $table) {
             $table->string('title')->nullable()->change();
-            $table->string('cover_image')->nullable()->after('tags');
+
+            if (! Schema::hasColumn('documents', 'cover_image')) {
+                $table->string('cover_image')->nullable()->after('tags');
+            }
         });
     }
 
@@ -22,9 +29,16 @@ return new class extends Migration
      */
     public function down(): void
     {
+        if (! Schema::hasTable('documents')) {
+            return;
+        }
+
         Schema::table('documents', function (Blueprint $table) {
             $table->string('title')->nullable(false)->change();
-            $table->dropColumn('cover_image');
+
+            if (Schema::hasColumn('documents', 'cover_image')) {
+                $table->dropColumn('cover_image');
+            }
         });
     }
 };

@@ -8,11 +8,14 @@ use App\Models\Event;
 use App\Models\User;
 use App\Notifications\NewEventOpenForRegistrationNotification;
 use App\Notifications\PastEventPostedOrUpdatedNotification;
+use App\Services\EventSessionFileService;
 use Illuminate\Support\Facades\Log;
 
 class EventObserver
 {
-    public function __construct() {}
+    public function __construct(
+        private readonly EventSessionFileService $sessionFiles,
+    ) {}
 
     /**
      * Handle the Event "created" event.
@@ -67,36 +70,26 @@ class EventObserver
     public function saved(Event $event): void
     {
         Log::debug("EventObserver@saved triggered for Event ID: {$event->id}");
+        $sessionFileEntries = $this->sessionFiles->entries($event);
         $sessionFilePaths = [];
 
         // 1. Process rundown (sessions) files
-        if (! empty($event->rundown)) {
-            foreach ($event->rundown as $session) {
-                // Builder blocks store data inside a 'data' array
-                $data = $session['data'] ?? $session;
-                $files = $data['session_files'] ?? [];
+        foreach ($sessionFileEntries as $entry) {
+            $sessionFilePaths[] = $entry['file_path'];
 
-                if (! empty($files)) {
-                    foreach ($files as $filePath) {
-                        $sessionFilePaths[] = $filePath;
-
-                        Log::debug("Dispatching Tika job for file: {$filePath}");
-                        dispatch(new ProcessDocumentTika(
-                            eventId: $event->id,
-                            filePath: $filePath,
-                            sessionTitle: $data['title'] ?? 'Untitled',
-                            sessionSlug: $data['slug'] ?? null,
-                            source: 'session'
-                        ));
-                    }
-                }
-            }
+            Log::debug("Dispatching Tika job for file: {$entry['file_path']}");
+            dispatch(new ProcessDocumentTika(
+                eventId: $event->id,
+                filePath: $entry['file_path'],
+                sessionTitle: $entry['session_title'],
+                sessionSlug: $entry['session_slug'],
+                source: 'session'
+            ));
         }
 
         Log::debug('Found '.count($sessionFilePaths).' total session files in rundown.');
 
         // Clean up documents for removed session files.
-        $sessionFilePaths = array_values(array_unique($sessionFilePaths));
         $staleSessionDocs = Document::query()
             ->where('event_id', $event->id)
             ->where('file_path', 'like', 'events/%/sessions/%');

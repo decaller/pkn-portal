@@ -1,0 +1,99 @@
+<?php
+
+use App\Console\Commands\QueueMissingDocumentCoversCommand;
+use App\Console\Commands\SyncMissingSessionDocumentsCommand;
+use App\Jobs\ProcessDocumentCover;
+use App\Jobs\ProcessDocumentTika;
+use App\Models\Document;
+use App\Models\Event;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Queue;
+
+uses(RefreshDatabase::class);
+
+it('queues jobs for session files that are missing document records', function () {
+    $event = Event::factory()->create([
+        'rundown' => [
+            [
+                'title' => 'Session 1',
+                'slug' => 'session-1',
+                'session_files' => ['events/test-event/sessions/session-1.pdf'],
+            ],
+        ],
+    ]);
+
+    Document::query()->create([
+        'event_id' => $event->id,
+        'session_slug' => 'existing-session',
+        'title' => 'Existing',
+        'slug' => 'existing-doc',
+        'file_path' => 'events/test-event/sessions/existing.pdf',
+    ]);
+
+    Queue::fake();
+
+    $this->artisan(SyncMissingSessionDocumentsCommand::class)
+        ->assertExitCode(0);
+
+    Queue::assertPushed(ProcessDocumentTika::class, function (ProcessDocumentTika $job) use ($event): bool {
+        return $job->eventId === $event->id
+            && $job->filePath === 'events/test-event/sessions/session-1.pdf'
+            && $job->sessionTitle === 'Session 1'
+            && $job->sessionSlug === 'session-1'
+            && $job->source === 'session';
+    });
+});
+
+it('skips session files that already have document records', function () {
+    $event = Event::factory()->create([
+        'rundown' => [
+            [
+                'title' => 'Session 2',
+                'slug' => 'session-2',
+                'session_files' => ['events/test-event/sessions/session-2.pdf'],
+            ],
+        ],
+    ]);
+
+    Document::query()->create([
+        'event_id' => $event->id,
+        'session_slug' => 'session-2',
+        'title' => 'Session 2',
+        'slug' => 'session-2-doc',
+        'file_path' => 'events/test-event/sessions/session-2.pdf',
+    ]);
+
+    Queue::fake();
+
+    $this->artisan(SyncMissingSessionDocumentsCommand::class)
+        ->assertExitCode(0);
+
+    Queue::assertNotPushed(ProcessDocumentTika::class);
+});
+
+it('queues cover jobs only for documents that are missing cover images', function () {
+    $missingCover = Document::query()->create([
+        'title' => 'Needs Cover',
+        'slug' => 'needs-cover',
+        'file_path' => 'manual-uploads/needs-cover.pdf',
+        'cover_image' => null,
+    ]);
+
+    Document::query()->create([
+        'title' => 'Has Cover',
+        'slug' => 'has-cover',
+        'file_path' => 'manual-uploads/has-cover.pdf',
+        'cover_image' => 'document-covers/has-cover.png',
+    ]);
+
+    Queue::fake();
+
+    $this->artisan(QueueMissingDocumentCoversCommand::class)
+        ->assertExitCode(0);
+
+    Queue::assertPushed(ProcessDocumentCover::class, function (ProcessDocumentCover $job) use ($missingCover): bool {
+        return $job->documentId === $missingCover->id && $job->force === false;
+    });
+
+    Queue::assertPushed(ProcessDocumentCover::class, 1);
+});
