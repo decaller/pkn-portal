@@ -71,4 +71,12 @@ Do not cache mutable workflow state in ways that allow users to submit stale reg
 
 The repository already contains signs of more than one API direction.
 
-If the real implementation uses `/api/v1/auth/login`, the tests and docs should say that. If temporary aliases exist, document them as migration shims only.
+If the real implementation uses `/api/v1/auth/token-handoff`, the tests and docs should say that. If temporary aliases exist, document them as migration shims only.
+
+## 10. Performance optimization: FlashList & MMKV
+
+Do not use standard React Native `FlatList` or `AsyncStorage` for high-volume data.
+
+- **FlashList**: Use Shopify's `<FlashList>` for the **Events Discovery** tab to prevent memory crashes and frame drops.
+- **MMKV**: Use `react-native-mmkv` for local storage in `dashboardStore.ts`. It is 30x faster than `AsyncStorage` and can load cached dashboard data in ~1ms.
+- **Caveat**: MMKV requires a custom dev client (it does not work in standard Expo Go). Commit to this transition only when the project moves beyond Expo Go for development.

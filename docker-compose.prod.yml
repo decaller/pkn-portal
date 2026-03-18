@@ -60,8 +60,8 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-      libreoffice:
-        condition: service_healthy
+      # libreoffice:
+      #   condition: service_healthy
     volumes:
       - public_storage:/var/www/html/storage/app/public
       - livewire_tmp:/var/www/html/storage/app/livewire-tmp
@@ -152,10 +152,10 @@ services:
         condition: service_healthy
       pgsql:
         condition: service_healthy
-      tika:
-        condition: service_healthy
-      libreoffice:
-        condition: service_healthy
+      # tika:
+      #   condition: service_healthy
+      # libreoffice:
+      #   condition: service_healthy
     command: ["php", "artisan", "queue:work", "--tries=3", "--timeout=90", "--sleep=3", "--max-time=3600"]
     volumes:
       - public_storage:/var/www/html/storage/app/public

@@ -14,54 +14,50 @@ Response rules:
 - use absolute URLs for images and files
 - return `null` for missing optional values
 
-## 1. Authentication
+## 1. Authentication (Hybrid Flow)
 
-### `POST /auth/login`
+The mobile app uses a **Hybrid Login Strategy**. Instead of a native login form, the app opens a WebView to the portal's web login page.
 
-Purpose:
+### Login Flow:
+1. Native app opens WebView to `https://your-domain.com/user/login`.
+2. User authenticates via the standard web form (Phone + Password).
+3. Upon success, the web session is established.
+4. The app redirects/navigates to the **Token Handoff** endpoint below.
+5. The native app intercepts the JSON response or URL, extracts the `token`, and closes the WebView.
 
-- authenticate a mobile user using the same credential style as the current portal
+### `GET /auth/token-handoff`
 
-Request:
+**Auth required:** yes (via web session/cookie)
 
+**Purpose:**
+- Convert a successful web session into a Sanctum Bearer Token for native API calls.
+
+**Response:**
 ```json
 {
-  "phone_number": "08123456789",
-  "password": "secret-password"
-}
-```
-
-Response:
-
-```json
-{
-  "success": true,
-  "message": "Login success.",
-  "token": "plain-text-token",
-  "user": {
-    "id": 1,
-    "name": "User Name",
-    "phone_number": "08123456789",
-    "email": "phone-08123456789@local.pkn"
-  }
+    "success": true,
+    "token": "plain-text-token",
+    "user": {
+        "id": 1,
+        "name": "User Name",
+        "phone_number": "08123456789"
+    }
 }
 ```
 
 ### `POST /auth/logout`
 
-Auth required: yes
+**Auth required:** yes (Bearer Token)
 
-Purpose:
-
-- revoke the current token
+**Purpose:**
+- Revoke the current Sanctum token.
 
 ### `GET /auth/me`
 
-Auth required: yes
+**Auth required:** yes (Bearer Token)
 
-Purpose:
-
-- return the currently authenticated mobile user
+**Purpose:**
+- Return the currently authenticated mobile user profile.
 
 ## 2. WebView bridge
 
@@ -78,7 +74,7 @@ Response:
 
 ```json
 {
-  "url": "https://your-domain.com/mobile/webview-login?...signed..."
+    "url": "https://your-domain.com/mobile/webview-login?...signed..."
 }
 ```
 
@@ -100,9 +96,9 @@ Suggested payload:
 
 ```json
 {
-  "featured_events": [],
-  "latest_news": [],
-  "testimonials": []
+    "featured_events": [],
+    "latest_news": [],
+    "testimonials": []
 }
 ```
 
@@ -143,6 +139,7 @@ Recommended fields:
 - registration availability
 - registration package summary
 - image URLs
+- similiar events
 
 ### `GET /events/{id}/similar`
 
@@ -210,7 +207,7 @@ Recommended response:
 
 ```json
 {
-  "download_url": "https://your-domain.com/temporary/invoice.pdf"
+    "download_url": "https://your-domain.com/temporary/invoice.pdf"
 }
 ```
 
@@ -256,7 +253,53 @@ Purpose:
 
 If profile editing remains complex, keep updates in WebView for v1 and expose this endpoint later.
 
-## 10. Formatting and safety rules
+## 10. Documents
+
+### `GET /documents`
+
+**Auth required:** yes (Bearer Token)
+
+**Query params:**
+- `category`
+- `search`
+- `page`
+
+**Purpose:**
+- Return paginated documents available to the user.
+
+### `GET /documents/{id}`
+
+**Auth required:** yes (Bearer Token)
+
+**Response:**
+```json
+{
+    "id": 1,
+    "title": "Document Title",
+    "description": "Short description",
+    "file_url": "https://your-domain.com/storage/docs/file.pdf",
+    "file_size": "2.1 MB",
+    "file_type": "PDF",
+    "created_at": "2024-03-18T12:00:00Z"
+}
+```
+
+## 11. Organization Management (Hybrid Flow)
+
+Organization creation, member management, and profile editing remain **WebView-based** to preserve the complex validation logic.
+
+### `GET /organizations`
+
+**Auth required:** yes (Bearer Token)
+
+**Purpose:**
+- List organizations the current user belongs to.
+
+### Native -> Web Transitions:
+1.  **Create Organization**: Native app uses `GET /webview/magic-link?redirect=/user/organizations/create` then opens result in WebView.
+2.  **Edit Profile**: Native app uses `GET /webview/magic-link?redirect=/user/{slug}/edit` then opens in WebView.
+
+## 12. Formatting and safety rules
 
 1. Never return raw Eloquent models directly.
 2. Strip sensitive or admin-only fields.
@@ -265,7 +308,7 @@ If profile editing remains complex, keep updates in WebView for v1 and expose th
 5. Make file and image URLs absolute.
 6. Keep mobile endpoints under `routes/api.php` with `auth:sanctum` where required.
 
-## 11. Compatibility note
+## 13. Compatibility note
 
 This spec intentionally standardizes on `/api/v1/...`.
 

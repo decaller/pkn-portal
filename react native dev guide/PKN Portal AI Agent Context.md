@@ -14,6 +14,8 @@ The backend already has strong web-side domain logic for:
 
 The mobile app should not try to rebuild all of that on day one.
 
+For a detailed breakdown of the app's user experience and screen transitions, see [UX Flow Guide.md](./UX%20Flow%20Guide.md).
+
 ## Recommended product architecture
 
 Use a hybrid model:
@@ -21,19 +23,20 @@ Use a hybrid model:
 - Native screens for content and account surfaces:
   - home dashboard
   - event list and event detail
-  - news
+  - news list and detail
   - notifications
-  - invoices
+  - invoices list and detail
   - profile summary
+  - documents list and detail
 - WebView only for complex Filament-driven flows:
+  - user login (initial)
   - event registration
-  - payment proof upload
-  - profile or organization editing if needed
+  - organization management
+  - profile or organization editing
 
-The key distinction is simple:
-
-- read-heavy experiences should be native
-- mutation-heavy flows that already exist in Filament can stay web-backed
+The key distinction is:
+- **Read-heavy** experiences (dashboard, news, event info) are **NATIVE**.
+- **Mutation-heavy** or complex logic (auth, registration, org setup) are **HYBRID (WebView)**.
 
 ## Build stack
 
@@ -44,7 +47,7 @@ The key distinction is simple:
 - State: Zustand with persist
 - Storage:
   - auth token in `expo-secure-store`
-  - cached app state in `@react-native-async-storage/async-storage`
+  - cached app state in `react-native-mmkv` (preferred over AsyncStorage for 30x faster performance)
 - Styling: React Native `StyleSheet`
 
 ## Environment constraints
@@ -52,58 +55,38 @@ The key distinction is simple:
 The current development setup is Linux-first and should stay Expo-friendly.
 
 Rules:
-
 1. Do not require native Android or iOS project edits unless explicitly approved.
 2. Prefer packages that work with standard Expo workflows.
 3. Do not use `react-navigation` directly; use Expo Router patterns.
 
-## Authentication rule
+## Authentication rule (Hybrid)
 
-Use native API authentication, not browser-based login, for v1.
+Use a **Hybrid Login Strategy** for v1.
 
-Why:
+### Login Flow:
+1. Native app opens a WebView to `/user/login`.
+2. User authenticates via the portal's web form.
+3. Native app detects success by observing a redirect to `/api/v1/auth/token-handoff`.
+4. Native app extracts the `token` from the JSON response and closes the WebView.
 
-- the Laravel app already authenticates users with `phone_number`
-- the repository already contains an API auth test direction
-- this is simpler than implementing a browser redirect login loop first
-
-Expected mobile auth input:
-
-- `phone_number`
-- `password`
-
-After successful login:
-
-- save the Sanctum bearer token securely
-- attach it to all API requests
-- use a dedicated WebView magic-link endpoint when a cookie-backed Filament session is needed
+This ensures:
+- The app has a **Sanctum Bearer Token** for native API calls.
+- The WebView has a **Session Cookie** for web-backed flows (registrations, profile edits).
 
 ## WebView bridge rule
 
-Do not open protected Filament pages directly inside a WebView.
+When navigating from a native screen to a web-backed flow (e.g., event registration):
 
-Instead:
-
-1. Native app calls `GET /api/v1/webview/magic-link?redirect=...`
-2. Laravel returns a temporary signed URL
-3. React Native opens the returned URL in a WebView
-4. Laravel establishes the web session and redirects to the intended Filament page
-5. On successful completion, Laravel redirects to a custom deep link such as `pknportal://action-success`
-
-This keeps API auth and web session auth separate.
+1. Call `GET /api/v1/webview/magic-link?redirect=...`.
+2. Open the resulting one-time signed URL in a WebView.
+3. Observe completion via redirect to `pknportal://action-success`.
 
 ## Data loading rule
 
-Use stale-while-revalidate behavior everywhere practical.
-
-Pattern:
-
-1. Render cached state immediately
-2. Fetch fresh data in the background
-3. Replace cache and UI when the request succeeds
-4. Show a non-blocking offline state when it fails
-
-Prefer BFF-style endpoints over many small calls.
+Use **stale-while-revalidate** behavior for native screens.
+1. Render cached state immediately.
+2. Fetch fresh data in the background.
+3. Update UI and cache on success.
 
 ## Suggested app structure
 
@@ -111,41 +94,46 @@ Prefer BFF-style endpoints over many small calls.
 pkn-portal-app/
 ├── app/
 │   ├── _layout.tsx
-│   ├── +not-found.tsx
-│   ├── auth/
-│   │   ├── login.tsx
-│   │   └── register.tsx
 │   ├── (tabs)/
-│   │   ├── _layout.tsx
-│   │   ├── index.tsx
+│   │   ├── index.tsx (Dashboard)
 │   │   ├── events.tsx
 │   │   ├── invoices.tsx
 │   │   └── profile.tsx
+│   ├── auth/
+│   │   └── hybrid-login.tsx (WebView wrapper)
 │   ├── events/
 │   │   └── [id].tsx
 │   ├── news/
 │   │   └── [id].tsx
-│   ├── notifications/
-│   │   └── index.tsx
+│   ├── invoices/
+│   │   └── [id].tsx
 │   └── webview/
-│       └── hybrid-flow.tsx
+│       └── bridge.tsx (For magic-link flows)
 ├── src/
 │   ├── components/
-│   ├── features/
-│   ├── lib/
 │   ├── services/
 │   ├── store/
+│   │   └── dashboardStore.ts (uses MMKV for 1ms cache loads)
 │   └── types/
-└── assets/
+
+## Performance & Scalability Tips
+
+1. **FlashList (instead of FlatList)**:
+   - Use Shopify's `<FlashList>` for rendering lists, specifically for the **Events Discovery** tab.
+   - It is significantly faster and prevents memory crashes when handling large datasets.
+
+2. **React Native MMKV (instead of AsyncStorage)**:
+   - Use `react-native-mmkv` for local storage; it is ~30x faster than standard `AsyncStorage`.
+   - It plugs directly into Zustand via a custom storage object.
+   - *Note*: MMKV requires a custom dev client (it does not work in standard Expo Go).
 ```
 
 ## Coding directives
 
 When generating code for this app:
 
-1. Use TypeScript interfaces for all API contracts.
-2. Keep API logic in dedicated service modules, not inline in screens.
-3. Include loading, empty, error, and offline states.
-4. Model auth around `phone_number`, not email-first assumptions.
-5. Treat WebView flows as isolated wrappers, not mixed into normal screen logic.
-6. Keep tap targets mobile-friendly and layouts simple.
+1. **Auth**: Do not build native login forms. Use the hybrid WebView bridge for initial authentication.
+2. **Types**: Use TypeScript interfaces for all API contracts.
+3. **BFF**: Use `GET /api/v1/mobile-dashboard` for the home screen to minimize round-trips.
+4. **URLs**: Ensure all image and file paths are absolute URLs returned by the API.
+5. **Flows**: Treat WebView flows as isolated wrappers, not mixed into normal screen logic.

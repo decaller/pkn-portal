@@ -39,21 +39,23 @@ Keep these web-backed in v1:
 
 ## Authentication model
 
-Use API auth for the app, then bridge into cookie auth only when entering WebView flows.
+Use a **Hybrid Login Strategy** to reuse the existing web-based authentication logic (Phone + Password).
 
-### Native auth flow
+### Hybrid login flow
 
-1. App shows a native login screen.
-2. User enters `phone_number` and `password`.
-3. App calls `POST /api/v1/auth/login`.
-4. Laravel returns a bearer token plus current user payload.
-5. App stores the token in secure storage.
+1. **WebView Login**: Native app opens a WebView to the existing web login page (`/user/login`).
+2. **Web Auth**: User authenticates using the portal's native Filament form.
+3. **Session to Token exchange**:
+    - Upon success, the WebView is redirected to `/api/v1/auth/token-handoff`.
+    - Native app intercepts the response (JSON with Sanctum Token).
+    - Session cookie is stored in the WebView, and the Bearer Token is stored in the native app.
+4. **Token Persistence**: App saves the Sanctum bearer token in secure storage (`expo-secure-store`).
 
 ### Why this is the preferred v1 path
 
-- it matches the existing Laravel login field better
-- it aligns with the repository's API auth test direction
-- it avoids building a browser login redirect flow before the API exists
+- it perfectly reuses the existing `phone_number` and password validation.
+- it avoids rebuilding complex login UI and error handling in React Native.
+- it ensures two-way authentication: session for WebViews and tokens for native APIs.
 
 ## Magic-link WebView bridge
 
