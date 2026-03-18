@@ -28,6 +28,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->web(append: [
             SetLocaleFromSession::class,
         ]);
+        $middleware->validateCsrfTokens(except: [
+            'payments/midtrans/notifications',
+        ]);
 
         $middleware->alias([
             'role' => RoleMiddleware::class,

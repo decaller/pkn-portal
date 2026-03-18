@@ -10,7 +10,6 @@ Artisan::command('inspire', function () {
 use App\Console\Commands\QueueMissingDocumentCoversCommand;
 use App\Console\Commands\SendEventRegistrationRemindersCommand;
 use App\Console\Commands\SendParticipantSlotRemindersCommand;
-use App\Console\Commands\SendPaymentReminderNotificationsCommand;
 use App\Console\Commands\SyncMissingSessionDocumentsCommand;
 use App\Console\Commands\SyncPastEventsCommand;
 use Illuminate\Support\Facades\Schedule;
@@ -20,7 +19,5 @@ Schedule::command(SyncMissingSessionDocumentsCommand::class)->hourlyAt(5)->witho
 Schedule::command(QueueMissingDocumentCoversCommand::class)->hourlyAt(20)->withoutOverlapping();
 
 Schedule::command(SendEventRegistrationRemindersCommand::class)->weekly()->mondays()->at('08:00');
-
-Schedule::command(SendPaymentReminderNotificationsCommand::class)->dailyAt('09:00');
 
 Schedule::command(SendParticipantSlotRemindersCommand::class)->dailyAt('09:00');

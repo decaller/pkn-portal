@@ -3,11 +3,9 @@
 namespace App\Filament\Admin\Resources\Invoices\Tables;
 
 use App\Enums\InvoiceStatus;
-use App\Enums\PaymentStatus;
 use App\Models\Invoice;
 use Filament\Actions\Action;
 use Filament\Actions\ViewAction;
-use Filament\Notifications\Notification;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
@@ -54,6 +52,28 @@ class InvoicesTable
                     ->label(__('Total'))
                     ->money('IDR')
                     ->sortable(),
+                TextColumn::make('latestPayment.status')
+                    ->label(__('Payment Status'))
+                    ->badge()
+                    ->formatStateUsing(fn (?string $state): string => match ($state) {
+                        'pending' => __('Pending Payment'),
+                        'paid' => __('Paid'),
+                        'failed' => __('Failed'),
+                        default => __('Unpaid'),
+                    })
+                    ->color(fn (?string $state): string => match ($state) {
+                        'pending' => 'warning',
+                        'paid' => 'success',
+                        'failed' => 'danger',
+                        default => 'gray',
+                    }),
+                TextColumn::make('latestPayment.order_id')
+                    ->label(__('Order ID'))
+                    ->searchable()
+                    ->toggleable(),
+                TextColumn::make('latestPayment.midtrans_payment_type')
+                    ->label(__('Payment method'))
+                    ->toggleable(),
                 TextColumn::make('issued_at')
                     ->translateLabel()
                     ->dateTime()
@@ -70,26 +90,6 @@ class InvoicesTable
             ])
             ->defaultSort('issued_at', 'desc')
             ->recordActions([
-                Action::make('verify_payment')
-                    ->label(__('Verify'))
-                    ->icon('heroicon-o-check-circle')
-                    ->color('success')
-                    ->visible(fn (Invoice $record): bool => $record->registration && $record->registration->payment_status === PaymentStatus::Submitted)
-                    ->requiresConfirmation()
-                    ->modalHeading(__('Verify Payment'))
-                    ->modalDescription(__('Are you sure you want to completely verify this invoice payment? The registration will be marked as paid.'))
-                    ->modalSubmitActionLabel(__('Yes, mark as Verified'))
-                    ->action(function (Invoice $record) {
-                        $registration = $record->registration;
-                        if ($registration) {
-                            $registration->verifyPayment(auth()->user());
-                        }
-
-                        Notification::make()
-                            ->title(__('Payment Verified'))
-                            ->success()
-                            ->send();
-                    }),
                 Action::make('download')
                     ->label(__('Download PDF'))
                     ->icon('heroicon-o-document-arrow-down')

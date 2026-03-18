@@ -28,7 +28,7 @@ class PaymentUploadReminderNotification extends Notification
             'event_id' => $this->registration->event_id,
             'event_title' => $this->registration->event?->title,
             'event_slug' => $this->registration->event?->slug,
-            'message' => __('Please upload your payment proof for event :title.', ['title' => $this->registration->event?->title]),
+            'message' => __('Please complete your Midtrans payment for event :title.', ['title' => $this->registration->event?->title]),
         ];
     }
 }

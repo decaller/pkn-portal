@@ -13,9 +13,9 @@ enum PaymentStatus: string
     {
         return match ($this) {
             self::Unpaid => 'Unpaid',
-            self::Submitted => 'Submitted',
-            self::Verified => 'Verified',
-            self::Rejected => 'Rejected',
+            self::Submitted => 'Pending Payment',
+            self::Verified => 'Paid',
+            self::Rejected => 'Failed',
         };
     }
 

@@ -15,6 +15,7 @@
         "laravel/sanctum": "^4.0",
         "laravel/tinker": "^2.10.1",
         "league/flysystem-aws-s3-v3": "^3.0",
+        "midtrans/midtrans-php": "^2.6",
         "pxlrbt/filament-activity-log": "^2.1",
         "rupadana/filament-api-service": "dev-copilot/update-to-filament-v5#533a7a6c1c230c7bfaab749029e94d63662257b2 as 4.0.99",
         "spatie/laravel-activitylog": "^4.12",

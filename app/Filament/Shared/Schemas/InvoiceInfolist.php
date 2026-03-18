@@ -3,6 +3,7 @@
 namespace App\Filament\Shared\Schemas;
 
 use App\Enums\InvoiceStatus;
+use App\Models\InvoicePayment;
 use Filament\Infolists\Components\RepeatableEntry;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Schemas\Components\Section;
@@ -52,6 +53,46 @@ class InvoiceInfolist
                     TextEntry::make('booker_snapshot.name')->label(__('Booker')),
                     TextEntry::make('booker_snapshot.email')
                         ->label(__('Booker email'))
+                        ->placeholder('-'),
+                ])
+                ->columns(2),
+
+            Section::make(__('Midtrans payment'))
+                ->schema([
+                    TextEntry::make('latestPayment.status')
+                        ->label(__('Payment status'))
+                        ->badge()
+                        ->formatStateUsing(fn (?string $state): string => match ($state) {
+                            InvoicePayment::STATUS_PENDING => __('Pending Payment'),
+                            InvoicePayment::STATUS_PAID => __('Paid'),
+                            InvoicePayment::STATUS_FAILED => __('Failed'),
+                            default => __('Unpaid'),
+                        })
+                        ->color(fn (?string $state): string => match ($state) {
+                            InvoicePayment::STATUS_PENDING => 'warning',
+                            InvoicePayment::STATUS_PAID => 'success',
+                            InvoicePayment::STATUS_FAILED => 'danger',
+                            default => 'gray',
+                        }),
+                    TextEntry::make('latestPayment.order_id')
+                        ->label(__('Order ID'))
+                        ->placeholder('-'),
+                    TextEntry::make('latestPayment.midtrans_payment_type')
+                        ->label(__('Payment method'))
+                        ->placeholder('-'),
+                    TextEntry::make('latestPayment.midtrans_transaction_id')
+                        ->label(__('Transaction ID'))
+                        ->placeholder('-'),
+                    TextEntry::make('latestPayment.midtrans_transaction_status')
+                        ->label(__('Midtrans transaction status'))
+                        ->placeholder('-'),
+                    TextEntry::make('latestPayment.paid_at')
+                        ->label(__('Paid at'))
+                        ->dateTime()
+                        ->placeholder('-'),
+                    TextEntry::make('latestPayment.expires_at')
+                        ->label(__('Payment expires at'))
+                        ->dateTime()
                         ->placeholder('-'),
                 ])
                 ->columns(2),

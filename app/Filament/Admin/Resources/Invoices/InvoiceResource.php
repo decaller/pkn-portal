@@ -54,6 +54,8 @@ class InvoiceResource extends Resource
             'registration.organization',
             'registration.booker',
             'items',
+            'latestPayment',
+            'payments',
         ]);
     }
 

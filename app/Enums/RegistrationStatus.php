@@ -14,7 +14,7 @@ enum RegistrationStatus: string
     {
         return match ($this) {
             self::Draft => 'Draft',
-            self::PendingPayment => 'Payment Verification',
+            self::PendingPayment => 'Pending Payment',
             self::Paid => 'Paid',
             self::Closed => 'Closed',
             self::Cancelled => 'Cancelled',

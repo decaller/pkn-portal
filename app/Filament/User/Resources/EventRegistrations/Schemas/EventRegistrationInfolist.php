@@ -5,6 +5,7 @@ namespace App\Filament\User\Resources\EventRegistrations\Schemas;
 use App\Enums\InvoiceStatus;
 use App\Enums\PaymentStatus;
 use App\Enums\RegistrationStatus;
+use App\Models\InvoicePayment;
 use App\Models\RegistrationParticipant;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
@@ -41,9 +42,23 @@ class EventRegistrationInfolist
                         ->formatStateUsing(fn (PaymentStatus|string|null $state): string => $state instanceof PaymentStatus ? $state->getLabel() : PaymentStatus::tryFrom((string) $state)?->getLabel() ?? '-')
                         ->color(fn (PaymentStatus|string|null $state): string => $state instanceof PaymentStatus ? $state->getColor() : PaymentStatus::tryFrom((string) $state)?->getColor() ?? 'gray'),
 
+                    TextEntry::make('latestInvoice.latestPayment.order_id')
+                        ->label(__('Order ID'))
+                        ->placeholder('-'),
+                    TextEntry::make('latestInvoice.latestPayment.midtrans_payment_type')
+                        ->label(__('Payment method'))
+                        ->placeholder('-'),
+                    TextEntry::make('latestInvoice.latestPayment.midtrans_transaction_status')
+                        ->label(__('Midtrans transaction status'))
+                        ->placeholder('-'),
+                    TextEntry::make('latestInvoice.latestPayment.expires_at')
+                        ->label(__('Payment expires at'))
+                        ->dateTime()
+                        ->placeholder('-'),
                     TextEntry::make('payment_proof_path')
-                        ->label(__('Payment proof'))
+                        ->label(__('Legacy payment proof'))
                         ->placeholder('-')
+                        ->visible(fn ($record): bool => filled($record->payment_proof_path))
                         ->formatStateUsing(
                             fn (?string $state): string => $state
                                 ? __('View proof')
@@ -59,6 +74,33 @@ class EventRegistrationInfolist
                         ->openUrlInNewTab(),
                     TextEntry::make('total_amount')->money('IDR'),
                     TextEntry::make('notes')->placeholder('-'),
+                ])
+                ->columns(2),
+            Section::make(__('Midtrans payment'))
+                ->visible(fn ($record): bool => filled($record->latestInvoice?->latestPayment))
+                ->schema([
+                    TextEntry::make('latestInvoice.latestPayment.status')
+                        ->label(__('Payment status'))
+                        ->badge()
+                        ->formatStateUsing(fn (?string $state): string => match ($state) {
+                            InvoicePayment::STATUS_PENDING => __('Pending Payment'),
+                            InvoicePayment::STATUS_PAID => __('Paid'),
+                            InvoicePayment::STATUS_FAILED => __('Failed'),
+                            default => __('Unpaid'),
+                        })
+                        ->color(fn (?string $state): string => match ($state) {
+                            InvoicePayment::STATUS_PENDING => 'warning',
+                            InvoicePayment::STATUS_PAID => 'success',
+                            InvoicePayment::STATUS_FAILED => 'danger',
+                            default => 'gray',
+                        }),
+                    TextEntry::make('latestInvoice.latestPayment.midtrans_transaction_id')
+                        ->label(__('Transaction ID'))
+                        ->placeholder('-'),
+                    TextEntry::make('latestInvoice.latestPayment.paid_at')
+                        ->label(__('Paid at'))
+                        ->dateTime()
+                        ->placeholder('-'),
                 ])
                 ->columns(2),
             Section::make(__('How to Pay'))

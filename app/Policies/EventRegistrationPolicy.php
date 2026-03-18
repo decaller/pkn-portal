@@ -54,6 +54,7 @@ class EventRegistrationPolicy
         EventRegistration $eventRegistration,
     ): bool {
         if (
+            $eventRegistration->payment_status === PaymentStatus::Submitted ||
             $eventRegistration->status === RegistrationStatus::Paid ||
             $eventRegistration->payment_status === PaymentStatus::Verified
         ) {
@@ -104,8 +105,7 @@ class EventRegistrationPolicy
         User $user,
         EventRegistration $eventRegistration,
     ): bool {
-        // Only the booker can update payment, not participants
-        return $eventRegistration->booker_user_id === $user->getKey();
+        return false;
     }
 
     public function manageParticipants(
@@ -125,6 +125,6 @@ class EventRegistrationPolicy
             return false;
         }
 
-        return true;
+        return $eventRegistration->payment_status === PaymentStatus::Unpaid;
     }
 }

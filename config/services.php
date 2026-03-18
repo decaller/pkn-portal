@@ -40,4 +40,11 @@ return [
     'libreoffice' => [
         'url' => env('LIBREOFFICE_URL', 'http://libreoffice:9980'),
     ],
+
+    'midtrans' => [
+        'server_key' => env('MIDTRANS_SERVER_KEY'),
+        'client_key' => env('MIDTRANS_CLIENT_KEY'),
+        'is_production' => env('MIDTRANS_IS_PRODUCTION', false),
+        'payment_expiry_minutes' => (int) env('MIDTRANS_PAYMENT_EXPIRY_MINUTES', 180),
+    ],
 ];

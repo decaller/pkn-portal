@@ -12,15 +12,12 @@ use App\Notifications\EmptyParticipantSpotReminderNotification;
 use App\Notifications\NewEventOpenForRegistrationNotification;
 use App\Notifications\PastEventPostedOrUpdatedNotification;
 use App\Notifications\PaymentApprovedNotification;
-use App\Notifications\PaymentUploadReminderNotification;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Notification;
 
 uses(RefreshDatabase::class);
 
-// ─── PaymentUploadReminder: sent when registration is created ───
-
-it('sends a payment upload reminder when a registration is created', function () {
+it('does not send a payment upload reminder when a registration is created', function () {
     Notification::fake();
 
     $user = User::factory()->create();
@@ -38,15 +35,12 @@ it('sends a payment upload reminder when a registration is created', function ()
         'payment_status' => PaymentStatus::Unpaid,
     ]);
 
-    Notification::assertSentTo($user, PaymentUploadReminderNotification::class);
+    Notification::assertNothingSent();
 });
 
-// ─── PaymentApproved: sent when payment_status changes to Verified ───
-
-it('sends a payment approved notification when payment status changes to Verified', function () {
+it('sends a payment approved notification when the gateway marks a registration as paid', function () {
     Notification::fake();
 
-    $admin = User::factory()->create(['is_super_admin' => true]);
     $user = User::factory()->create();
     $organization = Organization::factory()->create(['admin_user_id' => $user->id]);
     $user->organizations()->attach($organization, ['role' => 'admin']);
@@ -64,7 +58,7 @@ it('sends a payment approved notification when payment status changes to Verifie
 
     Notification::fake(); // Reset — only care about payment approved
 
-    $registration->verifyPayment($admin);
+    $registration->markPaidFromGateway();
 
     Notification::assertSentTo($user, PaymentApprovedNotification::class);
 });
@@ -85,32 +79,13 @@ it('sends a new event open notification to all org users when registration is en
     Notification::assertSentTo($user, NewEventOpenForRegistrationNotification::class);
 });
 
-// ─── SendPaymentReminderNotificationsCommand ───
-
-it('sends payment reminders via the scheduled command', function () {
+it('keeps the legacy payment reminder command as a no-op', function () {
     Notification::fake();
-
-    $user = User::factory()->create();
-    $organization = Organization::factory()->create(['admin_user_id' => $user->id]);
-    $user->organizations()->attach($organization, ['role' => 'admin']);
-    $event = Event::factory()->create(['allow_registration' => true, 'event_date' => now()->addDays(10)]);
-
-    EventRegistration::create([
-        'event_id' => $event->id,
-        'organization_id' => $organization->id,
-        'booker_user_id' => $user->id,
-        'package_breakdown' => [['package_name' => 'General', 'quantity' => 1, 'unit_price' => 0]],
-        'total_amount' => 0,
-        'status' => RegistrationStatus::Draft,
-        'payment_status' => PaymentStatus::Unpaid,
-    ]);
-
-    Notification::fake(); // Reset after registration creation notification
 
     $this->artisan(SendPaymentReminderNotificationsCommand::class)
         ->assertExitCode(0);
 
-    Notification::assertSentTo($user, PaymentUploadReminderNotification::class);
+    Notification::assertNothingSent();
 });
 
 // ─── SendParticipantSlotRemindersCommand ───

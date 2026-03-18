@@ -67,7 +67,7 @@ class EventRegistrationResource extends Resource
         $userId = auth()->id();
 
         return parent::getEloquentQuery()
-            ->with(['event', 'organization', 'invoices', 'participants', 'booker'])
+            ->with(['event', 'organization', 'invoices.latestPayment', 'latestInvoice.latestPayment', 'participants', 'booker'])
             ->where(function (Builder $query) use ($userId): void {
                 $query->where('booker_user_id', $userId)
                     ->orWhereHas('participants', fn (Builder $q) => $q->where('user_id', $userId));

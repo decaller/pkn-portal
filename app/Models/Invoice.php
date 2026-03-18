@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Invoice extends Model
 {
@@ -57,5 +58,41 @@ class Invoice extends Model
     public function items(): HasMany
     {
         return $this->hasMany(InvoiceItem::class);
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(InvoicePayment::class);
+    }
+
+    public function latestPayment(): HasOne
+    {
+        return $this->hasOne(InvoicePayment::class)->latestOfMany('id');
+    }
+
+    public function hasActivePaymentAttempt(): bool
+    {
+        if ($this->relationLoaded('payments')) {
+            return $this->payments->contains(
+                fn (InvoicePayment $payment): bool => $payment->isPendingLike()
+                    && ($payment->expires_at === null || $payment->expires_at->isFuture())
+                    && filled($payment->snap_token),
+            );
+        }
+
+        return $this->payments()
+            ->whereIn('status', InvoicePayment::pendingStatuses())
+            ->whereNotNull('snap_token')
+            ->where(function ($query): void {
+                $query->whereNull('expires_at')
+                    ->orWhere('expires_at', '>', now());
+            })
+            ->exists();
+    }
+
+    public function canStartGatewayPayment(): bool
+    {
+        return $this->status !== InvoiceStatus::Void
+            && $this->registration?->payment_status?->value !== 'verified';
     }
 }

@@ -71,6 +71,10 @@ class UserPanelProvider extends PanelProvider
                 fn () => view('filament.user.log-listener'),
             )
             ->renderHook(
+                'panels::scripts.after',
+                fn () => view('filament.user.midtrans-snap'),
+            )
+            ->renderHook(
                 'panels::global-search.after',
                 fn () => view('filament.components.whatsapp-contact-topbar'),
             )

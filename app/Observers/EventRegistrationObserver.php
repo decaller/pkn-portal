@@ -2,15 +2,20 @@
 
 namespace App\Observers;
 
-use App\Enums\PaymentStatus;
 use App\Models\EventRegistration;
-use App\Notifications\PaymentApprovedNotification;
-use App\Notifications\PaymentUploadReminderNotification;
 use App\Services\EventRegistrationInvoiceService;
 use Illuminate\Contracts\Events\ShouldHandleEventsAfterCommit;
 
 class EventRegistrationObserver implements ShouldHandleEventsAfterCommit
 {
+    private const INVOICE_AFFECTING_FIELDS = [
+        'event_id',
+        'organization_id',
+        'package_breakdown',
+        'total_amount',
+        'notes',
+    ];
+
     public function __construct(
         private readonly EventRegistrationInvoiceService $invoiceService,
     ) {}
@@ -18,23 +23,20 @@ class EventRegistrationObserver implements ShouldHandleEventsAfterCommit
     public function created(EventRegistration $registration): void
     {
         $this->invoiceService->regenerate($registration, 'Superseded by newer invoice');
-
-        // Notify booker to upload payment proof
-        if ($registration->booker) {
-            $registration->booker->notify(new PaymentUploadReminderNotification($registration));
-        }
     }
 
     public function updated(EventRegistration $registration): void
     {
-        $this->invoiceService->regenerate($registration, 'Superseded by newer invoice');
-
-        // Notify booker when payment is approved
-        if ($registration->wasChanged('payment_status') &&
-            $registration->payment_status === PaymentStatus::Verified &&
-            $registration->booker
-        ) {
-            $registration->booker->notify(new PaymentApprovedNotification($registration));
+        if ($this->shouldRegenerateInvoice($registration)) {
+            $this->invoiceService->regenerate($registration, 'Superseded by newer invoice');
         }
+    }
+
+    private function shouldRegenerateInvoice(EventRegistration $registration): bool
+    {
+        return collect($registration->getChanges())
+            ->keys()
+            ->intersect(self::INVOICE_AFFECTING_FIELDS)
+            ->isNotEmpty();
     }
 }

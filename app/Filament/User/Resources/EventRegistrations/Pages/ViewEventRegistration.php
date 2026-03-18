@@ -2,12 +2,10 @@
 
 namespace App\Filament\User\Resources\EventRegistrations\Pages;
 
-use App\Enums\PaymentStatus;
 use App\Enums\RegistrationStatus;
 use App\Filament\User\Resources\EventRegistrations\EventRegistrationResource;
 use App\Models\User;
 use Filament\Actions\Action;
-use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
@@ -27,11 +25,8 @@ class ViewEventRegistration extends ViewRecord
     {
         $status = $this->record->status;
         $isDraft = $status === RegistrationStatus::Draft;
-        $isPendingPayment = $status === RegistrationStatus::PendingPayment;
-        $isPaid = $status === RegistrationStatus::Paid;
         $isEditable = $isDraft;
         $canManage = auth()->user()->can('manageParticipants', $this->record);
-        $canUpdatePayment = auth()->user()->can('updatePayment', $this->record);
 
         return [
             Action::make('view_event')
@@ -54,11 +49,7 @@ class ViewEventRegistration extends ViewRecord
                 ->label(__('Edit Participants'))
                 ->icon('heroicon-o-users')
                 ->color('warning')
-                ->visible(fn (): bool => $canManage && in_array($status, [
-                    RegistrationStatus::Draft,
-                    RegistrationStatus::PendingPayment,
-                    RegistrationStatus::Paid,
-                ]))
+                ->visible(fn (): bool => $canManage && $this->record->canRemoveParticipants())
                 ->fillForm(fn (): array => [
                     'packages' => $this->packageEntriesForForm(),
                 ])
@@ -239,39 +230,6 @@ class ViewEventRegistration extends ViewRecord
                         ]),
                     );
                 }),
-            Action::make('upload_payment_proof')
-                ->label(__('Upload Payment'))
-                ->icon('heroicon-o-arrow-up-tray')
-                ->color('success')
-                ->visible(
-                    fn (): bool => $canUpdatePayment &&
-                        in_array($status, [
-                            RegistrationStatus::Draft,
-                            RegistrationStatus::PendingPayment,
-                        ]) &&
-                        $this->record->payment_status !== PaymentStatus::Verified,
-                )
-                ->form([
-                    FileUpload::make('payment_proof_path')
-                        ->label(__('Payment proof'))
-                        ->disk('public')
-                        ->visibility('public')
-                        ->directory('payment-proofs')
-                        ->maxSize(10240)
-                        ->helperText(__('Upload a scanned copy or screenshot of your payment receipt (JPG, PNG, PDF). Max 10MB.'))
-                        ->required(),
-                ])
-                ->action(function (array $data): void {
-                    $this->record->submitPaymentProof(
-                        $data['payment_proof_path'],
-                    );
-
-                    $this->redirect(
-                        static::getResource()::getUrl('view', [
-                            'record' => $this->record,
-                        ]),
-                    );
-                }),
         ];
     }
 
@@ -377,7 +335,7 @@ class ViewEventRegistration extends ViewRecord
         }
 
         throw ValidationException::withMessages([
-            'participants' => 'Participants cannot be modified after payment has been submitted.',
+            'participants' => __('Participants cannot be modified after payment has started.'),
         ]);
     }
 

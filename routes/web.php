@@ -1,6 +1,7 @@
 <?php
 
 use App\Filament\Admin\Resources\Events\Schemas\EventInfolist;
+use App\Http\Controllers\Payments\MidtransWebhookController;
 use App\Models\Event;
 use App\Models\Invoice;
 use App\Services\InvoicePdfService;
@@ -27,6 +28,10 @@ Route::get(
     '/register',
     fn () => redirect()->route('filament.user.auth.register'),
 )->name('register');
+
+Route::post('/payments/midtrans/notifications', MidtransWebhookController::class)
+    ->middleware('doNotCacheResponse')
+    ->name('payments.midtrans.notifications');
 
 Route::middleware('auth')
     ->get('/invoices/{invoice}/download', function (

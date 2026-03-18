@@ -52,9 +52,11 @@ class InvoiceResource extends Resource
     {
         $userId = auth()->id();
 
-        return parent::getEloquentQuery()->whereHas('registration', function (Builder $query) use ($userId) {
-            $query->where('booker_user_id', $userId);
-        });
+        return parent::getEloquentQuery()
+            ->with(['registration', 'latestPayment', 'payments'])
+            ->whereHas('registration', function (Builder $query) use ($userId) {
+                $query->where('booker_user_id', $userId);
+            });
     }
 
     public static function form(Schema $schema): Schema

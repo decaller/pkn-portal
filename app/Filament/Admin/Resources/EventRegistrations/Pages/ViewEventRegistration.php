@@ -2,8 +2,6 @@
 
 namespace App\Filament\Admin\Resources\EventRegistrations\Pages;
 
-use App\Enums\PaymentStatus;
-use App\Enums\RegistrationStatus;
 use App\Filament\Admin\Resources\EventRegistrations\EventRegistrationResource;
 use App\Filament\Admin\Resources\Users\UserResource;
 use App\Filament\Public\Resources\Events\EventResource;
@@ -29,35 +27,11 @@ class ViewEventRegistration extends ViewRecord
     protected function getHeaderActions(): array
     {
         return [
-            Action::make('verify_payment')
-                ->label(__('Verify Payment'))
-                ->icon('heroicon-o-check-circle')
-                ->color('success')
-                ->visible(fn (EventRegistration $record): bool => $record->payment_status === PaymentStatus::Submitted)
-                ->requiresConfirmation()
-                ->modalHeading(__('Verify Payment'))
-                ->modalDescription(__('Are you absolutely sure you want to verify this payment? The user will be fully confirmed for this event.'))
-                ->modalSubmitActionLabel(__('Yes, mark as Verified'))
-                ->action(function (EventRegistration $record) {
-                    $record->verifyPayment(auth()->user());
-
-                    Notification::make()
-                        ->title(__('Payment Verified'))
-                        ->success()
-                        ->send();
-                }),
-
             Action::make('edit_participants')
                 ->label(__('Edit Participants'))
                 ->icon('heroicon-o-users')
                 ->color('warning')
-                ->visible(fn (EventRegistration $record): bool => auth()->user()->is_super_admin || (
-                    auth()->user()->can('manageParticipants', $record) && in_array($record->status, [
-                        RegistrationStatus::Draft,
-                        RegistrationStatus::PendingPayment,
-                        RegistrationStatus::Paid,
-                    ])
-                ))
+                ->visible(fn (EventRegistration $record): bool => auth()->user()->can('manageParticipants', $record) && $record->canRemoveParticipants())
                 ->fillForm(fn (): array => [
                     'packages' => $this->packageEntriesForForm(),
                 ])
@@ -281,16 +255,12 @@ class ViewEventRegistration extends ViewRecord
 
     private function ensureRegistrationEditable(): void
     {
-        if (auth()->user()->is_super_admin) {
-            return;
-        }
-
         if ($this->record->canRemoveParticipants()) {
             return;
         }
 
         throw ValidationException::withMessages([
-            'participants' => 'Participants cannot be modified after payment has been submitted.',
+            'participants' => __('Participants cannot be modified after payment has started.'),
         ]);
     }
 

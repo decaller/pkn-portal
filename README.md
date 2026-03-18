@@ -39,10 +39,35 @@ Home page is served at `/` and links into the panels.
 - User registration/login using phone number
 - Organization-based membership (create new or join existing)
 - Event registration flow with participants and package breakdown
-- Invoice and payment proof handling
+- Invoice and Midtrans Snap payment handling
 - Surveys and testimonials
 - Analytics and document indexing integrations
 - Multi-language support (English / Indonesian)
+
+## Payments
+
+- New payments are initiated from invoice screens through Midtrans Snap.
+- Payment completion is webhook-driven. Frontend Snap callbacks only refresh the UI.
+- Historical manual `payment_proof_path` records remain readable, but the manual upload and admin verification flow is retired for new payments.
+
+### Required payment environment variables
+
+```bash
+MIDTRANS_SERVER_KEY=
+MIDTRANS_CLIENT_KEY=
+MIDTRANS_IS_PRODUCTION=false
+MIDTRANS_PAYMENT_EXPIRY_MINUTES=180
+```
+
+### Webhook URL
+
+Configure Midtrans to send notifications to:
+
+```text
+POST /payments/midtrans/notifications
+```
+
+For local Sail development, expose your app URL to Midtrans with a tunnel before testing webhooks.
 
 ## Local Development (Sail)
 
@@ -117,6 +142,7 @@ cp .env.production.example .env.production
 ```
 
 Set real values in `.env.production` (`APP_URL`, database credentials, SMTP, etc.).
+Also set the Midtrans credentials and configure the notification URL to `/payments/midtrans/notifications`.
 
 Generate an app key:
 

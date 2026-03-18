@@ -1,7 +1,5 @@
 <?php
 
-use App\Enums\PaymentStatus;
-use App\Enums\RegistrationStatus;
 use App\Filament\Admin\Resources\EventRegistrations\Pages\EditEventRegistration;
 use App\Filament\Admin\Resources\News\NewsResource;
 use App\Filament\Admin\Resources\News\Pages\CreateNews;
@@ -131,7 +129,7 @@ it('tests editing a news resource record', function (): void {
         ->and($news->is_published)->toBeFalse();
 });
 
-it('tests a custom filament action and notification on event registration edit', function (): void {
+it('removes the manual verify payment action from event registration edit', function (): void {
     $event = createEvent();
     $booker = User::factory()->create();
 
@@ -139,20 +137,12 @@ it('tests a custom filament action and notification on event registration edit',
         'event_id' => $event->getKey(),
         'organization_id' => $this->tenant->getKey(),
         'booker_user_id' => $booker->getKey(),
-        'status' => RegistrationStatus::PendingPayment->value,
-        'payment_status' => PaymentStatus::Submitted->value,
+        'status' => 'pending_payment',
+        'payment_status' => 'submitted',
         'total_amount' => 250000,
     ]);
 
     Livewire::test(EditEventRegistration::class, ['record' => $registration->getRouteKey()])
-        ->assertActionExists('verify_payment')
-        ->callAction('verify_payment')
-        ->assertNotified(__('Payment Verified'));
-
-    $registration->refresh();
-
-    expect($registration->payment_status)->toBe(PaymentStatus::Verified)
-        ->and($registration->status)->toBe(RegistrationStatus::Paid)
-        ->and($registration->verified_by_user_id)->toBe($this->admin->getKey())
-        ->and($registration->verified_at)->not->toBeNull();
+        ->assertActionDoesNotExist('verify_payment')
+        ->assertActionExists('view_booker');
 });

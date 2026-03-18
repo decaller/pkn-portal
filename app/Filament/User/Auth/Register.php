@@ -113,7 +113,7 @@ class Register extends BaseRegister
                     ->revealable(filament()->arePasswordsRevealable())
                     ->required()
                     ->minLength(8)
-                    ->helperText(__('Minimum 8 characters. Your password will be used so you can upload your payment proof and add participant details later.'))
+                    ->helperText(__('Minimum 8 characters. Your password will be used so you can continue payments and manage participant details later.'))
                     ->dehydrateStateUsing(fn ($state) => Hash::make($state))
                     ->same('passwordConfirmation'),
                 Placeholder::make('account_benefits')

@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Enums\PaymentStatus;
 use App\Enums\RegistrationStatus;
-use DomainException;
+use App\Notifications\PaymentApprovedNotification;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -85,6 +85,11 @@ class EventRegistration extends Model
         return $this->hasOne(Invoice::class)->latestOfMany('version');
     }
 
+    public function invoicePayments(): HasMany
+    {
+        return $this->hasMany(InvoicePayment::class);
+    }
+
     public function isPaidOrAwaitingVerification(): bool
     {
         return in_array(
@@ -96,39 +101,71 @@ class EventRegistration extends Model
 
     public function canRemoveParticipants(): bool
     {
-        // Can edit if not paid and not awaiting verification
-        if (! $this->isPaidOrAwaitingVerification()) {
-            return true;
-        }
-
-        // Allow editing if status is PendingPayment (payment verification in progress)
-        if ($this->status === RegistrationStatus::PendingPayment) {
-            return true;
-        }
-
-        return false;
+        return ! $this->hasGatewayPendingPayment()
+            && $this->payment_status !== PaymentStatus::Verified;
     }
 
-    public function submitPaymentProof(string $proofPath): void
+    public function hasGatewayPendingPayment(): bool
     {
+        if ($this->relationLoaded('invoicePayments')) {
+            return $this->invoicePayments->contains(
+                fn (InvoicePayment $payment): bool => $payment->isPendingLike()
+                    && $payment->expires_at?->isFuture() !== false,
+            );
+        }
+
+        return $this->invoicePayments()
+            ->where('provider', InvoicePayment::PROVIDER_MIDTRANS)
+            ->whereIn('status', InvoicePayment::pendingStatuses())
+            ->where(function ($query): void {
+                $query->whereNull('expires_at')
+                    ->orWhere('expires_at', '>', now());
+            })
+            ->exists();
+    }
+
+    public function markPaymentPendingFromGateway(array $attributes = []): void
+    {
+        if ($this->payment_status === PaymentStatus::Verified) {
+            return;
+        }
+
         $this->forceFill([
-            'payment_proof_path' => $proofPath,
             'payment_status' => PaymentStatus::Submitted,
             'status' => RegistrationStatus::PendingPayment,
+            'verified_by_user_id' => null,
+            'verified_at' => null,
         ])->save();
     }
 
-    public function verifyPayment(User $actor): void
+    public function markPaidFromGateway(array $attributes = []): void
     {
-        if (! $actor->isMainAdmin()) {
-            throw new DomainException('Only main admins can verify payments.');
-        }
+        $wasPaid = $this->payment_status === PaymentStatus::Verified
+            && $this->status === RegistrationStatus::Paid;
 
         $this->forceFill([
             'payment_status' => PaymentStatus::Verified,
             'status' => RegistrationStatus::Paid,
-            'verified_by_user_id' => $actor->getKey(),
-            'verified_at' => now(),
+            'verified_by_user_id' => null,
+            'verified_at' => $attributes['verified_at'] ?? now(),
+        ])->save();
+
+        if (! $wasPaid && $this->booker) {
+            $this->booker->notify(new PaymentApprovedNotification($this));
+        }
+    }
+
+    public function markPaymentFailedFromGateway(array $attributes = []): void
+    {
+        if ($this->payment_status === PaymentStatus::Verified) {
+            return;
+        }
+
+        $this->forceFill([
+            'payment_status' => PaymentStatus::Rejected,
+            'status' => RegistrationStatus::Draft,
+            'verified_by_user_id' => null,
+            'verified_at' => null,
         ])->save();
     }
 }
