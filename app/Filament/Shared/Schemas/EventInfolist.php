@@ -3,8 +3,8 @@
 namespace App\Filament\Shared\Schemas;
 
 use App\Models\Event;
+use Filament\Actions\Action;
 use Filament\Infolists\Components\RepeatableEntry;
-use Filament\Infolists\Components\RepeatableEntry\TableColumn;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\ViewEntry;
 use Filament\Schemas\Components\Grid;
@@ -114,6 +114,28 @@ class EventInfolist
                     ->columnSpanFull(),
 
                 Section::make(__('Sessions & Rundown'))
+                    ->headerActions([
+                        Action::make('download_all_session_files')
+                            ->label(__('Download All Materials'))
+                            ->icon('heroicon-m-arrow-down-tray')
+                            ->color('primary')
+                            ->url(fn (Event $record): string => route('events.sessions.download-all', $record))
+                            ->visible(function (Event $record) use ($showRundownFiles): bool {
+                                if (! $showRundownFiles) {
+                                    return false;
+                                }
+
+                                if (! auth()->check()) {
+                                    return false;
+                                }
+
+                                return collect($record->rundown)
+                                    ->pluck('data.session_files')
+                                    ->flatten()
+                                    ->filter()
+                                    ->isNotEmpty();
+                            }),
+                    ])
                     ->schema([
                         RepeatableEntry::make('rundown')
                             ->hiddenLabel()
@@ -212,23 +234,29 @@ HTML;
                                     'file_url' => asset('storage/'.$doc),
                                 ])->values()->all();
                             })
-                            ->table([
-                                TableColumn::make(__('Document')),
-                                TableColumn::make(__('Action')),
+                            ->grid([
+                                'default' => 1,
+                                'sm' => 2,
+                                'md' => 3,
                             ])
                             ->schema([
-                                TextEntry::make('file_name')
-                                    ->hiddenLabel()
-                                    ->color('primary')
-                                    ->weight('bold')
-                                    ->icon('heroicon-m-document-text'),
-                                TextEntry::make('file_url')
-                                    ->label(__('Action'))
-                                    ->formatStateUsing(fn () => __('View/Download'))
-                                    ->url(fn ($state) => $state, true)
-                                    ->badge()
-                                    ->color('info')
-                                    ->icon('heroicon-m-eye'),
+                                Group::make([
+                                    TextEntry::make('file_name')
+                                        ->hiddenLabel()
+                                        ->color('primary')
+                                        ->weight('bold')
+                                        ->icon('heroicon-m-document-text'),
+                                    TextEntry::make('file_url')
+                                        ->label(__('Action'))
+                                        ->formatStateUsing(fn () => __('View/Download'))
+                                        ->url(fn ($state) => $state, true)
+                                        ->badge()
+                                        ->color('info')
+                                        ->icon('heroicon-m-eye'),
+                                ])
+                                    ->extraAttributes([
+                                        'class' => 'bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700 p-4 h-full overflow-hidden transition-all hover:ring-2 hover:ring-primary-500',
+                                    ]),
                             ])
                             ->columnSpanFull(),
                     ])

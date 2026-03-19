@@ -84,3 +84,45 @@ Route::middleware('auth')
 
 Route::get('/mobile/webview-login', [WebViewController::class, 'handleMagicLink'])
     ->name('webview.magic-login');
+
+Route::middleware('auth')
+    ->get('/events/{event}/sessions/download-all', function (Event $event) {
+        $files = [];
+        $rundown = $event->rundown ?? [];
+        foreach ($rundown as $index => $session) {
+            $sessionData = $session['data'] ?? [];
+            $sessionTitle = $sessionData['title'] ?? ('Session '.($index + 1));
+            $sessionFiles = $sessionData['session_files'] ?? [];
+
+            if (is_array($sessionFiles)) {
+                foreach ($sessionFiles as $file) {
+                    if (filled($file) && ! str_starts_with($file, 'http')) {
+                        $files[] = [
+                            'source' => storage_path('app/public/'.$file),
+                            'zip_path' => str($sessionTitle)->slug().'/'.basename($file),
+                        ];
+                    }
+                }
+            }
+        }
+
+        if (empty($files) || ! class_exists('ZipArchive')) {
+            return redirect()->back()->with('error', __('No files found to download.'));
+        }
+
+        $zipFileName = str($event->slug)->slug().'-session-files.zip';
+        $tempFile = tempnam(sys_get_temp_dir(), 'zip');
+
+        $zip = new ZipArchive;
+        if ($zip->open($tempFile, ZipArchive::CREATE | ZipArchive::OVERWRITE) === true) {
+            foreach ($files as $file) {
+                if (file_exists($file['source'])) {
+                    $zip->addFile($file['source'], $file['zip_path'] ?: basename($file['source']));
+                }
+            }
+            $zip->close();
+        }
+
+        return response()->download($tempFile, $zipFileName)->deleteFileAfterSend(true);
+    })
+    ->name('events.sessions.download-all');

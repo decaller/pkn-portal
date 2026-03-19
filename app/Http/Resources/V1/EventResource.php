@@ -49,6 +49,7 @@ class EventResource extends JsonResource
             'registration_packages' => $this->resource->registration_packages, // JSON array
             'rundown' => $this->resource->rundown, // JSON array
             'tags' => $this->resource->tags,
+            'proposal' => $this->resource->proposal ? Storage::url($this->resource->proposal) : null,
             'testimonials' => TestimonialResource::collection($this->whenLoaded('approvedTestimonials')),
         ];
     }
