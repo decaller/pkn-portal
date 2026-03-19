@@ -23,7 +23,21 @@ class Event extends Model
 
     public function getActivitylogOptions(): LogOptions
     {
-        return LogOptions::defaults()->logFillable();
+        return LogOptions::defaults()
+            ->logOnly([
+                'title',
+                'slug',
+                'description',
+                'event_date',
+                'event_type',
+                'is_published',
+                'allow_registration',
+                'max_capacity',
+                'registration_packages',
+                'rundown',
+            ])
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs();
     }
 
     protected $casts = [

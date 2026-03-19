@@ -248,12 +248,21 @@
                 </div>
                 <div class="grid gap-4 md:grid-cols-3">
                     @forelse ($latestNews as $news)
-                        <article class="border border-base-300 bg-base-100 p-4">
-                            <p class="text-[11px] uppercase tracking-[0.18em] text-base-content/60">{{ $news->created_at?->format('d M Y') }}</p>
-                            <h3 class="mt-2 line-clamp-2 text-xl font-bold leading-tight">{{ $news->title }}</h3>
-                            <p class="mt-3 text-sm text-base-content/75">{{ Str::limit(strip_tags($news->content), 130) }}</p>
-                            <div class="mt-4 border-t border-base-300 pt-3 text-right">
-                                <a href="{{ route('filament.public.resources.news.view', ['record' => $news]) }}" class="text-xs uppercase tracking-wider hover:underline">{{ __('Read more') }}</a>
+                        <article class="border border-base-300 bg-base-100">
+                            <figure class="h-40 w-full bg-base-300">
+                                @if ($eventImageUrl($news->thumbnail))
+                                    <img src="{{ $eventImageUrl($news->thumbnail) }}" alt="{{ $news->title }}" class="h-full w-full object-cover" />
+                                @else
+                                    <div class="flex h-full w-full items-center justify-center text-base-content/50">{{ __('No image') }}</div>
+                                @endif
+                            </figure>
+                            <div class="p-4">
+                                <p class="text-[11px] uppercase tracking-[0.18em] text-base-content/60">{{ $news->created_at?->format('d M Y') }}</p>
+                                <h3 class="mt-2 line-clamp-2 text-xl font-bold leading-tight">{{ $news->title }}</h3>
+                                <p class="mt-3 text-sm text-base-content/75">{{ Str::limit(strip_tags($news->content), 130) }}</p>
+                                <div class="mt-4 border-t border-base-300 pt-3 text-right">
+                                    <a href="{{ route('filament.public.resources.news.view', ['record' => $news]) }}" class="text-xs uppercase tracking-wider hover:underline">{{ __('Read more') }}</a>
+                                </div>
                             </div>
                         </article>
                     @empty

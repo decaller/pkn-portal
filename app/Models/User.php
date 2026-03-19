@@ -40,7 +40,10 @@ class User extends Authenticatable implements FilamentUser, HasTenants
 
     public function getActivitylogOptions(): LogOptions
     {
-        return LogOptions::defaults()->logOnly(['name', 'email', 'phone_number', 'is_super_admin']);
+        return LogOptions::defaults()
+            ->logOnly(['name', 'email', 'phone_number', 'is_super_admin'])
+            ->logOnlyDirty()
+            ->dontSubmitEmptyLogs();
     }
 
     /**
