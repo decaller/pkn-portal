@@ -159,29 +159,36 @@ Auth required: no
 
 Return article content plus absolute banner URLs.
 
-## 6. Registrations
+### `POST /registrations`
+- **Auth required**: yes
+- **Purpose**: Create a new event registration natively.
+- **Payload**: `{ event_id, package_id, participants: [ { name, category, ... } ] }`
 
-### `GET /my-registrations`
+### `PUT /registrations/{id}`
+- **Auth required**: yes
+- **Purpose**: Update registration details (e.g., change package).
 
-Auth required: yes
+### `DELETE /registrations/{id}`
+- **Auth required**: yes
+- **Purpose**: Cancel a draft or unpaid registration.
 
-Purpose:
+## 7. Participants (Native CRUD)
 
-- list the authenticated user's registrations created through the portal
+### `GET /registrations/{id}/participants`
+- **Auth required**: yes
 
-### `GET /my-registrations/{id}`
+### `POST /registrations/{id}/participants`
+- **Auth required**: yes
+- **Purpose**: Add a new participant to an existing registration.
 
-Auth required: yes
+### `PUT /participants/{participant_id}`
+- **Auth required**: yes
+- **Purpose**: Update participant info.
 
-Purpose:
+### `DELETE /participants/{participant_id}`
+- **Auth required**: yes
 
-- show registration detail, participants, invoice references, and current status
-
-Note:
-
-- creation remains WebView-based in v1
-
-## 7. Invoices
+## 8. Invoices
 
 ### `GET /invoices`
 

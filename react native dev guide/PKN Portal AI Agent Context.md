@@ -18,25 +18,28 @@ For a detailed breakdown of the app's user experience and screen transitions, se
 
 ## Recommended product architecture
 
-Use a hybrid model:
+Use a **Public-First Native** model:
 
-- Native screens for content and account surfaces:
-  - home dashboard
-  - event list and event detail
-  - news list and detail
-  - notifications
-  - invoices list and detail
-  - profile summary
-  - documents list and detail
-- WebView only for complex Filament-driven flows:
-  - user login (initial)
-  - event registration
-  - organization management
-  - profile or organization editing
+- **Public Screens (Native - No Login Required):**
+  - Home Dashboard (Public view)
+  - Event Discovery (List and Detail)
+  - News/Articles (List and Detail)
+- **Authenticated Screens (Native):**
+  - My Registrations (History and Management)
+  - Event Registration (Native flow: Participant selection, Package selection)
+  - Invoices (List and Detail)
+  - Profile & Membership
+  - Notifications
+- **Hybrid Bridge (WebView Fallback):**
+  - Initial Login (Hybrid)
+  - Organization Management
+  - Profile/Org Editing (Complex cases)
+  - **Manual Fallback**: Any registration flow can fallback to WebView if needed via a dedicated "Manage in Web" button.
 
 The key distinction is:
-- **Read-heavy** experiences (dashboard, news, event info) are **NATIVE**.
-- **Mutation-heavy** or complex logic (auth, registration, org setup) are **HYBRID (WebView)**.
+- **Core Experience** (dashboard, news, events, registrations) is **NATIVE**.
+- **Complex Setup/Auth** (login, org management) is **HYBRID (WebView)**.
+- **Robustness**: WebView serves as a safety fallback for native mutation screens.
 
 ## Build stack
 

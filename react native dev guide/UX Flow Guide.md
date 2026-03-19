@@ -4,26 +4,30 @@ This document defines the mobile user experience for the React Native applicatio
 
 ---
 
-## 1. Core UX Strategy: "Read Native, Write Hybrid"
+## 1. Core UX Strategy: "Public Native, Personal Native-First"
 
-The app prioritizes fast read flows and reuses existing Laravel + Filament logic for complex write flows.
+The app prioritizes instant accessibility for public content and a seamless native experience for personal data management.
 
-- **READ-HEAVY** surfaces are **Native Screens**:
-  - dashboard
-  - event list and event detail
-  - registration list and registration detail
-  - news list and detail
-  - notifications
-  - invoice detail
-  - profile summary
-- **WRITE-HEAVY / COMPLEX LOGIC** surfaces stay **Hybrid via Authenticated WebView**:
-  - login
-  - event registration
-  - payment proof upload
-  - profile editing
-  - organization management
-
-This split keeps the app responsive while avoiding premature rewrites of business-critical portal workflows.
+- **SURFACE ENTRY (Native - No Login):**
+  - Welcome / Onboarding Screen
+  - Guest Dashboard
+- **PUBLIC SURFACES (Native - No Login):**
+  - Guest Dashboard (Fresh Variant)
+  - Event Discovery (List and Detail)
+  - News/Articles
+  - Public Document Browser (Guest View)
+- **PERSONAL SURFACES (Native - Authenticated):**
+  - Refined Dashboard (Personalized)
+  - Registration Management (Create, Edit, Participants)
+  - Invoice Tracking
+  - Notifications
+  - Profile Summary
+  - Private Document Access
+- **WEB FALLBACK / COMPLEX FLOWS (Hybrid WebView):**
+  - Initial Login
+  - Organization Management
+  - Profile/Org Editing (Complex cases)
+  - **Fallback CTA**: A "Manage in Web Portal" button is present on all native registration/invoice screens for robustness.
 
 ---
 
@@ -52,10 +56,13 @@ This split keeps the app responsive while avoiding premature rewrites of busines
 The app uses **Bottom Tab Navigation** for primary areas and **Stack Navigation** for detail screens.
 
 ### Top-Level Tabs
-- **Dashboard**: Summary of featured events, latest news, registration alerts, and shortcut actions.
+- **Dashboard**: Dynamic summary based on auth state.
+  - *Guest*: Focus on discovery, registration prompts, and news.
+  - *Personal*: Focus on active registrations, alerts, and quick actions.
 - **Events**: Searchable event discovery and detail browsing.
-- **Registrations**: Registration history, status tracking, linked invoices, and follow-up actions.
-- **Profile**: Personal account summary, organization context, settings, and logout.
+- **Documents**: Browse public and event-specific documents.
+- **Registrations**: Registration history, status tracking, and invoices (Authenticated only).
+- **Profile**: Personal account summary and settings (Authenticated only).
 
 ### Secondary Stack Screens
 - Event Detail
@@ -78,7 +85,21 @@ The app uses **Bottom Tab Navigation** for primary areas and **Stack Navigation*
 
 ## 4. Screen Inventory and Hierarchy
 
-### A. Hybrid Login Screen (WebView)
+### A. Welcome Screen
+**Purpose:** Provide a premium first impression and guide users to become participants.
+
+**Detailed UI elements:**
+- High-quality background illustration
+- Glassmorphism feature cards: `Academic Events`, `Latest News`, `Global Network`
+- Clear primary CTA: `Get Started` (leads to Guest Dashboard)
+- Secondary CTA: `Sign In` (leads to Hybrid Login)
+- Language picker and Help shortcut in header
+
+**Behavior:**
+- Opens on first launch if no token is found.
+- Uses smooth transitions to the dashboard or login gate.
+
+### B. Hybrid Login Screen (WebView)
 **Purpose:** Authenticate without rebuilding the existing portal login flow.
 
 **Core elements:**
@@ -109,49 +130,28 @@ The app uses **Bottom Tab Navigation** for primary areas and **Stack Navigation*
   - confirm if login is mid-process
   - return user to previous native state or exit gate
 
-### B. Dashboard Screen
-**Purpose:** Give immediate value after login and provide shortcuts into deeper flows.
+#### C. Dashboard Screen (Dual State)
+**Purpose:** Give immediate value and show the most relevant state (Guest or Member).
 
-**Layout order:**
-1. Greeting header
-2. Connectivity or account banners
-3. Quick action row
-4. Featured events carousel/list
-5. Latest news list
-6. Registration summary card
-7. Optional testimonials or partner trust block
+#### 1. Guest Dashboard (Fresh Variant)
+- Focus: "Discovery and Conversion"
+- Elements: Featured events, trending news, and "Why Join?" prompts.
 
-**Detailed UI elements:**
-- Header:
-  - user greeting: `Hi, {first_name}`
-  - subtext: organization name or membership role
-  - notification icon with unread badge
-- Banner area:
-  - offline banner
-  - incomplete profile prompt
-  - unpaid invoice warning
-- Quick actions:
+#### 2. Refined Dashboard (Member Mode)
+- Focus: "Action and Management"
+- Elements: High-priority alerts (e.g., Unpaid Invoices), Active Registration summary, and Quick Action grid:
   - `Browse Events`
   - `My Registrations`
   - `Notifications`
   - `Profile`
-- Featured event cards:
-  - cover image
-  - event title
-  - date and city
-  - price/package summary
-  - status chip: `Open`, `Closing Soon`, `Full`
-  - CTA: `View Details`
-- Latest news cards:
-  - thumbnail
-  - article title
-  - publish date
-  - short excerpt
-- Registration summary card:
-  - active registration count
-  - next required action
-  - linked unpaid amount if present
-  - CTA: `Open Registration`
+
+**Layout order (Refined):**
+1. Greeting header with avatar and organization.
+2. High-priority Banner area (Overdue Invoices).
+3. Registration Status summary card (e.g., "2 Active Registrations").
+4. Quick Action 2x2 grid.
+5. Featured Events carousel.
+6. Latest News vertical list.
 
 **Primary interactions:**
 - Tap notification icon -> Notifications screen
@@ -235,16 +235,16 @@ The app uses **Bottom Tab Navigation** for primary areas and **Stack Navigation*
   - horizontal cards
 
 **Sticky CTA states:**
-- `Register Now` when registration is open
-- `Continue Registration` if draft registration exists
-- `View Registration` if already registered
-- Disabled CTA with explanation when closed or offline
+- `Register Now` (Native flow) when registration is open.
+- `Continue Registration` (Native flow) if draft exists.
+- `View Registration` (Native flow) if already registered.
+- `Manage in Web Portal` (WebView bridge) as a secondary fallback link.
+- Disabled CTA with explanation when closed or offline.
 
 **Primary interactions:**
-- Tap `Register Now` -> request magic-link -> open WebView Registration Flow
-- Tap `Continue Registration` -> WebView Registration Flow
-- Tap `View Registration` -> Registration Detail
-- Tap similar event -> Event Detail for selected item
+- Tap `Register Now` -> Open Native Registration Step-thru (Participants -> Packages -> Summary).
+- Tap `Manage in Web Portal` -> WebView Registration Flow (Magic-link).
+- Tap similar event -> Event Detail for selected item.
 
 ### E. Registration Detail Screen
 **Purpose:** Let users review what they submitted after returning from a WebView flow.
@@ -297,17 +297,35 @@ The app uses **Bottom Tab Navigation** for primary areas and **Stack Navigation*
   - event date
   - status badge
   - invoice/payment summary
-  - CTA label based on state: `Continue`, `View`, `Pay`
+  - CTA label: `Manage`, `View`, `Pay`
 - Empty state:
   - no registrations yet
   - CTA: `Browse Events`
 
 **Primary interactions:**
-- Tap registration card -> Registration Detail
-- Tap `Browse Events` -> Events tab
-- Pull to refresh -> refetch registrations
+- Tap registration card -> Registration Detail (Native).
+- Tap `Manage` -> Native Registration Edit (Change package/participants) with Web Fallback option.
 
-### G. News List Screen
+### G. Documents Browser Screen
+**Purpose:** Centralized access to event agendas, materials, and reports.
+
+**Detailed UI elements:**
+- Search bar for files
+- Featured Documents carousel (Horizontal):
+  - Thumbnail preview
+  - File name and type/size
+  - Inline `Download` action
+- All Documents list:
+  - Categorized by type (PDF, DOCX, XLSX)
+  - Metadata: Date uploaded and size
+  - Filter and Sort controls
+- Empty state: "No documents available for this event."
+
+**Primary interactions:**
+- Tap file card -> Open system sharing/viewing sheet.
+- Search file -> filter list in real-time.
+
+### H. News List Screen
 **Purpose:** Make portal news scannable and easy to revisit.
 
 **Detailed UI elements:**
@@ -471,22 +489,18 @@ The app uses **Bottom Tab Navigation** for primary areas and **Stack Navigation*
    - News Detail
    - Registrations tab / Registration Detail
 
-### C. Event Registration Flow
-1. User opens Events tab.
-2. User searches or scrolls event list.
-3. User taps event card.
-4. Event Detail opens.
-5. User taps `Register Now`.
-6. App requests `/webview/magic-link`.
-7. App opens Registration WebView modal.
-8. User completes Filament registration steps.
-9. Portal redirects to `pknportal://action-success?type=registration`.
-10. App closes WebView.
-11. Event detail and related registration/invoice stores refresh.
-12. User sees updated state:
-   - `Registered`
-   - `Continue Registration`
-   - or linked registration summary
+### C. Event Registration Flow (Native-First)
+1. User opens Events tab (Public).
+2. User taps event card.
+3. Event Detail opens (Public).
+4. User taps `Register Now`.
+5. If unauthenticated, prompts Hybrid Login modal.
+6. Once logged in, app opens Native Registration wizard:
+    - Step 1: Participant selection (Native list).
+    - Step 2: Package selection (Native list).
+    - Step 3: Summary and Submission. (POST to `/api/v1/registrations`).
+7. User sees success state and linked Invoice Detail.
+8. **Alternative**: If user hits a snag, they tap `Manage in Web` -> opens WebView Bridge.
 
 ### D. Invoice Payment Flow (Midtrans Snap)
 1. User opens Registrations tab.
@@ -628,15 +642,15 @@ Recommended examples:
 
 ## 10. Recommended Screen Build Order
 
-1. Hybrid Login
-2. Dashboard
-3. Events List
-4. Event Detail
-5. Registrations List
-6. Registration Detail
-7. Invoice Detail
-8. Notifications
-9. Profile
-10. Reusable WebView Bridge
+1. Public Dashboard (Native)
+2. Events & News (Native)
+3. Event Detail (Native)
+4. Hybrid Login (WebView)
+5. Registrations List & Detail (Native)
+6. Registration Management (Native CRUD)
+7. Participant Management (Native CRUD)
+8. Invoice Detail & Pay Now (Native/Midtrans)
+9. Reusable WebView Bridge (Fallback Shell)
+10. Profile & Notifications (Native)
 
 This order matches the hybrid architecture and gives users a usable read experience early while preserving the portal's existing write flows.
