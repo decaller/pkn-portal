@@ -3,6 +3,7 @@
 use App\Models\Document;
 use App\Models\Event;
 use App\Models\News;
+use App\Models\Testimonial;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
@@ -10,6 +11,7 @@ uses(RefreshDatabase::class);
 test('guest can access mobile dashboard', function () {
     Event::factory()->count(3)->create(['is_published' => true]);
     News::factory()->count(2)->create(['is_published' => true]);
+    Testimonial::factory()->count(2)->create(['is_approved' => true]);
 
     $response = $this->getJson('/api/v1/mobile-dashboard');
 
@@ -21,7 +23,9 @@ test('guest can access mobile dashboard', function () {
             'latest_news' => [
                 '*' => ['id', 'title', 'thumbnail'],
             ],
-            'testimonials' => [],
+            'testimonials' => [
+                '*' => ['id', 'content', 'rating', 'user' => ['name']],
+            ],
         ]);
 });
 
