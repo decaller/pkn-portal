@@ -26,7 +26,7 @@ return new class extends Migration
             // 2. Identity
             $table->string('title');
             $table->string('slug')->unique();
-            $table->jsonb('tags')->nullable();
+            $table->json('tags')->nullable();
 
             // 3. Storage
             $table->string('file_path')->unique();

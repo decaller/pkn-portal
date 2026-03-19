@@ -1,6 +1,7 @@
 <?php
 
 use App\Filament\Admin\Resources\Events\Schemas\EventInfolist;
+use App\Http\Controllers\Api\V1\WebViewController;
 use App\Http\Controllers\Payments\MidtransWebhookController;
 use App\Models\Event;
 use App\Models\Invoice;
@@ -80,3 +81,6 @@ Route::middleware('auth')
         ]);
     })
     ->name('admin.events.participants.download');
+
+Route::get('/mobile/webview-login', [WebViewController::class, 'handleMagicLink'])
+    ->name('webview.magic-login');

@@ -17,10 +17,6 @@ class EventSessionFileService
             $data = $session['data'] ?? $session;
             $files = $data['session_files'] ?? [];
 
-            if (empty($files)) {
-                continue;
-            }
-
             foreach ($files as $filePath) {
                 if (! is_string($filePath) || $filePath === '') {
                     continue;

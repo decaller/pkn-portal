@@ -20,25 +20,21 @@ class SyncMissingSessionDocumentsCommand extends Command
         $queued = 0;
 
         Event::query()
-            ->whereNotNull('rundown')
-            ->orderBy('id')
-            ->chunkById(100, function ($events) use ($sessionFiles, $force, &$queued): void {
-                foreach ($events as $event) {
-                    foreach ($sessionFiles->entries($event) as $entry) {
-                        if (! $force && Document::query()->where('file_path', $entry['file_path'])->exists()) {
-                            continue;
-                        }
-
-                        ProcessDocumentTika::dispatch(
-                            eventId: $event->id,
-                            filePath: $entry['file_path'],
-                            sessionTitle: $entry['session_title'],
-                            sessionSlug: $entry['session_slug'],
-                            source: 'session'
-                        );
-
-                        $queued++;
+            ->each(function (Event $event) use ($sessionFiles, $force, &$queued): void {
+                foreach ($sessionFiles->entries($event) as $entry) {
+                    if (! $force && Document::query()->where('file_path', $entry['file_path'])->exists()) {
+                        continue;
                     }
+
+                    ProcessDocumentTika::dispatch(
+                        eventId: $event->id,
+                        filePath: $entry['file_path'],
+                        sessionTitle: $entry['session_title'],
+                        sessionSlug: $entry['session_slug'],
+                        source: 'session'
+                    );
+
+                    $queued++;
                 }
             });
 
