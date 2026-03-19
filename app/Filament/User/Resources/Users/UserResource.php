@@ -2,6 +2,7 @@
 
 namespace App\Filament\User\Resources\Users;
 
+use App\Filament\User\Resources\Users\Pages\CreateUser;
 use App\Filament\User\Resources\Users\Pages\EditUser;
 use App\Filament\User\Resources\Users\Pages\ListUserActivities;
 use App\Filament\User\Resources\Users\Pages\ListUsers;
@@ -9,8 +10,10 @@ use App\Filament\User\Resources\Users\Pages\ViewUser;
 use App\Filament\User\Resources\Users\Schemas\UserForm;
 use App\Filament\User\Resources\Users\Schemas\UserInfolist;
 use App\Filament\User\Resources\Users\Tables\UsersTable;
+use App\Models\Organization;
 use App\Models\User;
 use BackedEnum;
+use Filament\Facades\Filament;
 use Filament\Resources\Resource;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
@@ -71,6 +74,23 @@ class UserResource extends Resource
 
     public static function canCreate(): bool
     {
+        /** @var User $user */
+        $user = auth()->user();
+
+        if (! $user) {
+            return false;
+        }
+
+        if ($user->isMainAdmin()) {
+            return true;
+        }
+
+        $tenant = Filament::getTenant();
+
+        if ($tenant instanceof Organization && $user->isOrganizationAdmin($tenant)) {
+            return true;
+        }
+
         return false;
     }
 
@@ -78,6 +98,7 @@ class UserResource extends Resource
     {
         return [
             'index' => ListUsers::route('/'),
+            'create' => CreateUser::route('/create'),
             'view' => ViewUser::route('/{record}'),
             'activities' => ListUserActivities::route('/{record}/activities'),
             'edit' => EditUser::route('/{record}/edit'),

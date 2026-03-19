@@ -127,7 +127,7 @@ class User extends Authenticatable implements FilamentUser, HasTenants
     public function canAccessPanel(Panel $panel): bool
     {
         return match ($panel->getId()) {
-            'admin' => $this->isMainAdmin(),
+            'admin' => $this->isMainAdmin() || $this->organizations()->wherePivot('role', 'admin')->exists(),
             'user' => true,
             default => false,
         };

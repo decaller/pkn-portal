@@ -149,7 +149,16 @@ class RegisterEvent extends BaseRegister
                 //     ->dehydrated(false),
                 CheckboxList::make('past_events')
                     ->label(__('Were you attending these past events? (Optional)'))
-                    ->options(fn () => Event::where('event_date', '<', now())->pluck('title', 'id'))
+                    ->options(fn () => Event::where('event_date', '<', now())
+                        ->orderBy('event_date', 'desc')
+                        ->pluck('title', 'id'))
+                    ->descriptions(fn () => Event::where('event_date', '<', now())
+                        ->orderBy('event_date', 'desc')
+                        ->get()
+                        ->mapWithKeys(fn (Event $event) => [
+                            $event->id => trim("{$event->city}, ".$event->event_date?->translatedFormat('F Y')),
+                        ])
+                        ->toArray())
                     ->columns(2)
                     ->gridDirection('row')
                     ->visible(fn () => Event::where('event_date', '<', now())->exists()),

@@ -30,18 +30,6 @@ class NewsForm
 
                 Section::make(__('Images'))
                     ->schema([
-                        FileUpload::make('cover_image')
-                            ->image()
-                            ->disk('public')
-                            ->directory('news-covers')
-                            ->imageResizeMode('cover')
-                            ->imageResizeTargetWidth('1920')
-                            ->imageResizeTargetHeight('1080')
-                            ->maxSize(10240)
-                            ->columnSpanFull()
-                            ->helperText(__('Upload a large cover image (JPG, PNG). Recommended size: 1920x1080 pixels. Max 10MB.'))
-                            ->imageEditor(),
-
                         FileUpload::make('thumbnail')
                             ->image()
                             ->disk('public')

@@ -33,12 +33,16 @@ class UserPolicy
 
     public function create(User $user): bool
     {
-        return false;
+        return $user->isMainAdmin() ||
+            $user->organizations()->wherePivot('role', 'admin')->exists() ||
+            $user->administeredOrganizations()->exists();
     }
 
     public function update(User $user, User $target): bool
     {
-        $adminOrgIds = $user->administeredOrganizations()->pluck('id');
+        $adminOrgIds = $user->administeredOrganizations()->pluck('id')
+            ->merge($user->organizations()->wherePivot('role', 'admin')->pluck('organization_id'))
+            ->unique();
 
         if ($adminOrgIds->isEmpty()) {
             return false;

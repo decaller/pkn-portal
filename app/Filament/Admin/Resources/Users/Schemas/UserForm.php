@@ -4,6 +4,7 @@ namespace App\Filament\Admin\Resources\Users\Schemas;
 
 use App\Models\Organization;
 use App\Models\User;
+use Filament\Facades\Filament;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
@@ -29,17 +30,18 @@ class UserForm
                             ->unique(User::class, 'phone_number', ignoreRecord: true),
                         TextInput::make('email')
                             ->email()
-                            ->required()
                             ->maxLength(255)
                             ->unique(User::class, 'email', ignoreRecord: true),
                         TextInput::make('password')
                             ->password()
                             ->revealable()
                             ->minLength(8)
+                            ->required(fn (string $operation): bool => $operation === 'create')
                             ->dehydrated(fn (?string $state): bool => filled($state))
                             ->dehydrateStateUsing(fn (string $state): string => Hash::make($state)),
                         Toggle::make('is_super_admin')
-                            ->label(__('Main admin')),
+                            ->label(__('Main admin'))
+                            ->visible(fn (): bool => auth()->user()?->isMainAdmin()),
                     ])
                     ->columns(2),
                 Section::make(__('Organizations'))
@@ -47,7 +49,17 @@ class UserForm
                         Select::make('organizations')
                             ->multiple()
                             ->relationship('organizations', 'name')
-                            ->options(Organization::query()->orderBy('name')->pluck('name', 'id'))
+                            ->options(function () {
+                                $user = auth()->user();
+                                if ($user?->isMainAdmin()) {
+                                    return Organization::query()->orderBy('name')->pluck('name', 'id');
+                                }
+
+                                return $user?->organizations()
+                                    ->wherePivot('role', 'admin')
+                                    ->pluck('name', 'organization_id');
+                            })
+                            ->default(fn () => [Filament::getTenant()?->getKey()])
                             ->searchable()
                             ->preload(),
                     ]),
