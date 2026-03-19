@@ -133,6 +133,27 @@ class EventRegistrationForm
                             );
                         })
                         ->required(),
+                    Placeholder::make('package_description')
+                        ->label(__('Package Description'))
+                        ->content(function (Get $get) {
+                            $eventId = $get('../../event_id');
+                            $packageName = $get('package_name');
+
+                            if (! $eventId || ! $packageName) {
+                                return null;
+                            }
+
+                            $packages = self::packagesForEvent($eventId);
+                            foreach ($packages as $pkg) {
+                                if (($pkg['name'] ?? '') === $packageName) {
+                                    return $pkg['description'] ?? null;
+                                }
+                            }
+
+                            return null;
+                        })
+                        ->visible(fn (Get $get) => filled($get('package_name')) && filled(collect(self::packagesForEvent($get('../../event_id')))->firstWhere('name', $get('package_name'))['description'] ?? null))
+                        ->columnSpanFull(),
                     TextInput::make('participant_count')
                         ->label('Participants')
                         ->helperText(__('Number of people for this package.'))

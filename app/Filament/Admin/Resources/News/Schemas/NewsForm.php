@@ -28,8 +28,20 @@ class NewsForm
                             ->columnSpanFull(),
                     ])->columnSpan(2),
 
-                Section::make(__('Metadata'))
+                Section::make(__('Images'))
                     ->schema([
+                        FileUpload::make('cover_image')
+                            ->image()
+                            ->disk('public')
+                            ->directory('news-covers')
+                            ->imageResizeMode('cover')
+                            ->imageResizeTargetWidth('1920')
+                            ->imageResizeTargetHeight('1080')
+                            ->maxSize(10240)
+                            ->columnSpanFull()
+                            ->helperText(__('Upload a large cover image (JPG, PNG). Recommended size: 1920x1080 pixels. Max 10MB.'))
+                            ->imageEditor(),
+
                         FileUpload::make('thumbnail')
                             ->image()
                             ->disk('public')
@@ -37,7 +49,7 @@ class NewsForm
                             ->imageResizeTargetWidth('1200')
                             ->directory('news-thumbnails')
                             ->maxSize(10240)
-                            ->helperText(__('Upload an image (JPG, PNG). Recommended size: 1200x630 pixels. Max 10MB.'))
+                            ->helperText(__('Upload a thumbnail image for lists (JPG, PNG). Recommended size: 1200x630 pixels. Max 10MB.'))
                             ->imageEditor(),
 
                         Toggle::make('is_published')

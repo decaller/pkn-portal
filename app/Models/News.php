@@ -21,6 +21,7 @@ class News extends Model
         'title',
         'content',
         'thumbnail',
+        'cover_image',
         'is_published',
         'event_id',
     ];

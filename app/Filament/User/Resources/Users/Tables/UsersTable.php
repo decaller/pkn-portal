@@ -38,6 +38,7 @@ class UsersTable
                     ->label(__('Main admin'))
                     ->boolean(),
             ])
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 SelectFilter::make('organization')
                     ->label(__('Organization'))

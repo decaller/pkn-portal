@@ -4,6 +4,7 @@ namespace App\Filament\Shared\Schemas;
 
 use App\Models\Event;
 use Filament\Infolists\Components\RepeatableEntry;
+use Filament\Infolists\Components\RepeatableEntry\TableColumn;
 use Filament\Infolists\Components\TextEntry;
 use Filament\Infolists\Components\ViewEntry;
 use Filament\Schemas\Components\Grid;
@@ -195,7 +196,7 @@ HTML;
 
                 Section::make(__('Event Documentation'))
                     ->schema([
-                        TextEntry::make('event_docs')
+                        RepeatableEntry::make('event_docs')
                             ->hiddenLabel()
                             ->getStateUsing(function ($record) {
                                 if (! $record) {
@@ -206,20 +207,57 @@ HTML;
                                     return [];
                                 }
 
-                                return $docs;
+                                return collect($docs)->map(fn ($doc) => [
+                                    'file_name' => basename($doc),
+                                    'file_url' => asset('storage/'.$doc),
+                                ])->values()->all();
                             })
-                            ->formatStateUsing(function ($state) {
-                                $url = asset('storage/'.$state);
-                                $name = basename($state);
-
-                                return "<a href=\"{$url}\" target=\"_blank\" class=\"text-primary-600 hover:underline flex items-center gap-1\"><svg class=\"w-4 h-4\" fill=\"none\" stroke=\"currentColor\" viewBox=\"0 0 24 24\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" stroke-width=\"2\" d=\"M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z\"></path></svg><span>{$name}</span></a>";
-                            })
-                            ->html()
-                            ->listWithLineBreaks()
+                            ->table([
+                                TableColumn::make(__('Document')),
+                                TableColumn::make(__('Action')),
+                            ])
+                            ->schema([
+                                TextEntry::make('file_name')
+                                    ->hiddenLabel()
+                                    ->color('primary')
+                                    ->weight('bold')
+                                    ->icon('heroicon-m-document-text'),
+                                TextEntry::make('file_url')
+                                    ->label(__('Action'))
+                                    ->formatStateUsing(fn () => __('View/Download'))
+                                    ->url(fn ($state) => $state, true)
+                                    ->badge()
+                                    ->color('info')
+                                    ->icon('heroicon-m-eye'),
+                            ])
                             ->columnSpanFull(),
                     ])
                     ->columnSpanFull()
                     ->visible(fn ($record) => filled($record?->documentation)),
+
+                Section::make(__('Registration Packages'))
+                    ->schema([
+                        RepeatableEntry::make('registration_packages')
+                            ->hiddenLabel()
+                            ->schema([
+                                TextEntry::make('name')
+                                    ->label(__('Package'))
+                                    ->weight('bold'),
+                                TextEntry::make('price')
+                                    ->label(__('Price'))
+                                    ->money('IDR'),
+                                TextEntry::make('max_quota')
+                                    ->label(__('Quota'))
+                                    ->formatStateUsing(fn ($state) => $state ?: __('Unlimited')),
+                                TextEntry::make('description')
+                                    ->label(__('Description'))
+                                    ->columnSpanFull()
+                                    ->visible(fn ($state) => filled($state)),
+                            ])
+                            ->columns(3),
+                    ])
+                    ->visible(fn ($record) => $record?->allow_registration && filled($record?->registration_packages))
+                    ->columnSpanFull(),
             ]);
     }
 }

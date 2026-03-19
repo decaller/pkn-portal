@@ -78,7 +78,7 @@ class EventsTable
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
-            ->defaultSort('event_date', 'desc')
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 //
             ])

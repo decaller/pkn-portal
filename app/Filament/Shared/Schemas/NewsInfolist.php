@@ -18,10 +18,16 @@ class NewsInfolist
             ->components([
                 Section::make()
                     ->schema([
+                        ImageEntry::make('cover_image')
+                            ->hiddenLabel()
+                            ->width('100%')
+                            ->extraImgAttributes(['class' => 'object-cover rounded-xl w-full max-h-[500px]']),
+
                         ImageEntry::make('thumbnail')
                             ->hiddenLabel()
                             ->width('100%')
-                            ->extraImgAttributes(['class' => 'object-contain rounded-xl w-full']),
+                            ->extraImgAttributes(['class' => 'object-contain rounded-xl w-full'])
+                            ->visible(fn ($record) => blank($record->cover_image)),
 
                         TextEntry::make('title')
                             ->hiddenLabel()

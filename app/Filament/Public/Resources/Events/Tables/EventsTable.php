@@ -42,7 +42,7 @@ class EventsTable
                             : EventType::tryFrom((string) $state)?->getColor(),
                     )
                     ->sortable(),
-                TextColumn::make('description')->limit(80)->label(__('Summary')),
+                TextColumn::make('description')->label(__('Summary'))->lineClamp(2)->html()->wrap(),
             ])
             ->defaultSort('event_date', 'desc')
             ->recordActions([

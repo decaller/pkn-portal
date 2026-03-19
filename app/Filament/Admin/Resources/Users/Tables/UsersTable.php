@@ -42,11 +42,13 @@ class UsersTable
                     ->translateLabel()
                     ->since(),
             ])
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 SelectFilter::make('organization')
                     ->label(__('Organization'))
                     ->relationship('organizations', 'name'),
             ])
+            ->defaultSort('created_at', 'desc')
             ->recordActions([
                 ViewAction::make(),
                 EditAction::make(),

@@ -33,6 +33,7 @@ class OrganizationsTable
                 TextColumn::make('users_count')->label(__('Members'))->badge(),
                 TextColumn::make('updated_at')->translateLabel()->since(),
             ])
+            ->defaultSort('created_at', 'desc')
             ->recordActions([ViewAction::make(), EditAction::make()])
             ->toolbarActions([
                 BulkActionGroup::make([DeleteBulkAction::make()]),

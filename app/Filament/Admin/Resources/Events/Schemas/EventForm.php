@@ -12,6 +12,7 @@ use Filament\Forms\Components\Repeater;
 use Filament\Forms\Components\RichEditor;
 use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TagsInput;
+use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
 use Filament\Schemas\Components\Section;
@@ -170,7 +171,6 @@ class EventForm
                         ->reorderable()
                         ->downloadable()
                         ->openable()
-                        ->panelLayout('grid')
                         ->maxSize(1048576)
                         ->helperText(__('Upload PDFs or Images (JPG, PNG). Max 1GB per file.')),
                 ])
@@ -197,6 +197,11 @@ class EventForm
                                 ->numeric()
                                 ->minValue(1)
                                 ->placeholder(__('Optional limit')),
+                            Textarea::make('description')
+                                ->label(__('Description'))
+                                ->placeholder(__('Package details, inclusions, etc.'))
+                                ->columnSpanFull()
+                                ->rows(2),
                         ])
                         ->columns(3)
                         ->defaultItems(0)

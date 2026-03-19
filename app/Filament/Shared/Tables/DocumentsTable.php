@@ -52,6 +52,7 @@ class DocumentsTable
                 SelectFilter::make('event')
                     ->relationship('event', 'title'),
             ])
+            ->defaultSort('created_at', 'desc')
             ->recordActions([
                 // DOWNLOAD ACTION
                 Action::make('download')

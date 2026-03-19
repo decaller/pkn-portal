@@ -92,6 +92,7 @@ class InvoicesTable
             ->filters([
                 //
             ])
+            ->defaultSort('created_at', 'desc')
             ->recordActions([
                 Action::make('pay_now')
                     ->label(fn (Invoice $record): string => $record->hasActivePaymentAttempt()

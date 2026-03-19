@@ -45,6 +45,7 @@ class NewsTable
                     ])->space(3)->extraAttributes(['class' => 'p-4']),
                 ])->space(0)->extraAttributes(['class' => 'bg-white shadow rounded-xl dark:bg-gray-800 ring-1 ring-gray-950/5 dark:ring-white/10']),
             ])
+            ->defaultSort('created_at', 'desc')
             ->filters([
                 //
             ])
