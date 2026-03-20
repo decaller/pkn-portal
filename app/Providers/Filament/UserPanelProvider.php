@@ -11,6 +11,7 @@ use App\Filament\User\Widgets\AvailableRegistrationEventsWidget;
 use App\Filament\User\Widgets\EventRegistrationsTableWidget;
 use App\Filament\User\Widgets\LatestNewsWidget;
 use App\Filament\User\Widgets\WelcomeWidget;
+use App\Http\Middleware\MobileWebView;
 use App\Models\Organization;
 use CraftForge\FilamentLanguageSwitcher\FilamentLanguageSwitcherPlugin;
 use Filament\Http\Middleware\Authenticate;
@@ -92,6 +93,7 @@ class UserPanelProvider extends PanelProvider
                 SubstituteBindings::class,
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
+                MobileWebView::class,
             ])
             ->authMiddleware([Authenticate::class])
             ->plugins([

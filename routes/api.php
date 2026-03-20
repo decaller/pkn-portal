@@ -35,7 +35,9 @@ Route::prefix('v1')->group(function () {
     });
 
     // 2. Hybrid Login & Identity
-    Route::get('/auth/token-handoff', [AuthController::class, 'tokenHandoff'])->middleware('web');
+    Route::get('/auth/token-handoff', [AuthController::class, 'tokenHandoff'])
+        ->middleware('web')
+        ->name('api.v1.auth.token-handoff');
 
     // 3. Authenticated Screens
     Route::middleware('auth:sanctum')->group(function () {
