@@ -19,28 +19,48 @@ Create a configuration file at `src/utils/i18n/index.ts`.
 ```tsx
 import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
+import { getLocales } from 'expo-localization';
 
-i18n
-  .use(initReactI18next)
-  .init({
-    resources: {
-      en: {
-        translation: {
-          welcomeMessage: "Welcome to PKN Portal"
-        }
-      },
-      id: {
-        translation: {
-          welcomeMessage: "Selamat datang di Portal PKN"
-        }
-      }
-    },
-    lng: "en", // Default starting language
-    fallbackLng: "en", // Failsafe language
-    interpolation: {
-      escapeValue: false // React Native is already protected from XSS
-    }
-  });
+import en from './locales/en.json';
+import id from './locales/id.json';
+
+// 1. Define resources
+const resources = {
+  en: { translation: en },
+  id: { translation: id },
+};
+
+// 2. Add Type Safety (Inferred from English)
+export type AppTranslations = typeof en;
+declare module 'i18next' {
+  interface CustomTypeOptions {
+    defaultNS: 'translation';
+    resources: typeof resources['en'];
+  }
+}
+
+// 3. Detect Device Language Safely
+let deviceLanguage = 'en';
+try {
+  const locales = getLocales();
+  if (locales && locales.length > 0) {
+    deviceLanguage = locales[0].languageCode === 'id' ? 'id' : 'en';
+  }
+} catch {
+  deviceLanguage = 'en';
+}
+
+i18n.use(initReactI18next).init({
+  resources,
+  lng: deviceLanguage,
+  fallbackLng: 'en',
+  interpolation: {
+    escapeValue: false, // React Native already protects from XSS
+  },
+  react: {
+    useSuspense: false,
+  },
+});
 
 export default i18n;
 ```
@@ -112,4 +132,6 @@ import { Text } from 'react-native';
 2.  **Extract to JSON Files Promptly:** Move translations into separate JSON files (e.g., `locales/en/translation.json`) once the app grows beyond basic setup. This allows easy hand-off to professional translators.
 3.  **Handle Missing Keys Gracefully:** Always set a `fallbackLng`. If a translation is missing in the target language, the app will display the fallback version instead of a raw key.
 4.  **Minimize <Trans> Usage:** The index-based syntax of `<Trans>` can be fragile. Whenever possible, split complex strings into simpler, separate translation keys.
-5.  **Dynamic Language Switching:** Use `i18n.changeLanguage('id')` to change the app language on the fly (e.g., from a settings menu).
+5.  **Dynamic Language Switching:** Use `i18n.changeLanguage('id')` to change the app language. Remember to save the choice to `AsyncStorage` so it persists on restart.
+6.  **Type Safety Implementation:** Always export the translation type from your `i18n/index.ts`. This gives you full autocomplete and catches missing keys during development.
+7.  **RTL Testing:** If supporting languages like Arabic, use `I18nManager.forceRTL(true)` to test your layout's responsiveness to right-to-left directions.

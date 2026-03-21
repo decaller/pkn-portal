@@ -8,6 +8,7 @@ use App\Http\Resources\V1\NewsResource;
 use App\Http\Resources\V1\TestimonialResource;
 use App\Models\Event;
 use App\Models\News;
+use App\Models\Setting;
 use App\Models\Testimonial;
 use Illuminate\Http\JsonResponse;
 
@@ -40,6 +41,10 @@ class DashboardController extends Controller
             'featured_events' => EventResource::collection($featuredEvents),
             'latest_news' => NewsResource::collection($latestNews),
             'testimonials' => TestimonialResource::collection($testimonials),
+            'contact_info' => [
+                'phone' => Setting::defaultContactNumber(),
+                'whatsapp_url' => Setting::defaultContactWhatsAppUrl(),
+            ],
         ]);
     }
 }

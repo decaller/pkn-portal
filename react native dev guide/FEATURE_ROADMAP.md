@@ -1,53 +1,52 @@
 # PKN Portal App - Feature Implementation Roadmap (MVP First)
 
-This roadmap prioritizes a "Public Access First" strategy, allowing users to browse events and news without logging in. The implementation follows the "Read Native, Write Hybrid" approach.
+This roadmap prioritizes a "Public Access First" strategy, allowing users to browse events and news without logging in. The implementation follows a fully native approach.
 
 ---
 
 ## Phase 1: Public Core (No-Login MVP)
 **Goal:** Enable users to immediately browse PKN content without authentication.
 
-- [ ] **Project Setup**
-  - [ ] Initialize directory structure (`src/components`, `src/services`, `src/store`, `src/hooks`, `src/types`, `src/theme`).
-  - [ ] Install core dependencies: `axios`, `zustand`, `react-native-mmkv`, `@shopify/flash-list`, `expo-image`, `expo-blur`.
-  - [ ] **Form & Validation**: Install `react-hook-form` and `zod`.
-  - [ ] **i18n Setup**: Install `i18next` and `react-i18next`; configure `src/utils/i18n/index.ts`.
-  - [ ] **Theming Engine**: Install `react-native-paper` and `@material/material-color-utilities`.
-  - [ ] **Quality Control**: Set up Sentry, Jest, and `eslint-plugin-react-native-a11y`.
-  - [ ] **CI/CD**: Configure EAS Build and set up GitHub Actions for automated deployments.
-  - [ ] Set up `axios` instance for public APIs with proper environment variable handling.
+- [x] **Project Setup**
+  - [x] Initialize directory structure (`src/components`, `src/services`, `src/store`, `src/hooks`, `src/types`, `src/theme`).
+  - [x] Install core dependencies: `axios`, `zustand`, `react-native-mmkv`, `@shopify/flash-list`, `expo-image`, `expo-blur`.
+  - [x] **Form & Validation**: Install `react-hook-form` and `zod`.
+  - [x] **i18n Setup**: Install `i18next` and `react-i18next`; configure `src/utils/i18n/index.ts`.
+  - [x] **Theming Engine**: Install `react-native-paper` and `@material/material-color-utilities`.
+  - [x] **Quality Control**: Set up Sentry, Jest, and `eslint-plugin-react-native-a11y`.
+  - [x] **CI/CD**: Configure EAS Build and set up GitHub Actions for automated deployments.
+  - [x] Set up `axios` instance for public APIs with proper environment variable handling.
 
-
-- [ ] **Welcome & Onboarding**
-  - [ ] Implement `src/app/index.tsx` as the high-fidelity Welcome Screen from mockups.
-  - [ ] Handle "Get Started" (Guest access) and "Sign In" (Hybrid Login) transitions.
+- [x] **Welcome & Onboarding**
+  - [x] Implement `src/app/index.tsx` as the high-fidelity Welcome Screen from mockups.
+  - [x] Handle "Get Started" (Guest access) and "Sign In" (Native Login) transitions.
 - [x] **Native Public Dashboard (Guest Mode)**
   - [x] Implement `GET /api/v1/mobile-dashboard` (Public version/endpoint).
-  - [ ] Build Guest Dashboard UI (`guest_dashboard_fresh_variant_2` mockup).
-  - [ ] Implement skeleton loaders for a smooth first-load experience.
+  - [x] Build Guest Dashboard UI (`guest_dashboard_fresh_variant_2` mockup).
+  - [x] Implement skeleton loaders for a smooth first-load experience.
 - [x] **Events & News Discovery**
-  - [x] Implement Events List and News List endpoints (Native Ready).
-  - [ ] Build Event Detail screen (`src/app/events/[id].tsx`) with native content layout.
-  - [ ] Build News Detail screen.
+  - [x] Implement Events List and News List screens (Native).
+  - [x] Build Event Detail screen (`src/app/events/[id].tsx`) with native content layout.
+  - [x] Build News Detail screen.
 - [x] **Document Browsing (Public)**
-  - [x] Implement `GET /api/v1/documents` (Public document browser endpoint).
-  - [ ] Build "Featured Documents" carousel and "All Documents" list.
-  - [ ] Implement file search and basic download/viewing functionality (Backend ready).
+  - [x] Implement `src/app/documents/index.tsx` (Public document browser mockup).
+  - [x] Build "Featured Documents" carousel and "All Documents" list.
+  - [x] Implement file search and basic download/viewing functionality.
 
 ---
 
-## Phase 2: Hybrid Login & Identity
+## Phase 2: Native Login & Identity
 **Goal:** Introduce authentication to allow personalized features.
 
 - [ ] **Authentication Infrastructure**
   - [ ] Configure `axios` interceptors for Sanctum tokens.
-  - [ ] Create `useAuthStore` using Zustand + MMKV for persistent token storage.
+  - [ ] Update `useAppStore` or create `useAuthStore` for secure persistent token storage (`expo-secure-store` or `react-native-mmkv`).
   - [ ] **Deep Linking**: Configure `app.json` for `pknportal://` scheme and universal links.
 
-- [x] **Hybrid Login Strategy**
-  - [x] Implement `src/app/auth/hybrid-login.tsx` (WebView Magic Link Bridge ready).
-  - [x] Implement token extraction logic from `/api/v1/auth/token-handoff`.
-  - [x] Handle logout and token revocation logic.
+- [ ] **Native Login Strategy**
+  - [ ] Implement `src/app/auth/login.tsx` (Native Login screen).
+  - [ ] Implement API login integration with Laravel Sanctum (`/api/v1/auth/login` or similar).
+  - [ ] Handle logout and token revocation logic.
 - [ ] **Profile & Protected States**
   - [ ] Implement conditional UI for "Log In" prompts on restricted features (e.g., Register button).
   - [ ] **Refined Private Dashboard**: Implement the authenticated dashboard view (`refined_dashboard_screen` mockup) with user-specific alerts and action grid.
@@ -70,10 +69,8 @@ This roadmap prioritizes a "Public Access First" strategy, allowing users to bro
 - [ ] **Infrastructure & Invoices**
   - [ ] Implement Native Invoice preview and status tracking within the registration flow.
   - [ ] Build detail views for linked participants and their metadata.
-- [ ] **Hybrid Fallback Mechanism**
-  - [ ] Implement `src/app/webview/bridge.tsx` as a reusable modal shell.
-  - [ ] Add "Open in Web Portal" fallback button on all registration screens.
-  - [ ] Detect success redirects from WebView and refresh native registration state.
+- [ ] **Direct Web Portal Link (Optional)**
+  - [ ] Add "Open in Web Portal" button for users preferring the web version.
 
 ---
 
@@ -85,7 +82,7 @@ This roadmap prioritizes a "Public Access First" strategy, allowing users to bro
   - [ ] Show payment status badges (Unpaid, Pending, Paid).
 - [ ] **Midtrans Integration**
   - [ ] Implement "Pay Now" flow: fetch Snap token from backend.
-  - [ ] Integrate Midtrans Snap (WebView or SDK bridge).
+  - [ ] Integrate Midtrans Snap.
   - [ ] Implement automatic status refresh after payment.
 
 ---
@@ -102,7 +99,7 @@ This roadmap prioritizes a "Public Access First" strategy, allowing users to bro
 
 - [ ] **Organization Management**
   - [ ] Build Profile screen with organization context.
-  - [ ] Implement "Edit Profile" and "Manage Org" via WebView Bridge.
+  - [ ] Implement "Edit Profile" and "Manage Org" natively using API.
 
 ---
 
