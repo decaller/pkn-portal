@@ -6,21 +6,31 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\V1\UserResource;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class AuthController extends Controller
 {
     /**
-     * Convert web session to Sanctum token.
+     * Authenticate a user via their phone number and password.
      */
-    public function tokenHandoff(Request $request): JsonResponse
+    public function login(Request $request): JsonResponse
     {
-        $user = auth()->user();
+        $credentials = $request->validate([
+            'phone_number' => ['required', 'string'],
+            'password' => ['required', 'string'],
+        ]);
 
-        if (! $user) {
-            return response()->json(['message' => 'Unauthenticated.'], 401);
+        if (! Auth::attempt($credentials)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Invalid phone number or password.',
+            ], 401);
         }
 
-        // Revoke existing tokens if needed or just create a new one
+        $user = Auth::user();
+
+        // Revoke existing mobile-app tokens if needed or just create a new one
+        $user->tokens()->where('name', 'mobile-app')->delete();
         $token = $user->createToken('mobile-app')->plainTextToken;
 
         return response()->json([

@@ -4,8 +4,13 @@ use App\Http\Controllers\Api\V1\AuthController;
 use App\Http\Controllers\Api\V1\DashboardController;
 use App\Http\Controllers\Api\V1\DocumentController;
 use App\Http\Controllers\Api\V1\EventController;
+use App\Http\Controllers\Api\V1\InvoiceController;
 use App\Http\Controllers\Api\V1\NewsController;
-use App\Http\Controllers\Api\V1\WebViewController;
+use App\Http\Controllers\Api\V1\NotificationController;
+use App\Http\Controllers\Api\V1\OrganizationController;
+use App\Http\Controllers\Api\V1\ParticipantController;
+use App\Http\Controllers\Api\V1\ProfileController;
+use App\Http\Controllers\Api\V1\RegistrationController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -34,18 +39,39 @@ Route::prefix('v1')->group(function () {
         Route::get('/documents/{document}', 'show');
     });
 
-    // 2. Hybrid Login & Identity
-    Route::get('/auth/token-handoff', [AuthController::class, 'tokenHandoff'])
-        ->middleware('web')
-        ->name('api.v1.auth.token-handoff');
+    // 2. Native Login & Identity
+    Route::post('/auth/login', [AuthController::class, 'login'])
+        ->name('api.v1.auth.login');
 
     // 3. Authenticated Screens
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/auth/me', [AuthController::class, 'me']);
         Route::post('/auth/logout', [AuthController::class, 'logout']);
 
-        Route::get('/webview/magic-link', [WebViewController::class, 'getMagicLink']);
+        // Profile
+        Route::get('/user/profile', [ProfileController::class, 'show']);
+        Route::put('/user/profile', [ProfileController::class, 'update']);
 
-        // Profile, Notifications, Registrations, Invoices (Phase 2-5) will go here
+        // Organizations
+        Route::get('/organizations', [OrganizationController::class, 'index']);
+
+        // Notifications
+        Route::get('/notifications', [NotificationController::class, 'index']);
+        Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllRead']);
+        Route::post('/notifications/{id}/mark-read', [NotificationController::class, 'markRead']);
+
+        // Registrations
+        Route::apiResource('registrations', RegistrationController::class)->except(['index', 'show']);
+
+        // Participants
+        Route::get('/registrations/{registration_id}/participants', [ParticipantController::class, 'index']);
+        Route::post('/registrations/{registration_id}/participants', [ParticipantController::class, 'store']);
+        Route::put('/participants/{participant}', [ParticipantController::class, 'update']);
+        Route::delete('/participants/{participant}', [ParticipantController::class, 'destroy']);
+
+        // Invoices
+        Route::get('/invoices', [InvoiceController::class, 'index']);
+        Route::get('/invoices/{invoice}', [InvoiceController::class, 'show']);
+        Route::get('/invoices/{invoice}/download', [InvoiceController::class, 'download']);
     });
 });
