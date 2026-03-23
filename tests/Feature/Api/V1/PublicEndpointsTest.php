@@ -1,10 +1,12 @@
 <?php
 
+use App\Enums\EventType;
 use App\Models\Document;
 use App\Models\Event;
 use App\Models\News;
 use App\Models\Testimonial;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Str;
 
 uses(RefreshDatabase::class);
 
@@ -26,6 +28,11 @@ test('guest can access mobile dashboard', function () {
             'testimonials' => [
                 '*' => ['id', 'content', 'rating', 'user' => ['name']],
             ],
+            'featured_document',
+            'contact_info' => [
+                'phone',
+                'whatsapp_url',
+            ],
         ]);
 });
 
@@ -38,6 +45,33 @@ test('guest can list and search events', function () {
     $response->assertStatus(200)
         ->assertJsonCount(1, 'data')
         ->assertJsonPath('data.0.title', 'Searchable Event');
+});
+
+test('guest can filter events by category', function () {
+    $onlineTitle = 'Online Event '.Str::random(5);
+    Event::factory()->create(['title' => $onlineTitle, 'event_type' => EventType::Online, 'is_published' => true]);
+    Event::factory()->create(['event_type' => EventType::Offline, 'is_published' => true]);
+
+    $response = $this->getJson('/api/v1/events?category=online&search='.$onlineTitle);
+
+    $response->assertStatus(200)
+        ->assertJsonCount(1, 'data')
+        ->assertJsonPath('data.0.title', $onlineTitle);
+});
+
+test('guest can filter events by status', function () {
+    $openTitle = 'Open Event '.Str::random(5);
+    $closedTitle = 'Closed Event '.Str::random(5);
+    Event::factory()->create(['title' => $openTitle, 'allow_registration' => true, 'is_published' => true]);
+    Event::factory()->create(['title' => $closedTitle, 'allow_registration' => false, 'is_published' => true]);
+
+    $responseOpen = $this->getJson("/api/v1/events?status=open&search={$openTitle}");
+    $responseOpen->assertStatus(200)->assertJsonCount(1, 'data');
+    $responseOpen->assertJsonPath('data.0.title', $openTitle);
+
+    $responseClosed = $this->getJson("/api/v1/events?status=closed&search={$closedTitle}");
+    $responseClosed->assertStatus(200)->assertJsonCount(1, 'data');
+    $responseClosed->assertJsonPath('data.0.title', $closedTitle);
 });
 
 test('guest can view published event detail', function () {
@@ -73,5 +107,21 @@ test('guest can list documents', function () {
     $response = $this->getJson('/api/v1/documents');
 
     $response->assertStatus(200)
-        ->assertJsonCount(5, 'data');
+        ->assertJsonCount(5, 'data')
+        ->assertJsonStructure([
+            'data' => [
+                '*' => ['id', 'title', 'is_featured'],
+            ],
+        ]);
+});
+
+test('guest can filter featured documents', function () {
+    Document::factory()->create(['is_active' => true, 'is_featured' => true, 'title' => 'Featured Doc']);
+    Document::factory()->create(['is_active' => true, 'is_featured' => false, 'title' => 'Regular Doc']);
+
+    $response = $this->getJson('/api/v1/documents?is_featured=1');
+
+    $response->assertStatus(200)
+        ->assertJsonCount(1, 'data')
+        ->assertJsonPath('data.0.title', 'Featured Doc');
 });

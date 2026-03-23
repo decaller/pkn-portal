@@ -30,6 +30,7 @@ class DocumentResource extends JsonResource
             'description' => $this->resource->description,
             'tags' => $this->resource->tags,
             'is_active' => $this->resource->is_active,
+            'is_featured' => $this->resource->is_featured,
             'event_id' => $this->resource->event_id,
         ];
     }

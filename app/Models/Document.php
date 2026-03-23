@@ -29,8 +29,17 @@ class Document extends Model
     protected $casts = [
         'metadata' => 'array',
         'is_active' => 'boolean',
+        'is_featured' => 'boolean',
         'tags' => 'array',
     ];
+
+    /**
+     * Scope for featured documents.
+     */
+    public function scopeFeatured($query)
+    {
+        return $query->where('is_featured', true);
+    }
 
     /**
      * Link to the Event (The Folder)

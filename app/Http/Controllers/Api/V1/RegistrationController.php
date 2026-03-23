@@ -15,6 +15,26 @@ use Illuminate\Validation\ValidationException;
 
 class RegistrationController extends Controller
 {
+    public function index(Request $request)
+    {
+        $registrations = EventRegistration::query()
+            ->where('booker_user_id', $request->user()->id)
+            ->with(['event', 'participants'])
+            ->latest()
+            ->paginate($request->integer('per_page', 15));
+
+        return RegistrationResource::collection($registrations);
+    }
+
+    public function show(Request $request, EventRegistration $registration)
+    {
+        if ($registration->booker_user_id !== $request->user()->id) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+
+        return new RegistrationResource($registration->load(['event', 'participants']));
+    }
+
     public function store(Request $request)
     {
         $validated = $request->validate([

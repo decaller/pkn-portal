@@ -51,17 +51,19 @@ Route::prefix('v1')->group(function () {
         // Profile
         Route::get('/user/profile', [ProfileController::class, 'show']);
         Route::put('/user/profile', [ProfileController::class, 'update']);
+        Route::delete('/user/profile', [ProfileController::class, 'destroy']);
 
         // Organizations
-        Route::get('/organizations', [OrganizationController::class, 'index']);
+        Route::apiResource('organizations', OrganizationController::class);
 
         // Notifications
         Route::get('/notifications', [NotificationController::class, 'index']);
+        Route::get('/notifications/unread-count', [NotificationController::class, 'unreadCount']);
         Route::post('/notifications/mark-all-read', [NotificationController::class, 'markAllRead']);
         Route::post('/notifications/{id}/mark-read', [NotificationController::class, 'markRead']);
 
         // Registrations
-        Route::apiResource('registrations', RegistrationController::class)->except(['index', 'show']);
+        Route::apiResource('registrations', RegistrationController::class);
 
         // Participants
         Route::get('/registrations/{registration_id}/participants', [ParticipantController::class, 'index']);

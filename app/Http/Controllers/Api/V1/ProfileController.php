@@ -28,4 +28,16 @@ class ProfileController extends Controller
 
         return new UserResource($user->load('organizations'));
     }
+
+    public function destroy(Request $request)
+    {
+        $user = $request->user();
+
+        // Revoke all tokens
+        $user->tokens()->delete();
+
+        $user->delete();
+
+        return response()->noContent();
+    }
 }

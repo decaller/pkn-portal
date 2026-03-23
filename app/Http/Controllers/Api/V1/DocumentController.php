@@ -23,6 +23,7 @@ class DocumentController extends Controller
                     ->orWhere('original_filename', 'like', "%{$search}%");
             })
             ->when($request->event_id, fn ($query, $eventId) => $query->where('event_id', $eventId))
+            ->when($request->boolean('is_featured'), fn ($query) => $query->featured())
             ->latest()
             ->paginate($request->integer('per_page', 20));
 

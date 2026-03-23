@@ -18,8 +18,20 @@ class EventController extends Controller
         $events = Event::query()
             ->where('is_published', true)
             ->when($request->search, function ($query, $search) {
-                $query->where('title', 'like', "%{$search}%")
-                    ->orWhere('description', 'like', "%{$search}%");
+                $query->where(function ($q) use ($search) {
+                    $q->where('title', 'like', "%{$search}%")
+                        ->orWhere('description', 'like', "%{$search}%");
+                });
+            })
+            ->when($request->category, function ($query, $category) {
+                $query->where('event_type', $category);
+            })
+            ->when($request->status, function ($query, $status) {
+                if ($status === 'open') {
+                    $query->where('allow_registration', true);
+                } elseif ($status === 'closed') {
+                    $query->where('allow_registration', false);
+                }
             })
             ->latest('event_date')
             ->paginate($request->integer('per_page', 15));

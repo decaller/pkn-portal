@@ -3,9 +3,11 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\V1\DocumentResource;
 use App\Http\Resources\V1\EventResource;
 use App\Http\Resources\V1\NewsResource;
 use App\Http\Resources\V1\TestimonialResource;
+use App\Models\Document;
 use App\Models\Event;
 use App\Models\News;
 use App\Models\Setting;
@@ -37,10 +39,17 @@ class DashboardController extends Controller
             ->limit(5)
             ->get();
 
+        $featuredDocument = Document::query()
+            ->where('is_active', true)
+            ->where('is_featured', true)
+            ->inRandomOrder()
+            ->first();
+
         return response()->json([
             'featured_events' => EventResource::collection($featuredEvents),
             'latest_news' => NewsResource::collection($latestNews),
             'testimonials' => TestimonialResource::collection($testimonials),
+            'featured_document' => $featuredDocument ? new DocumentResource($featuredDocument) : null,
             'contact_info' => [
                 'phone' => Setting::defaultContactNumber(),
                 'whatsapp_url' => Setting::defaultContactWhatsAppUrl(),
