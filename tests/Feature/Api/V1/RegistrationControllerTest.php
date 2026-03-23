@@ -1,30 +1,139 @@
 <?php
 
-use App\Models\Event;
 use App\Models\User;
+use App\Models\Event;
+use App\Models\EventRegistration;
+use App\Models\Organization;
+use App\Enums\PaymentStatus;
+use App\Enums\RegistrationStatus;
+use Laravel\Sanctum\Sanctum;
 
-use function Pest\Laravel\actingAs;
-
-it('can create a native registration', function () {
+test('authenticated user can create registration', function () {
     $user = User::factory()->create();
     $event = Event::factory()->create([
         'allow_registration' => true,
-        'event_date' => now()->addDays(10),
         'max_capacity' => 100,
+        'registration_packages' => [
+            [
+                'id' => 'regular',
+                'name' => 'Regular',
+                'price' => 1000
+            ]
+        ]
     ]);
+    $org = Organization::factory()->create();
 
-    $response = actingAs($user, 'sanctum')->postJson('/api/v1/registrations', [
+    Sanctum::actingAs($user, ['*']);
+
+    $response = $this->postJson('/api/v1/registrations', [
         'event_id' => $event->id,
+        'organization_id' => $org->id,
+        'package_id' => 'regular',
         'participants' => [
-            ['name' => 'John Doe', 'email' => 'john@example.com', 'phone' => '1234567890'],
-        ],
+            ['name' => 'John Doe', 'email' => 'john@example.com']
+        ]
     ]);
 
     $response->assertStatus(201)
         ->assertJsonPath('data.event_id', $event->id);
-
+    
     $this->assertDatabaseHas('event_registrations', [
         'event_id' => $event->id,
         'booker_user_id' => $user->id,
+        'organization_id' => $org->id,
+    ]);
+
+    $this->assertDatabaseHas('registration_participants', [
+        'name' => 'John Doe',
+        'email' => 'john@example.com'
+    ]);
+});
+
+test('user cannot register for event not allowing registration', function () {
+    $user = User::factory()->create();
+    $event = Event::factory()->create(['allow_registration' => false]);
+
+    Sanctum::actingAs($user, ['*']);
+
+    $response = $this->postJson('/api/v1/registrations', [
+        'event_id' => $event->id,
+        'participants' => [
+            ['name' => 'John Doe']
+        ]
+    ]);
+
+    $response->assertStatus(422)
+        ->assertJsonValidationErrors(['event_id']);
+});
+
+test('authenticated user can update their draft registration', function () {
+    $user = User::factory()->create();
+    $event = Event::factory()->create();
+    $org1 = Organization::factory()->create();
+    $org2 = Organization::factory()->create();
+    
+    $registration = EventRegistration::create([
+        'booker_user_id' => $user->id,
+        'event_id' => $event->id,
+        'organization_id' => $org1->id,
+        'payment_status' => PaymentStatus::Unpaid,
+        'status' => RegistrationStatus::Draft,
+        'total_amount' => 1000
+    ]);
+
+    Sanctum::actingAs($user, ['*']);
+
+    $response = $this->putJson("/api/v1/registrations/{$registration->id}", [
+        'organization_id' => $org2->id
+    ]);
+
+    $response->assertStatus(200);
+    $this->assertDatabaseHas('event_registrations', [
+        'id' => $registration->id,
+        'organization_id' => $org2->id
+    ]);
+});
+
+test('cannot update paid registration', function () {
+    $user = User::factory()->create();
+    $event = Event::factory()->create();
+    
+    $registration = EventRegistration::create([
+        'booker_user_id' => $user->id,
+        'event_id' => $event->id,
+        'payment_status' => PaymentStatus::Verified,
+        'status' => RegistrationStatus::Draft,
+        'total_amount' => 1000
+    ]);
+
+    Sanctum::actingAs($user, ['*']);
+
+    $response = $this->putJson("/api/v1/registrations/{$registration->id}", [
+        'organization_id' => 1
+    ]);
+
+    $response->assertStatus(422)
+        ->assertJsonValidationErrors(['registration']);
+});
+
+test('authenticated user can delete draft registration', function () {
+    $user = User::factory()->create();
+    $event = Event::factory()->create();
+    
+    $registration = EventRegistration::create([
+        'booker_user_id' => $user->id,
+        'event_id' => $event->id,
+        'payment_status' => PaymentStatus::Unpaid,
+        'status' => RegistrationStatus::Draft,
+        'total_amount' => 1000
+    ]);
+
+    Sanctum::actingAs($user, ['*']);
+
+    $response = $this->deleteJson("/api/v1/registrations/{$registration->id}");
+
+    $response->assertStatus(200);
+    $this->assertDatabaseMissing('event_registrations', [
+        'id' => $registration->id
     ]);
 });
