@@ -5,7 +5,6 @@ namespace App\Filament\User\Auth;
 use App\Models\Setting;
 use Filament\Actions\Action;
 use Filament\Actions\ActionGroup;
-use Filament\Auth\Http\Responses\Contracts\LoginResponse;
 use Filament\Auth\Pages\Login as BaseLogin;
 use Filament\Forms\Components\TextInput;
 use Filament\Schemas\Components\Component;
@@ -13,37 +12,6 @@ use Illuminate\Validation\ValidationException;
 
 class Login extends BaseLogin
 {
-    public ?string $source = null;
-
-    public function mount(): void
-    {
-        parent::mount();
-
-        $this->source = request()->query('source');
-    }
-
-    public function authenticate(): ?LoginResponse
-    {
-        $response = parent::authenticate();
-
-        if ($this->source === 'mobile') {
-            $this->redirect(route('api.v1.auth.token-handoff'));
-
-            return null;
-        }
-
-        return $response;
-    }
-
-    public function getRedirectUrl(): string
-    {
-        if ($this->source === 'mobile') {
-            return route('api.v1.auth.token-handoff');
-        }
-
-        return parent::getRedirectUrl();
-    }
-
     protected function getEmailFormComponent(): Component
     {
         return TextInput::make('phone_number')

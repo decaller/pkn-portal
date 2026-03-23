@@ -7,7 +7,10 @@ use App\Models\EventRegistration;
 use App\Enums\PaymentStatus;
 use App\Enums\RegistrationStatus;
 use App\Enums\InvoiceStatus;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
+
+uses(RefreshDatabase::class);
 
 test('authenticated user can list their invoices', function () {
     $user = User::factory()->create();
@@ -35,8 +38,10 @@ test('authenticated user can list their invoices', function () {
 
     $response = $this->getJson('/api/v1/invoices');
 
-    $response->assertStatus(200)
-        ->assertJsonCount(2, 'data');
+    $response->assertSuccessful()
+        ->assertJsonCount(2, 'data')
+        ->assertJsonStructure(['data', 'links', 'meta'])
+        ->assertJsonPath('data.0.status', 'unpaid');
 });
 
 test('authenticated user can view specific invoice', function () {
@@ -56,8 +61,18 @@ test('authenticated user can view specific invoice', function () {
 
     $response = $this->getJson("/api/v1/invoices/{$invoice->id}");
 
-    $response->assertStatus(200)
-        ->assertJsonPath('data.id', $invoice->id);
+    $response->assertSuccessful()
+        ->assertJsonPath('data.id', $invoice->id)
+        ->assertJsonPath('data.registration_id', $registration->id)
+        ->assertJsonPath('data.status', 'unpaid')
+        ->assertJsonPath('data.gross_amount', 1000.0)
+        ->assertJsonStructure([
+            'data' => [
+                'items',
+                'payments',
+                'gross_amount',
+            ],
+        ]);
 });
 
 test('user cannot view someone elses invoice', function () {
@@ -78,7 +93,7 @@ test('user cannot view someone elses invoice', function () {
 
     $response = $this->getJson("/api/v1/invoices/{$invoice->id}");
 
-    $response->assertStatus(403);
+    $response->assertForbidden();
 });
 
 test('authenticated user can get invoice download link', function () {
@@ -98,6 +113,9 @@ test('authenticated user can get invoice download link', function () {
 
     $response = $this->getJson("/api/v1/invoices/{$invoice->id}/download");
 
-    $response->assertStatus(200)
+    $response->assertSuccessful()
         ->assertJsonStructure(['download_url']);
+
+    expect($response->json('download_url'))->toContain('/temporary/invoices/')
+        ->toContain('signature=');
 });

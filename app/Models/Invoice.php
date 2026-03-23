@@ -102,7 +102,7 @@ class Invoice extends Model
 
     public function canStartGatewayPayment(): bool
     {
-        return $this->status !== InvoiceStatus::Void
+        return ! in_array($this->status, [InvoiceStatus::Void, InvoiceStatus::Paid, InvoiceStatus::Expired, InvoiceStatus::Cancelled], true)
             && $this->registration?->payment_status?->value !== 'verified';
     }
 }

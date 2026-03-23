@@ -64,8 +64,8 @@ class MidtransSnapGateway
     {
         Config::$serverKey = (string) config('services.midtrans.server_key');
         Config::$isProduction = (bool) config('services.midtrans.is_production', false);
-        Config::$isSanitized = true;
-        Config::$is3ds = true;
+        Config::$isSanitized = (bool) config('services.midtrans.is_sanitized', true);
+        Config::$is3ds = (bool) config('services.midtrans.is_3ds', true);
         Config::$paymentIdempotencyKey = $idempotencyKey;
     }
 }

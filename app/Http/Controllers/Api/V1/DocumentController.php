@@ -23,6 +23,12 @@ class DocumentController extends Controller
                     ->orWhere('description', 'like', "%{$search}%")
                     ->orWhere('original_filename', 'like', "%{$search}%");
             })
+            ->when($request->filled('category'), function ($query) use ($request) {
+                $query->whereJsonContains('tags', $request->string('category')->toString());
+            })
+            ->when($request->boolean('is_featured'), function ($query) {
+                $query->featured();
+            })
             ->when($request->event_id, fn ($query, $eventId) => $query->where('event_id', $eventId));
 
         // Get featured documents (limit to 10)

@@ -2,6 +2,7 @@
 
 namespace App\Services\Payments;
 
+use App\Enums\InvoiceStatus;
 use App\Enums\PaymentStatus;
 use App\Models\Invoice;
 use App\Models\InvoicePayment;
@@ -71,6 +72,10 @@ class InvoicePaymentService
                 'currency' => $snap['currency'],
             ])->save();
 
+            $invoice->forceFill([
+                'status' => InvoiceStatus::Pending,
+            ])->save();
+
             $invoice->registration?->markPaymentPendingFromGateway([
                 'invoice_payment_id' => $payment->getKey(),
             ]);
@@ -112,6 +117,10 @@ class InvoicePaymentService
                     : $payment->paid_at,
             ])->save();
 
+            $payment->invoice?->forceFill([
+                'status' => $this->mapInvoiceStatus($payload['transaction_status']),
+            ])->save();
+
             if ($normalizedStatus === InvoicePayment::STATUS_PAID && ! $wasPaid) {
                 $payment->registration?->markPaidFromGateway([
                     'verified_at' => now(),
@@ -149,6 +158,17 @@ class InvoicePaymentService
             'pending' => InvoicePayment::STATUS_PENDING,
             'deny', 'expire', 'cancel', 'failure' => InvoicePayment::STATUS_FAILED,
             default => InvoicePayment::STATUS_FAILED,
+        };
+    }
+
+    private function mapInvoiceStatus(string $transactionStatus): InvoiceStatus
+    {
+        return match ($transactionStatus) {
+            'settlement', 'capture' => InvoiceStatus::Paid,
+            'pending' => InvoiceStatus::Pending,
+            'expire' => InvoiceStatus::Expired,
+            'cancel', 'deny', 'failure' => InvoiceStatus::Cancelled,
+            default => InvoiceStatus::Cancelled,
         };
     }
 }

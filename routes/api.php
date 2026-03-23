@@ -8,6 +8,7 @@ use App\Http\Controllers\Api\V1\InvoiceController;
 use App\Http\Controllers\Api\V1\NewsController;
 use App\Http\Controllers\Api\V1\NotificationController;
 use App\Http\Controllers\Api\V1\OrganizationController;
+use App\Http\Controllers\Api\V1\PaymentController;
 use App\Http\Controllers\Api\V1\ParticipantController;
 use App\Http\Controllers\Api\V1\ProfileController;
 use App\Http\Controllers\Api\V1\RegistrationController;
@@ -43,13 +44,13 @@ Route::prefix('v1')->group(function () {
     Route::post('/auth/login', [AuthController::class, 'login'])
         ->name('api.v1.auth.login');
 
-    Route::get('/auth/token-handoff', [AuthController::class, 'tokenHandoff'])
-        ->middleware('web')
-        ->name('api.v1.auth.token-handoff');
+    Route::post('/payments/webhook', [PaymentController::class, 'webhook'])
+        ->name('api.v1.payments.webhook');
 
     // 3. Authenticated Screens
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/auth/me', [AuthController::class, 'me']);
+        Route::get('/user', [AuthController::class, 'me']);
         Route::post('/auth/logout', [AuthController::class, 'logout']);
 
         // Profile
@@ -79,5 +80,8 @@ Route::prefix('v1')->group(function () {
         Route::get('/invoices', [InvoiceController::class, 'index']);
         Route::get('/invoices/{invoice}', [InvoiceController::class, 'show']);
         Route::get('/invoices/{invoice}/download', [InvoiceController::class, 'download']);
+
+        // Payments
+        Route::post('/payments/charge', [PaymentController::class, 'charge']);
     });
 });

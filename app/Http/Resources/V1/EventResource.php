@@ -12,6 +12,15 @@ use Illuminate\Support\Facades\Storage;
  */
 class EventResource extends JsonResource
 {
+    private function absoluteUrl(?string $path): ?string
+    {
+        if (! $path) {
+            return null;
+        }
+
+        return url(Storage::url($path));
+    }
+
     /**
      * Transform the resource into an array.
      *
@@ -31,15 +40,15 @@ class EventResource extends JsonResource
             'nation' => $this->resource->nation,
             'duration_days' => $this->resource->duration_days,
             'google_maps_url' => $this->resource->google_maps_url,
-            'cover_image' => $this->resource->cover_image ? Storage::url($this->resource->cover_image) : null,
+            'cover_image' => $this->absoluteUrl($this->resource->cover_image),
             'photos' => collect($this->resource->photos ?? [])
-                ->map(fn (string $photo) => Storage::url($photo))
+                ->map(fn (string $photo) => $this->absoluteUrl($photo))
                 ->toArray(),
             'files' => collect($this->resource->files ?? [])
-                ->map(fn (string $file) => Storage::url($file))
+                ->map(fn (string $file) => $this->absoluteUrl($file))
                 ->toArray(),
             'documentation' => collect($this->resource->documentation ?? [])
-                ->map(fn (string $doc) => Storage::url($doc))
+                ->map(fn (string $doc) => $this->absoluteUrl($doc))
                 ->toArray(),
             'is_published' => $this->resource->is_published,
             'allow_registration' => $this->resource->allow_registration,
@@ -49,7 +58,7 @@ class EventResource extends JsonResource
             'registration_packages' => $this->resource->registration_packages, // JSON array
             'rundown' => $this->resource->rundown, // JSON array
             'tags' => $this->resource->tags,
-            'proposal' => $this->resource->proposal ? Storage::url($this->resource->proposal) : null,
+            'proposal' => $this->absoluteUrl($this->resource->proposal),
             'testimonials' => TestimonialResource::collection($this->whenLoaded('approvedTestimonials')),
         ];
     }

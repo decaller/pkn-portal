@@ -12,6 +12,15 @@ use Illuminate\Support\Facades\Storage;
  */
 class NewsResource extends JsonResource
 {
+    private function absoluteUrl(?string $path): ?string
+    {
+        if (! $path) {
+            return null;
+        }
+
+        return url(Storage::url($path));
+    }
+
     /**
      * Transform the resource into an array.
      *
@@ -23,7 +32,7 @@ class NewsResource extends JsonResource
             'id' => $this->resource->id,
             'title' => $this->resource->title,
             'content' => $this->resource->content,
-            'thumbnail' => $this->resource->thumbnail ? Storage::url($this->resource->thumbnail) : null,
+            'thumbnail' => $this->absoluteUrl($this->resource->thumbnail),
             'is_published' => $this->resource->is_published,
             'event_id' => $this->resource->event_id,
             'created_at' => $this->resource->created_at?->toIso8601String(),

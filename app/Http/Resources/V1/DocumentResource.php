@@ -12,6 +12,15 @@ use Illuminate\Support\Facades\Storage;
  */
 class DocumentResource extends JsonResource
 {
+    private function absoluteUrl(?string $path): ?string
+    {
+        if (! $path) {
+            return null;
+        }
+
+        return url(Storage::url($path));
+    }
+
     /**
      * Transform the resource into an array.
      *
@@ -23,15 +32,16 @@ class DocumentResource extends JsonResource
             'id' => $this->resource->id,
             'title' => $this->resource->title,
             'slug' => $this->resource->slug,
-            'file_url' => $this->resource->file_path ? Storage::url($this->resource->file_path) : null,
+            'file_url' => $this->absoluteUrl($this->resource->file_path),
             'original_filename' => $this->resource->original_filename,
-            'cover_image' => $this->resource->cover_image ? Storage::url($this->resource->cover_image) : null,
+            'cover_image' => $this->absoluteUrl($this->resource->cover_image),
             'mime_type' => $this->resource->mime_type,
             'description' => $this->resource->description,
             'tags' => $this->resource->tags,
             'is_active' => $this->resource->is_active,
             'is_featured' => $this->resource->is_featured,
             'event_id' => $this->resource->event_id,
+            'created_at' => $this->resource->created_at?->toIso8601String(),
         ];
     }
 }

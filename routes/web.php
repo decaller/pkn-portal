@@ -1,13 +1,13 @@
 <?php
 
 use App\Filament\Admin\Resources\Events\Schemas\EventInfolist;
-use App\Http\Controllers\Api\V1\WebViewController;
 use App\Http\Controllers\Payments\MidtransWebhookController;
 use App\Models\Event;
 use App\Models\Invoice;
 use App\Services\InvoicePdfService;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
 Route::view('/', 'home')->middleware(['throttle:60,1', 'cacheResponse'])->name('home');
 
@@ -46,6 +46,16 @@ Route::middleware('auth')
     })
     ->name('invoices.download');
 
+Route::get('/temporary/invoices/{invoice}/download', function (
+    Request $request,
+    Invoice $invoice,
+    InvoicePdfService $service,
+) {
+    abort_unless($request->integer('user') === $invoice->registration()->value('booker_user_id'), 403);
+
+    return $service->download($invoice);
+})->middleware('signed')->name('invoices.temporary-download');
+
 Route::middleware('auth')
     ->get('/admin/events/{event}/participants/download', function (Event $event) {
         abort_unless((bool) auth()->user()?->isMainAdmin(), 403);
@@ -81,9 +91,6 @@ Route::middleware('auth')
         ]);
     })
     ->name('admin.events.participants.download');
-
-Route::get('/mobile/webview-login', [WebViewController::class, 'handleMagicLink'])
-    ->name('webview.magic-login');
 
 Route::middleware('auth')
     ->get('/events/{event}/sessions/download-all', function (Event $event) {
