@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\MorphMany;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Support\Str;
 
 class Document extends Model
@@ -29,16 +30,25 @@ class Document extends Model
     protected $casts = [
         'metadata' => 'array',
         'is_active' => 'boolean',
-        'is_featured' => 'boolean',
         'tags' => 'array',
     ];
+
+    /**
+     * Determine if the document is featured.
+     */
+    protected function isFeatured(): Attribute
+    {
+        return Attribute::make(
+            get: fn () => collect($this->tags ?? [])->contains('featured'),
+        );
+    }
 
     /**
      * Scope for featured documents.
      */
     public function scopeFeatured($query)
     {
-        return $query->where('is_featured', true);
+        return $query->whereJsonContains('tags', 'featured');
     }
 
     /**

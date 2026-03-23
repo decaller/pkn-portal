@@ -116,8 +116,8 @@ test('guest can list documents', function () {
 });
 
 test('guest can filter featured documents', function () {
-    Document::factory()->create(['is_active' => true, 'is_featured' => true, 'title' => 'Featured Doc']);
-    Document::factory()->create(['is_active' => true, 'is_featured' => false, 'title' => 'Regular Doc']);
+    Document::factory()->create(['is_active' => true, 'tags' => ['featured'], 'title' => 'Featured Doc']);
+    Document::factory()->create(['is_active' => true, 'tags' => ['regular'], 'title' => 'Regular Doc']);
 
     $response = $this->getJson('/api/v1/documents?is_featured=1');
 

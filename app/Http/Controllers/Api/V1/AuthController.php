@@ -60,4 +60,29 @@ class AuthController extends Controller
             'message' => 'Logged out successfully.',
         ]);
     }
+
+    /**
+     * Exchange a web session for a Sanctum token (Hybrid Flow).
+     */
+    public function tokenHandoff(Request $request): JsonResponse
+    {
+        $user = Auth::user();
+
+        if (! $user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No active session found.',
+            ], 401);
+        }
+
+        // Revoke existing mobile-app tokens if needed or just create a new one
+        $user->tokens()->where('name', 'mobile-app')->delete();
+        $token = $user->createToken('mobile-app')->plainTextToken;
+
+        return response()->json([
+            'success' => true,
+            'token' => $token,
+            'user' => new UserResource($user),
+        ]);
+    }
 }

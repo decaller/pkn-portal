@@ -41,9 +41,9 @@ class DashboardController extends Controller
 
         $featuredDocument = Document::query()
             ->where('is_active', true)
-            ->where('is_featured', true)
+            ->featured()
             ->inRandomOrder()
-            ->first();
+            ->limit(5);
 
         return response()->json([
             'featured_events' => EventResource::collection($featuredEvents),

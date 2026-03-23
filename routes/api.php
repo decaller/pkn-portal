@@ -43,6 +43,10 @@ Route::prefix('v1')->group(function () {
     Route::post('/auth/login', [AuthController::class, 'login'])
         ->name('api.v1.auth.login');
 
+    Route::get('/auth/token-handoff', [AuthController::class, 'tokenHandoff'])
+        ->middleware('web')
+        ->name('api.v1.auth.token-handoff');
+
     // 3. Authenticated Screens
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/auth/me', [AuthController::class, 'me']);
