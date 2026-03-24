@@ -24,6 +24,13 @@ it('can register a personal user and create an event registration', function () 
         'is_published' => true,
         'allow_registration' => true,
         'event_date' => now()->addDays(5),
+        'registration_packages' => [
+            [
+                'id' => 'general',
+                'name' => 'General',
+                'price' => 0,
+            ],
+        ],
     ]);
 
     Livewire::test(RegisterEvent::class)

@@ -128,6 +128,7 @@ class User extends Authenticatable implements FilamentUser, HasTenants
         if (config('app.env') !== 'production') {
             \Log::info("isMainAdmin Check for user {$this->email}", ['result' => $result]);
         }
+
         return $result;
     }
 

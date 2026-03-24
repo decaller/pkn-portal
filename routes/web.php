@@ -4,8 +4,11 @@ use App\Filament\Admin\Resources\Events\Schemas\EventInfolist;
 use App\Http\Controllers\Payments\MidtransWebhookController;
 use App\Models\Event;
 use App\Models\Invoice;
+use App\Models\User;
 use App\Services\InvoicePdfService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
 
@@ -29,6 +32,32 @@ Route::get(
     '/register',
     fn () => redirect()->route('filament.user.auth.register'),
 )->name('register');
+
+Route::get('/webview-login', function (Request $request) {
+    $ticket = $request->query('ticket');
+
+    if (! $ticket) {
+        return redirect('/login')->withErrors('No ticket provided.');
+    }
+
+    $cacheKey = 'webview_ticket_'.$ticket;
+    $userId = Cache::get($cacheKey);
+
+    if (! $userId) {
+        return redirect('/login')->withErrors('Session expired. Please log in again.');
+    }
+
+    $user = User::find($userId);
+
+    if ($user) {
+        Auth::guard('web')->login($user);
+        Cache::forget($cacheKey);
+
+        return redirect('/user');
+    }
+
+    return redirect('/login');
+});
 
 Route::post('/payments/midtrans/notifications', MidtransWebhookController::class)
     ->middleware('doNotCacheResponse')

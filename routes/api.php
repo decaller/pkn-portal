@@ -8,11 +8,13 @@ use App\Http\Controllers\Api\V1\InvoiceController;
 use App\Http\Controllers\Api\V1\NewsController;
 use App\Http\Controllers\Api\V1\NotificationController;
 use App\Http\Controllers\Api\V1\OrganizationController;
-use App\Http\Controllers\Api\V1\ParticipantController;
 use App\Http\Controllers\Api\V1\PaymentController;
 use App\Http\Controllers\Api\V1\ProfileController;
 use App\Http\Controllers\Api\V1\RegistrationController;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
 
 /*
 |--------------------------------------------------------------------------
@@ -56,6 +58,15 @@ Route::prefix('v1')->group(function () {
         Route::get('/user', [AuthController::class, 'me']);
         Route::post('/auth/logout', [AuthController::class, 'logout']);
 
+        // Webview Ticket
+        Route::post('/webview-ticket', function (Request $request) {
+            $user = $request->user();
+            $ticket = Str::random(60);
+            Cache::put('webview_ticket_'.$ticket, $user->id, now()->addMinutes(1));
+
+            return response()->json(['ticket' => $ticket]);
+        });
+
         // Profile
         Route::get('/user/profile', [ProfileController::class, 'show']);
         Route::put('/user/profile', [ProfileController::class, 'update']);
@@ -72,12 +83,6 @@ Route::prefix('v1')->group(function () {
 
         // Registrations
         Route::apiResource('registrations', RegistrationController::class);
-
-        // Participants
-        Route::get('/registrations/{registration_id}/participants', [ParticipantController::class, 'index']);
-        Route::post('/registrations/{registration_id}/participants', [ParticipantController::class, 'store']);
-        Route::put('/participants/{participant}', [ParticipantController::class, 'update']);
-        Route::delete('/participants/{participant}', [ParticipantController::class, 'destroy']);
 
         // Invoices
         Route::get('/invoices', [InvoiceController::class, 'index']);

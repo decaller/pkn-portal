@@ -18,7 +18,7 @@ class RegistrationController extends Controller
     {
         $registrations = EventRegistration::query()
             ->where('booker_user_id', $request->user()->id)
-            ->with(['event', 'participants'])
+            ->with(['event', 'participants', 'organization', 'booker', 'invoices', 'invoices.payments'])
             ->latest()
             ->paginate($request->integer('per_page', 15));
 
@@ -31,7 +31,7 @@ class RegistrationController extends Controller
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
-        return new RegistrationResource($registration->load(['event', 'participants']));
+        return new RegistrationResource($registration->load(['event', 'participants', 'organization', 'booker', 'invoices', 'invoices.payments']));
     }
 
     public function store(Request $request)
@@ -92,7 +92,7 @@ class RegistrationController extends Controller
                 'total_amount' => $totalAmount,
             ]);
 
-            return new RegistrationResource($registration->load('participants', 'event'));
+            return new RegistrationResource($registration->load(['participants', 'event', 'organization', 'booker', 'invoices', 'invoices.payments']));
         });
     }
 
@@ -114,7 +114,7 @@ class RegistrationController extends Controller
             'organization_id' => $validated['organization_id'] ?? $registration->organization_id,
         ]);
 
-        return new RegistrationResource($registration->load('participants', 'event'));
+        return new RegistrationResource($registration->load(['participants', 'event', 'organization', 'booker', 'invoices', 'invoices.payments']));
     }
 
     public function destroy(Request $request, EventRegistration $registration)

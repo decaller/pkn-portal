@@ -41,7 +41,7 @@ Home page is served at `/` and links into the panels.
 - Public event/news listing
 - User registration/login using phone number
 - Organization-based membership (create new or join existing)
-- Event registration flow with participants and package breakdown
+- Hybrid Event registration flow: native creation & listing, with participant/payment management via webviews.
 - Invoice and Midtrans Snap payment handling
 - Surveys and testimonials
 - Analytics and document indexing integrations
