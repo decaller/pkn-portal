@@ -15,8 +15,7 @@ class RedirectIfNotSuperAdmin
      */
     public function handle(Request $request, Closure $next): Response
     {
-        // Now running after Authenticate middleware, so auth()->user() is guaranteed if it reaches here.
-        if (! auth()->user()?->isMainAdmin()) {
+        if (auth()->check() && ! auth()->user()?->isMainAdmin()) {
             return redirect('/user');
         }
 

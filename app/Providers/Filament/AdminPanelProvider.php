@@ -70,6 +70,7 @@ class AdminPanelProvider extends PanelProvider
                 EncryptCookies::class,
                 AddQueuedCookiesToResponse::class,
                 StartSession::class,
+                RedirectIfNotSuperAdmin::class,
                 AuthenticateSession::class,
                 ShareErrorsFromSession::class,
                 VerifyCsrfToken::class,
@@ -79,7 +80,6 @@ class AdminPanelProvider extends PanelProvider
             ])
             ->authMiddleware([
                 Authenticate::class,
-                RedirectIfNotSuperAdmin::class,
             ])
             ->plugins([
                 ApiServicePlugin::make(),
