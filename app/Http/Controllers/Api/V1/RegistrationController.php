@@ -8,7 +8,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\V1\RegistrationResource;
 use App\Models\Event;
 use App\Models\EventRegistration;
-use App\Models\RegistrationParticipant;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
@@ -40,11 +39,9 @@ class RegistrationController extends Controller
         $validated = $request->validate([
             'event_id' => ['required', 'exists:events,id'],
             'organization_id' => ['nullable', 'exists:organizations,id'],
-            'package_id' => ['nullable', 'string'],
-            'participants' => ['required', 'array', 'min:1'],
-            'participants.*.name' => ['required', 'string'],
-            'participants.*.email' => ['nullable', 'email'],
-            'participants.*.phone' => ['nullable', 'string'],
+            'packages' => ['required', 'array', 'min:1'],
+            'packages.*.package_id' => ['required', 'string'],
+            'packages.*.count' => ['required', 'integer', 'min:1'],
         ]);
 
         $event = Event::findOrFail($validated['event_id']);
@@ -60,24 +57,28 @@ class RegistrationController extends Controller
         return DB::transaction(function () use ($validated, $event, $request) {
             $totalAmount = 0;
             $packageBreakdown = [];
+            $availablePackages = collect($event->registration_packages);
 
-            if (! empty($validated['package_id']) && ! empty($event->registration_packages)) {
-                $packages = collect($event->registration_packages);
-                $selectedPackage = $packages->firstWhere('id', $validated['package_id']);
+            foreach ($validated['packages'] as $pItem) {
+                $selectedPackage = $availablePackages->firstWhere('id', $pItem['package_id']);
 
                 if ($selectedPackage) {
                     $price = $selectedPackage['price'] ?? 0;
-                    $quantity = count($validated['participants']);
-                    $totalAmount = $price * $quantity;
+                    $count = $pItem['count'];
+                    $subtotal = $price * $count;
+                    $totalAmount += $subtotal;
 
-                    $packageBreakdown = [
-                        [
-                            'package_name' => $selectedPackage['name'] ?? 'Selected Package',
-                            'price' => $price,
-                            'quantity' => $quantity,
-                            'subtotal' => $totalAmount,
-                        ],
+                    $packageBreakdown[] = [
+                        'package_id' => $pItem['package_id'],
+                        'name' => $selectedPackage['name'] ?? 'Selected Package',
+                        'count' => $count,
+                        'price' => $price,
+                        'subtotal' => $subtotal,
                     ];
+                } else {
+                    throw ValidationException::withMessages([
+                        'packages' => "Package ID {$pItem['package_id']} is invalid for this event.",
+                    ]);
                 }
             }
 
@@ -90,12 +91,6 @@ class RegistrationController extends Controller
                 'payment_status' => PaymentStatus::Unpaid,
                 'total_amount' => $totalAmount,
             ]);
-
-            foreach ($validated['participants'] as $pData) {
-                RegistrationParticipant::create(array_merge($pData, [
-                    'registration_id' => $registration->id,
-                ]));
-            }
 
             return new RegistrationResource($registration->load('participants', 'event'));
         });

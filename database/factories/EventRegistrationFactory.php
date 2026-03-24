@@ -24,9 +24,17 @@ class EventRegistrationFactory extends Factory
         return [
             'event_id' => Event::factory(),
             'booker_user_id' => User::factory(),
-            'status' => RegistrationStatus::Draft,
-            'payment_status' => PaymentStatus::Unpaid,
-            'total_amount' => 0,
+            'status' => $this->faker->randomElement(RegistrationStatus::cases()),
+            'payment_status' => $this->faker->randomElement(PaymentStatus::cases()),
+            'total_amount' => $this->faker->randomElement([50000, 100000, 250000, 500000]),
+            'package_breakdown' => [
+                [
+                    'package_name' => 'Regular',
+                    'participant_count' => 1,
+                    'unit_price' => 50000,
+                ],
+            ],
+            'notes' => $this->faker->optional()->sentence(),
         ];
     }
 }

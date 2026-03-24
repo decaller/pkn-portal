@@ -5,9 +5,9 @@ use App\Http\Controllers\Payments\MidtransWebhookController;
 use App\Models\Event;
 use App\Models\Invoice;
 use App\Services\InvoicePdfService;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Http\Request;
 
 Route::view('/', 'home')->middleware(['throttle:60,1', 'cacheResponse'])->name('home');
 

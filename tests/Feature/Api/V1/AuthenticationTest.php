@@ -5,8 +5,6 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 
 uses(RefreshDatabase::class);
 
-
-
 test('user can fetch their profile via sanctum', function () {
     $user = User::factory()->create();
     $token = $user->createToken('test')->plainTextToken;

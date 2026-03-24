@@ -13,6 +13,7 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
+use Symfony\Component\Finder\SplFileInfo;
 
 class ApiResultSeeder extends Seeder
 {
@@ -61,6 +62,10 @@ class ApiResultSeeder extends Seeder
             ],
         );
 
+        $pkn->users()->syncWithoutDetaching([
+            $admin->id => ['role' => 'admin'],
+        ]);
+
         $ybit = Organization::updateOrCreate(
             ['slug' => 'ybit'],
             [
@@ -104,8 +109,8 @@ class ApiResultSeeder extends Seeder
                 'is_published' => true,
                 'allow_registration' => true,
                 'registration_packages' => [
-                    ['name' => 'Regular', 'price' => 100000],
-                    ['name' => 'VIP', 'price' => 250000],
+                    ['id' => 1, 'name' => 'Regular', 'price' => 100000],
+                    ['id' => 2, 'name' => 'VIP', 'price' => 250000],
                 ],
                 'cover_image' => $this->copyToPublic($coverFiles[1] ?? null, 'event-covers'),
                 'proposal' => $this->copyToPublic($proposalFiles[1] ?? null, 'event-proposals'),
@@ -140,8 +145,8 @@ class ApiResultSeeder extends Seeder
                 'allow_registration' => true,
                 'max_capacity' => 50,
                 'registration_packages' => [
-                    ['name' => 'Regular', 'price' => 75000, 'max_quota' => 30],
-                    ['name' => 'VIP', 'price' => 200000, 'max_quota' => 20],
+                    ['id' => 1, 'name' => 'Regular', 'price' => 75000, 'max_quota' => 30],
+                    ['id' => 2, 'name' => 'VIP', 'price' => 200000, 'max_quota' => 20],
                 ],
                 'cover_image' => $this->copyToPublic($coverFiles[0] ?? null, 'event-covers'),
                 'proposal' => $this->copyToPublic($proposalFiles[0] ?? null, 'event-proposals'),
@@ -302,14 +307,14 @@ class ApiResultSeeder extends Seeder
         }
     }
 
-    private function copyToPublic(?\Symfony\Component\Finder\SplFileInfo $sourceFile, string $destinationDir): ?string
+    private function copyToPublic(?SplFileInfo $sourceFile, string $destinationDir): ?string
     {
         if (! $sourceFile) {
             return null;
         }
 
         $filename = $sourceFile->getFilename();
-        $destinationPath = $destinationDir . '/' . $filename;
+        $destinationPath = $destinationDir.'/'.$filename;
 
         if (! Storage::disk('public')->exists($destinationPath)) {
             Storage::disk('public')->put($destinationPath, file_get_contents($sourceFile->getRealPath()));

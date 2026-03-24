@@ -7,6 +7,7 @@ use App\Filament\Admin\Widgets\LatestEventsWidget;
 use App\Filament\Pages\Tenancy\EditOrganizationProfile;
 use App\Filament\Pages\Tenancy\RegisterOrganization;
 use App\Filament\Shared\Widgets\FeaturedDocumentsWidget;
+use App\Http\Middleware\RedirectIfNotSuperAdmin;
 use App\Models\Organization;
 use CraftForge\FilamentLanguageSwitcher\FilamentLanguageSwitcherPlugin;
 use Filament\Http\Middleware\Authenticate;
@@ -76,7 +77,10 @@ class AdminPanelProvider extends PanelProvider
                 DisableBladeIconComponents::class,
                 DispatchServingFilamentEvent::class,
             ])
-            ->authMiddleware([Authenticate::class])
+            ->authMiddleware([
+                Authenticate::class,
+                RedirectIfNotSuperAdmin::class,
+            ])
             ->plugins([
                 ApiServicePlugin::make(),
                 FilamentLanguageSwitcherPlugin::make()

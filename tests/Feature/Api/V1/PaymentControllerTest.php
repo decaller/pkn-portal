@@ -5,6 +5,7 @@ use App\Enums\PaymentStatus;
 use App\Enums\RegistrationStatus;
 use App\Models\Event;
 use App\Models\EventRegistration;
+use App\Models\Invoice;
 use App\Models\InvoicePayment;
 use App\Models\Organization;
 use App\Models\User;
@@ -40,7 +41,7 @@ function fakeApiGateway(): MidtransSnapGateway
 {
     return new class extends MidtransSnapGateway
     {
-        public function createTransaction(\App\Models\Invoice $invoice, string $orderId, string $idempotencyKey): array
+        public function createTransaction(Invoice $invoice, string $orderId, string $idempotencyKey): array
         {
             return [
                 'order_id' => $orderId,

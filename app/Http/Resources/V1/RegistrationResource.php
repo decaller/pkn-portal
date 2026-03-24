@@ -41,10 +41,11 @@ class RegistrationResource extends JsonResource
             'participant_count' => $this->resource->participants_count ?? count($this->whenLoaded('participants') ?? []),
             'unit_price' => $firstPackage['unit_price'] ?? ($firstPackage['price'] ?? '0.00'),
             'package_breakdown' => collect($packageBreakdown)->map(fn ($item) => [
-                'package_name' => $item['package_name'] ?? ($item['name'] ?? 'Selected Package'),
-                'participant_count' => $item['participant_count'] ?? ($item['quantity'] ?? 0),
-                'unit_price' => $item['unit_price'] ?? ($item['price'] ?? 0),
-                'debug_log' => $item['debug_log'] ?? null,
+                'package_id' => $item['package_id'] ?? null,
+                'name' => $item['name'] ?? ($item['package_name'] ?? 'Selected Package'),
+                'count' => $item['count'] ?? ($item['participant_count'] ?? ($item['quantity'] ?? 0)),
+                'price' => $item['price'] ?? ($item['unit_price'] ?? 0),
+                'subtotal' => $item['subtotal'] ?? 0,
             ])->toArray(),
 
             'event' => new EventResource($this->whenLoaded('event')),

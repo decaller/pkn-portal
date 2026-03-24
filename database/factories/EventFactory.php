@@ -25,6 +25,22 @@ class EventFactory extends Factory
             'is_published' => true,
             'allow_registration' => true,
             'event_type' => 'online',
+            'registration_packages' => [
+                [
+                    'id' => 1,
+                    'name' => 'Regular',
+                    'price' => 75000,
+                    'max_quota' => 30,
+                    'description' => 'Standard package',
+                ],
+                [
+                    'id' => 2,
+                    'name' => 'VIP',
+                    'price' => 200000,
+                    'max_quota' => 20,
+                    'description' => 'Premium package',
+                ],
+            ],
         ];
     }
 }

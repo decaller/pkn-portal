@@ -59,7 +59,11 @@ class EventResource extends JsonResource
             'max_capacity' => $this->resource->max_capacity,
             'available_spots' => $this->resource->availableSpots(),
             'is_full' => $this->resource->isFull(),
-            'registration_packages' => $this->resource->registration_packages,
+            'registration_packages' => collect($this->resource->registration_packages ?? [])
+                ->map(fn (array $package, int $index) => array_merge($package, [
+                    'id' => $package['id'] ?? ($index + 1),
+                ]))
+                ->toArray(),
             'rundown' => $this->resource->rundown,
             'tags' => $this->resource->tags,
             'proposal' => $this->absoluteUrl($this->resource->proposal),

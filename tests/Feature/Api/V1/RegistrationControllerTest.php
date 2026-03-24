@@ -31,24 +31,54 @@ test('authenticated user can create registration', function () {
     $response = $this->postJson('/api/v1/registrations', [
         'event_id' => $event->id,
         'organization_id' => $org->id,
-        'package_id' => 'regular',
-        'participants' => [
-            ['name' => 'John Doe', 'email' => 'john@example.com'],
+        'packages' => [
+            ['package_id' => 'regular', 'count' => 2],
         ],
     ]);
 
     $response->assertStatus(201)
-        ->assertJsonPath('data.event_id', $event->id);
+        ->assertJsonPath('data.event_id', $event->id)
+        ->assertJsonCount(1, 'data.package_breakdown')
+        ->assertJsonPath('data.package_breakdown.0.count', 2);
 
     $this->assertDatabaseHas('event_registrations', [
         'event_id' => $event->id,
         'booker_user_id' => $user->id,
         'organization_id' => $org->id,
+        'total_amount' => 2000,
     ]);
 
+    // Should NOT have participants yet
+    $this->assertDatabaseEmpty('registration_participants');
+});
+
+test('slots are allocated when registration is marked as paid', function () {
+    $user = User::factory()->create();
+    $event = Event::factory()->create();
+
+    $registration = EventRegistration::create([
+        'booker_user_id' => $user->id,
+        'event_id' => $event->id,
+        'payment_status' => PaymentStatus::Unpaid,
+        'status' => RegistrationStatus::Draft,
+        'total_amount' => 2000,
+        'package_breakdown' => [
+            [
+                'package_id' => 'regular',
+                'name' => 'Regular',
+                'count' => 2,
+                'price' => 1000,
+                'subtotal' => 2000,
+            ],
+        ],
+    ]);
+
+    $registration->markPaidFromGateway(['verified_at' => now()]);
+
+    $this->assertDatabaseCount('registration_participants', 2);
     $this->assertDatabaseHas('registration_participants', [
-        'name' => 'John Doe',
-        'email' => 'john@example.com',
+        'registration_id' => $registration->id,
+        'name' => 'Pending...',
     ]);
 });
 
@@ -60,8 +90,8 @@ test('user cannot register for event not allowing registration', function () {
 
     $response = $this->postJson('/api/v1/registrations', [
         'event_id' => $event->id,
-        'participants' => [
-            ['name' => 'John Doe'],
+        'packages' => [
+            ['package_id' => 'regular', 'count' => 1],
         ],
     ]);
 

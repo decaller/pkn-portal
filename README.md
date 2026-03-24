@@ -26,9 +26,12 @@ It supports three main audiences:
 
 Default panel paths:
 
-- Public panel: `/public`
-- User panel: `/user`
-- Admin panel: `/admin`
+- Public panel: `/public` (Visitors)
+- User panel: `/user` (Members/Users and Organization Admins)
+- Admin panel: `/admin` (Super Admins ONLY)
+
+> [!NOTE]
+> Any unauthorized access to protected `/admin` routes will be automatically redirected to `/user`. Authentication routes (e.g., `/admin/login`) remain accessible.
 
 Home page is served at `/` and links into the panels.
 

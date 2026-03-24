@@ -124,15 +124,25 @@ class User extends Authenticatable implements FilamentUser, HasTenants
 
     public function isMainAdmin(): bool
     {
-        return (bool) $this->is_super_admin;
+        $result = (bool) $this->is_super_admin;
+        if (config('app.env') !== 'production') {
+            \Log::info("isMainAdmin Check for user {$this->email}", ['result' => $result]);
+        }
+        return $result;
     }
 
     public function canAccessPanel(Panel $panel): bool
     {
-        return match ($panel->getId()) {
-            'admin' => $this->isMainAdmin() || $this->organizations()->wherePivot('role', 'admin')->exists(),
+        $result = match ($panel->getId()) {
+            'admin' => $this->isMainAdmin(),
             'user' => true,
             default => false,
         };
+
+        if (config('app.env') !== 'production') {
+            \Log::info("canAccessPanel check for panel {$panel->getId()} for user {$this->email}", ['result' => $result]);
+        }
+
+        return $result;
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Api\V1;
 
+use App\Enums\RegistrationStatus;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\V1\ParticipantResource;
 use App\Models\EventRegistration;
@@ -30,12 +31,8 @@ class ParticipantController extends Controller
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
-        if ($registration->event->isFull()) {
+        if (! $registration->isPaidOrAwaitingVerification() && $registration->event->isFull()) {
             throw ValidationException::withMessages(['participant' => 'The event is already full.']);
-        }
-
-        if ($registration->isPaidOrAwaitingVerification()) {
-            throw ValidationException::withMessages(['participant' => 'Cannot add a participant to a registration that is paid or awaiting verification.']);
         }
 
         $validated = $request->validate([
@@ -58,8 +55,10 @@ class ParticipantController extends Controller
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
-        if ($participant->registration->isPaidOrAwaitingVerification()) {
-            throw ValidationException::withMessages(['participant' => 'Cannot modify a participant when registration is paid.']);
+        // In the new "Pay-First, Fill-Later" flow, we MUST allow updates after payment.
+        // We only block if the registration is cancelled or archived (if those statuses exist).
+        if ($participant->registration->status === RegistrationStatus::Cancelled) {
+            throw ValidationException::withMessages(['participant' => 'Cannot modify a participant for a cancelled registration.']);
         }
 
         $validated = $request->validate([

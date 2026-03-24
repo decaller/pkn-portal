@@ -1,0 +1,2173 @@
+name: Endpoints
+description: ''
+endpoints:
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/auth/login
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: Login
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      email:
+        custom: []
+        name: email
+        description: 'Must be a valid email address.'
+        required: true
+        example: gbailey@example.net
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      password:
+        custom: []
+        name: password
+        description: ''
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      email: gbailey@example.net
+      password: architecto
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/auth/logout
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: Logout
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/v1/mobile-dashboard
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get aggregated content for the mobile home screen.'
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"featured_events":[{"id":2,"title":"PKN Regional Workshop 2026","slug":"pkn-regional-workshop-2026","summary":null,"description":"<p>Workshop discussion.<\/p>","event_date":"2026-09-04","city":"Kabupaten Cikarang","province":"Jawa Barat","nation":"Indonesia","duration_days":5,"google_maps_url":null,"cover_image":"http:\/\/localhost\/storage\/event-covers\/FLYER-PANDUAN-IMPLEMENTASI-1.png","photos":[],"files":[],"documentation":["http:\/\/localhost\/storage\/event-documentation\/WhatsApp Image 2024-07-10 at 3.04.53 PM.jpeg","http:\/\/localhost\/storage\/event-documentation\/WhatsApp Image 2024-07-11 at 8.37.16 PM.jpeg","http:\/\/localhost\/storage\/event-documentation\/WhatsApp Image 2024-07-11 at 8.37.17 PM (1).jpeg"],"is_published":true,"allow_registration":true,"max_capacity":50,"available_spots":48,"is_full":false,"registration_packages":[{"id":1,"name":"Regular","price":75000,"max_quota":30},{"id":2,"name":"VIP","price":200000,"max_quota":20}],"rundown":[{"type":"advanced","data":{"title":"Materi Sesi 1","speaker":"Ustad Abdul Kholiq","session_files":["events\/pkn-regional-workshop-2026\/sessions\/0. LEMBAR OBSERVASI 2-PEMETAAN KARAKTER.pdf","events\/pkn-regional-workshop-2026\/sessions\/0. OBSERVASI HARIAN 40 PILAR (CONTOH ISIAN).pdf"]}}],"tags":null,"proposal":"http:\/\/localhost\/storage\/event-proposals\/BOOKLET AKADEMI GURU PKN 4_20231221_132330_0000.pdf","created_at":"2026-03-24T01:18:52.000000Z","updated_at":"2026-03-24T06:18:58.000000Z","event_type":"offline","survey_template_id":null,"place":null,"payment_instructions":null},{"id":1,"title":"PKN National Conference 2026","slug":"pkn-national-conference-2026","summary":null,"description":"<p>Annual national offline conference by PKN.<\/p>","event_date":"2026-06-04","city":null,"province":null,"nation":null,"duration_days":null,"google_maps_url":null,"cover_image":"http:\/\/localhost\/storage\/event-covers\/Flyer + Booklet AKG PKN Batch V.png","photos":[],"files":[],"documentation":["http:\/\/localhost\/storage\/event-documentation\/WhatsApp Image 2024-07-10 at 3.04.52 PM.jpeg","http:\/\/localhost\/storage\/event-documentation\/WhatsApp Image 2024-07-10 at 3.04.53 PM (1).jpeg"],"is_published":true,"allow_registration":true,"max_capacity":null,"available_spots":null,"is_full":false,"registration_packages":[{"id":1,"name":"Regular","price":100000},{"id":2,"name":"VIP","price":250000}],"rundown":[{"type":"advanced","data":{"title":"Ju","session_files":["events\/pkn-national-conference-2026\/sessions\/0. FORM PERENCANAAN PROYEK PEMBELAJARAN.pdf","events\/pkn-national-conference-2026\/sessions\/0. LEMBAR OBSERVASI 1-PERTUMBUHAN KARAKTER.pdf"]}}],"tags":null,"proposal":"http:\/\/localhost\/storage\/event-proposals\/BOOKLET AKADEMI GURU PKN VI.pdf","created_at":"2026-03-24T01:18:52.000000Z","updated_at":"2026-03-24T06:18:58.000000Z","event_type":"offline","survey_template_id":null,"place":null,"payment_instructions":null},{"id":5,"title":"Sed quas officiis suscipit.","slug":"numquam-sit-doloribus-est-natus","summary":null,"description":null,"event_date":"2026-04-22","city":null,"province":null,"nation":null,"duration_days":null,"google_maps_url":null,"cover_image":null,"photos":[],"files":[],"documentation":[],"is_published":true,"allow_registration":true,"max_capacity":null,"available_spots":null,"is_full":false,"registration_packages":[],"rundown":null,"tags":null,"proposal":null,"created_at":"2026-03-24T01:18:52.000000Z","updated_at":"2026-03-24T01:18:52.000000Z","event_type":"offline","survey_template_id":null,"place":null,"payment_instructions":null},{"id":4,"title":"PKN Mini Summit 2024","slug":"pkn-mini-summit-2024","summary":null,"description":null,"event_date":"2025-07-04","city":"Bandung","province":"Jawa Barat","nation":"Indonesia","duration_days":null,"google_maps_url":null,"cover_image":null,"photos":[],"files":[],"documentation":[],"is_published":true,"allow_registration":false,"max_capacity":null,"available_spots":null,"is_full":false,"registration_packages":[],"rundown":null,"tags":null,"proposal":null,"created_at":"2026-03-24T01:18:52.000000Z","updated_at":"2026-03-24T01:18:52.000000Z","event_type":"offline","survey_template_id":null,"place":null,"payment_instructions":null},{"id":3,"title":"PKN Recap 2023","slug":"pkn-recap-2023","summary":null,"description":null,"event_date":"2025-03-04","city":null,"province":null,"nation":null,"duration_days":null,"google_maps_url":null,"cover_image":null,"photos":[],"files":[],"documentation":[],"is_published":true,"allow_registration":false,"max_capacity":null,"available_spots":null,"is_full":false,"registration_packages":[],"rundown":null,"tags":null,"proposal":null,"created_at":"2026-03-24T01:18:52.000000Z","updated_at":"2026-03-24T01:18:52.000000Z","event_type":"offline","survey_template_id":null,"place":null,"payment_instructions":null}],"latest_news":[{"id":1,"title":"Registration Open: PKN National Conference 2026","content":"<p>Registration is now open for PKN National Conference 2026.<\/p>","thumbnail":"http:\/\/localhost\/storage\/news-thumbnails\/WhatsApp Image 2026-03-12 at 1.14.05 PM.jpeg","is_published":true,"event_id":null,"created_at":"2026-03-24T01:18:52+00:00"},{"id":2,"title":"Registration Open: PKN Regional Workshop 2026","content":"<p>Registration is now open for PKN Regional Workshop 2026.<\/p>","thumbnail":"http:\/\/localhost\/storage\/news-thumbnails\/WhatsApp Image 2026-03-12 at 1.14.07 PM.jpeg","is_published":true,"event_id":null,"created_at":"2026-03-24T01:18:52+00:00"}],"testimonials":[],"featured_documents":[{"id":27,"title":"1. Mengembalikan Pendidikan ke asalnya-1.pdf","slug":"doc-a7z0y","file_url":"http:\/\/localhost\/storage\/manual-uploads\/0. PROGRAM PEMBELAJARAN 40 PILAR.xlsx","original_filename":"0. PROGRAM PEMBELAJARAN 40 PILAR.xlsx","cover_image":"http:\/\/localhost\/storage\/document-covers\/WhatsApp Image 2026-03-12 at 1.49.09 PM(1).jpeg","mime_type":"application\/pdf","description":null,"tags":["featured"],"is_active":true,"is_featured":true,"event_id":null,"created_at":"2026-03-24T01:18:52+00:00"},{"id":34,"title":"0. PROGRAM PEMBELAJARAN 40 PILAR.xlsx","slug":"doc-pnxci","file_url":"http:\/\/localhost\/storage\/manual-uploads\/1. 40 PILAR KARAKTER diurai dalam KURIKULUM.pdf","original_filename":"1. 40 PILAR KARAKTER diurai dalam KURIKULUM.pdf","cover_image":null,"mime_type":null,"description":null,"tags":["featured"],"is_active":true,"is_featured":true,"event_id":null,"created_at":"2026-03-24T01:18:52+00:00"},{"id":31,"title":"3. Pembelajaran Alamiyah.pptx","slug":"doc-tqtyz","file_url":"http:\/\/localhost\/storage\/manual-uploads\/0. LEMBAR OBSERVASI 1-PERTUMBUHAN KARAKTER.pdf","original_filename":"0. LEMBAR OBSERVASI 1-PERTUMBUHAN KARAKTER.pdf","cover_image":null,"mime_type":null,"description":null,"tags":["featured"],"is_active":true,"is_featured":true,"event_id":null,"created_at":"2026-03-24T01:18:52+00:00"},{"id":30,"title":"4. BAKAT - TB - 40.pptx","slug":"doc-pvpme","file_url":"http:\/\/localhost\/storage\/manual-uploads\/0. FORM PERENCANAAN PROYEK PEMBELAJARAN.pdf","original_filename":"0. FORM PERENCANAAN PROYEK PEMBELAJARAN.pdf","cover_image":null,"mime_type":null,"description":null,"tags":["featured"],"is_active":true,"is_featured":true,"event_id":null,"created_at":"2026-03-24T01:18:52+00:00"}],"contact_info":{"phone":null,"whatsapp_url":null},"alerts":[],"stats":{"active_registrations":10,"pending_payments":8}}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-frame-options: SAMEORIGIN
+          x-content-type-options: nosniff
+          strict-transport-security: 'max-age=31536000; includeSubDomains'
+          referrer-policy: no-referrer-when-downgrade
+          content-security-policy: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; style-src 'self' 'unsafe-inline' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; img-src 'self' data: https://*; font-src 'self' data: https://*; connect-src 'self' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; frame-src 'self' https://*"
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/v1/events
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'List all published events.'
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"data":[{"id":2,"title":"PKN Regional Workshop 2026","slug":"pkn-regional-workshop-2026","summary":null,"description":"<p>Workshop discussion.<\/p>","event_date":"2026-09-04","city":"Kabupaten Cikarang","province":"Jawa Barat","nation":"Indonesia","duration_days":5,"google_maps_url":null,"cover_image":"http:\/\/localhost\/storage\/event-covers\/FLYER-PANDUAN-IMPLEMENTASI-1.png","photos":[],"files":[],"documentation":["http:\/\/localhost\/storage\/event-documentation\/WhatsApp Image 2024-07-10 at 3.04.53 PM.jpeg","http:\/\/localhost\/storage\/event-documentation\/WhatsApp Image 2024-07-11 at 8.37.16 PM.jpeg","http:\/\/localhost\/storage\/event-documentation\/WhatsApp Image 2024-07-11 at 8.37.17 PM (1).jpeg"],"is_published":true,"allow_registration":true,"max_capacity":50,"available_spots":48,"is_full":false,"registration_packages":[{"id":1,"name":"Regular","price":75000,"max_quota":30},{"id":2,"name":"VIP","price":200000,"max_quota":20}],"rundown":[{"type":"advanced","data":{"title":"Materi Sesi 1","speaker":"Ustad Abdul Kholiq","session_files":["events\/pkn-regional-workshop-2026\/sessions\/0. LEMBAR OBSERVASI 2-PEMETAAN KARAKTER.pdf","events\/pkn-regional-workshop-2026\/sessions\/0. OBSERVASI HARIAN 40 PILAR (CONTOH ISIAN).pdf"]}}],"tags":null,"proposal":"http:\/\/localhost\/storage\/event-proposals\/BOOKLET AKADEMI GURU PKN 4_20231221_132330_0000.pdf","created_at":"2026-03-24T01:18:52.000000Z","updated_at":"2026-03-24T06:18:58.000000Z","event_type":"offline","survey_template_id":null,"place":null,"payment_instructions":null},{"id":1,"title":"PKN National Conference 2026","slug":"pkn-national-conference-2026","summary":null,"description":"<p>Annual national offline conference by PKN.<\/p>","event_date":"2026-06-04","city":null,"province":null,"nation":null,"duration_days":null,"google_maps_url":null,"cover_image":"http:\/\/localhost\/storage\/event-covers\/Flyer + Booklet AKG PKN Batch V.png","photos":[],"files":[],"documentation":["http:\/\/localhost\/storage\/event-documentation\/WhatsApp Image 2024-07-10 at 3.04.52 PM.jpeg","http:\/\/localhost\/storage\/event-documentation\/WhatsApp Image 2024-07-10 at 3.04.53 PM (1).jpeg"],"is_published":true,"allow_registration":true,"max_capacity":null,"available_spots":null,"is_full":false,"registration_packages":[{"id":1,"name":"Regular","price":100000},{"id":2,"name":"VIP","price":250000}],"rundown":[{"type":"advanced","data":{"title":"Ju","session_files":["events\/pkn-national-conference-2026\/sessions\/0. FORM PERENCANAAN PROYEK PEMBELAJARAN.pdf","events\/pkn-national-conference-2026\/sessions\/0. LEMBAR OBSERVASI 1-PERTUMBUHAN KARAKTER.pdf"]}}],"tags":null,"proposal":"http:\/\/localhost\/storage\/event-proposals\/BOOKLET AKADEMI GURU PKN VI.pdf","created_at":"2026-03-24T01:18:52.000000Z","updated_at":"2026-03-24T06:18:58.000000Z","event_type":"offline","survey_template_id":null,"place":null,"payment_instructions":null},{"id":5,"title":"Sed quas officiis suscipit.","slug":"numquam-sit-doloribus-est-natus","summary":null,"description":null,"event_date":"2026-04-22","city":null,"province":null,"nation":null,"duration_days":null,"google_maps_url":null,"cover_image":null,"photos":[],"files":[],"documentation":[],"is_published":true,"allow_registration":true,"max_capacity":null,"available_spots":null,"is_full":false,"registration_packages":[],"rundown":null,"tags":null,"proposal":null,"created_at":"2026-03-24T01:18:52.000000Z","updated_at":"2026-03-24T01:18:52.000000Z","event_type":"offline","survey_template_id":null,"place":null,"payment_instructions":null},{"id":4,"title":"PKN Mini Summit 2024","slug":"pkn-mini-summit-2024","summary":null,"description":null,"event_date":"2025-07-04","city":"Bandung","province":"Jawa Barat","nation":"Indonesia","duration_days":null,"google_maps_url":null,"cover_image":null,"photos":[],"files":[],"documentation":[],"is_published":true,"allow_registration":false,"max_capacity":null,"available_spots":null,"is_full":false,"registration_packages":[],"rundown":null,"tags":null,"proposal":null,"created_at":"2026-03-24T01:18:52.000000Z","updated_at":"2026-03-24T01:18:52.000000Z","event_type":"offline","survey_template_id":null,"place":null,"payment_instructions":null},{"id":3,"title":"PKN Recap 2023","slug":"pkn-recap-2023","summary":null,"description":null,"event_date":"2025-03-04","city":null,"province":null,"nation":null,"duration_days":null,"google_maps_url":null,"cover_image":null,"photos":[],"files":[],"documentation":[],"is_published":true,"allow_registration":false,"max_capacity":null,"available_spots":null,"is_full":false,"registration_packages":[],"rundown":null,"tags":null,"proposal":null,"created_at":"2026-03-24T01:18:52.000000Z","updated_at":"2026-03-24T01:18:52.000000Z","event_type":"offline","survey_template_id":null,"place":null,"payment_instructions":null}],"links":{"first":"http:\/\/localhost\/api\/v1\/events?page=1","last":"http:\/\/localhost\/api\/v1\/events?page=1","prev":null,"next":null},"meta":{"current_page":1,"from":1,"last_page":1,"links":[{"url":null,"label":"&laquo; Previous","page":null,"active":false},{"url":"http:\/\/localhost\/api\/v1\/events?page=1","label":"1","page":1,"active":true},{"url":null,"label":"Next &raquo;","page":null,"active":false}],"path":"http:\/\/localhost\/api\/v1\/events","per_page":15,"to":5,"total":5}}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-frame-options: SAMEORIGIN
+          x-content-type-options: nosniff
+          strict-transport-security: 'max-age=31536000; includeSubDomains'
+          referrer-policy: no-referrer-when-downgrade
+          content-security-policy: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; style-src 'self' 'unsafe-inline' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; img-src 'self' data: https://*; font-src 'self' data: https://*; connect-src 'self' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; frame-src 'self' https://*"
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/v1/events/{event_id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Show a specific event.'
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      event_id:
+        custom: []
+        name: event_id
+        description: 'The ID of the event.'
+        required: true
+        example: 3
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      event_id: 3
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"data":{"id":3,"title":"PKN Recap 2023","slug":"pkn-recap-2023","summary":null,"description":null,"event_date":"2025-03-04","city":null,"province":null,"nation":null,"duration_days":null,"google_maps_url":null,"cover_image":null,"photos":[],"files":[],"documentation":[],"is_published":true,"allow_registration":false,"max_capacity":null,"available_spots":null,"is_full":false,"registration_packages":[],"rundown":null,"tags":null,"proposal":null,"created_at":"2026-03-24T01:18:52.000000Z","updated_at":"2026-03-24T01:18:52.000000Z","event_type":"offline","survey_template_id":null,"place":null,"payment_instructions":null,"testimonials":[]}}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-frame-options: SAMEORIGIN
+          x-content-type-options: nosniff
+          strict-transport-security: 'max-age=31536000; includeSubDomains'
+          referrer-policy: no-referrer-when-downgrade
+          content-security-policy: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; style-src 'self' 'unsafe-inline' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; img-src 'self' data: https://*; font-src 'self' data: https://*; connect-src 'self' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; frame-src 'self' https://*"
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/v1/events/{event_id}/similar'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Show similar events.'
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      event_id:
+        custom: []
+        name: event_id
+        description: 'The ID of the event.'
+        required: true
+        example: 3
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      event_id: 3
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"data":[{"id":2,"title":"PKN Regional Workshop 2026","slug":"pkn-regional-workshop-2026","summary":null,"description":"<p>Workshop discussion.<\/p>","event_date":"2026-09-04","city":"Kabupaten Cikarang","province":"Jawa Barat","nation":"Indonesia","duration_days":5,"google_maps_url":null,"cover_image":"http:\/\/localhost\/storage\/event-covers\/FLYER-PANDUAN-IMPLEMENTASI-1.png","photos":[],"files":[],"documentation":["http:\/\/localhost\/storage\/event-documentation\/WhatsApp Image 2024-07-10 at 3.04.53 PM.jpeg","http:\/\/localhost\/storage\/event-documentation\/WhatsApp Image 2024-07-11 at 8.37.16 PM.jpeg","http:\/\/localhost\/storage\/event-documentation\/WhatsApp Image 2024-07-11 at 8.37.17 PM (1).jpeg"],"is_published":true,"allow_registration":true,"max_capacity":50,"available_spots":48,"is_full":false,"registration_packages":[{"id":1,"name":"Regular","price":75000,"max_quota":30},{"id":2,"name":"VIP","price":200000,"max_quota":20}],"rundown":[{"type":"advanced","data":{"title":"Materi Sesi 1","speaker":"Ustad Abdul Kholiq","session_files":["events\/pkn-regional-workshop-2026\/sessions\/0. LEMBAR OBSERVASI 2-PEMETAAN KARAKTER.pdf","events\/pkn-regional-workshop-2026\/sessions\/0. OBSERVASI HARIAN 40 PILAR (CONTOH ISIAN).pdf"]}}],"tags":null,"proposal":"http:\/\/localhost\/storage\/event-proposals\/BOOKLET AKADEMI GURU PKN 4_20231221_132330_0000.pdf","created_at":"2026-03-24T01:18:52.000000Z","updated_at":"2026-03-24T06:18:58.000000Z","event_type":"offline","survey_template_id":null,"place":null,"payment_instructions":null},{"id":1,"title":"PKN National Conference 2026","slug":"pkn-national-conference-2026","summary":null,"description":"<p>Annual national offline conference by PKN.<\/p>","event_date":"2026-06-04","city":null,"province":null,"nation":null,"duration_days":null,"google_maps_url":null,"cover_image":"http:\/\/localhost\/storage\/event-covers\/Flyer + Booklet AKG PKN Batch V.png","photos":[],"files":[],"documentation":["http:\/\/localhost\/storage\/event-documentation\/WhatsApp Image 2024-07-10 at 3.04.52 PM.jpeg","http:\/\/localhost\/storage\/event-documentation\/WhatsApp Image 2024-07-10 at 3.04.53 PM (1).jpeg"],"is_published":true,"allow_registration":true,"max_capacity":null,"available_spots":null,"is_full":false,"registration_packages":[{"id":1,"name":"Regular","price":100000},{"id":2,"name":"VIP","price":250000}],"rundown":[{"type":"advanced","data":{"title":"Ju","session_files":["events\/pkn-national-conference-2026\/sessions\/0. FORM PERENCANAAN PROYEK PEMBELAJARAN.pdf","events\/pkn-national-conference-2026\/sessions\/0. LEMBAR OBSERVASI 1-PERTUMBUHAN KARAKTER.pdf"]}}],"tags":null,"proposal":"http:\/\/localhost\/storage\/event-proposals\/BOOKLET AKADEMI GURU PKN VI.pdf","created_at":"2026-03-24T01:18:52.000000Z","updated_at":"2026-03-24T06:18:58.000000Z","event_type":"offline","survey_template_id":null,"place":null,"payment_instructions":null},{"id":5,"title":"Sed quas officiis suscipit.","slug":"numquam-sit-doloribus-est-natus","summary":null,"description":null,"event_date":"2026-04-22","city":null,"province":null,"nation":null,"duration_days":null,"google_maps_url":null,"cover_image":null,"photos":[],"files":[],"documentation":[],"is_published":true,"allow_registration":true,"max_capacity":null,"available_spots":null,"is_full":false,"registration_packages":[],"rundown":null,"tags":null,"proposal":null,"created_at":"2026-03-24T01:18:52.000000Z","updated_at":"2026-03-24T01:18:52.000000Z","event_type":"offline","survey_template_id":null,"place":null,"payment_instructions":null},{"id":4,"title":"PKN Mini Summit 2024","slug":"pkn-mini-summit-2024","summary":null,"description":null,"event_date":"2025-07-04","city":"Bandung","province":"Jawa Barat","nation":"Indonesia","duration_days":null,"google_maps_url":null,"cover_image":null,"photos":[],"files":[],"documentation":[],"is_published":true,"allow_registration":false,"max_capacity":null,"available_spots":null,"is_full":false,"registration_packages":[],"rundown":null,"tags":null,"proposal":null,"created_at":"2026-03-24T01:18:52.000000Z","updated_at":"2026-03-24T01:18:52.000000Z","event_type":"offline","survey_template_id":null,"place":null,"payment_instructions":null}]}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-frame-options: SAMEORIGIN
+          x-content-type-options: nosniff
+          strict-transport-security: 'max-age=31536000; includeSubDomains'
+          referrer-policy: no-referrer-when-downgrade
+          content-security-policy: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; style-src 'self' 'unsafe-inline' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; img-src 'self' data: https://*; font-src 'self' data: https://*; connect-src 'self' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; frame-src 'self' https://*"
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/v1/news
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'List all published news.'
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"data":[{"id":1,"title":"Registration Open: PKN National Conference 2026","content":"<p>Registration is now open for PKN National Conference 2026.<\/p>","thumbnail":"http:\/\/localhost\/storage\/news-thumbnails\/WhatsApp Image 2026-03-12 at 1.14.05 PM.jpeg","is_published":true,"event_id":null,"created_at":"2026-03-24T01:18:52+00:00"},{"id":2,"title":"Registration Open: PKN Regional Workshop 2026","content":"<p>Registration is now open for PKN Regional Workshop 2026.<\/p>","thumbnail":"http:\/\/localhost\/storage\/news-thumbnails\/WhatsApp Image 2026-03-12 at 1.14.07 PM.jpeg","is_published":true,"event_id":null,"created_at":"2026-03-24T01:18:52+00:00"}],"links":{"first":"http:\/\/localhost\/api\/v1\/news?page=1","last":"http:\/\/localhost\/api\/v1\/news?page=1","prev":null,"next":null},"meta":{"current_page":1,"from":1,"last_page":1,"links":[{"url":null,"label":"&laquo; Previous","page":null,"active":false},{"url":"http:\/\/localhost\/api\/v1\/news?page=1","label":"1","page":1,"active":true},{"url":null,"label":"Next &raquo;","page":null,"active":false}],"path":"http:\/\/localhost\/api\/v1\/news","per_page":15,"to":2,"total":2}}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-frame-options: SAMEORIGIN
+          x-content-type-options: nosniff
+          strict-transport-security: 'max-age=31536000; includeSubDomains'
+          referrer-policy: no-referrer-when-downgrade
+          content-security-policy: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; style-src 'self' 'unsafe-inline' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; img-src 'self' data: https://*; font-src 'self' data: https://*; connect-src 'self' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; frame-src 'self' https://*"
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/v1/news/{news_id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Show a specific news article.'
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      news_id:
+        custom: []
+        name: news_id
+        description: 'The ID of the news.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      news_id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"data":{"id":1,"title":"Registration Open: PKN National Conference 2026","content":"<p>Registration is now open for PKN National Conference 2026.<\/p>","thumbnail":"http:\/\/localhost\/storage\/news-thumbnails\/WhatsApp Image 2026-03-12 at 1.14.05 PM.jpeg","is_published":true,"event_id":null,"created_at":"2026-03-24T01:18:52+00:00","event":null}}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-frame-options: SAMEORIGIN
+          x-content-type-options: nosniff
+          strict-transport-security: 'max-age=31536000; includeSubDomains'
+          referrer-policy: no-referrer-when-downgrade
+          content-security-policy: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; style-src 'self' 'unsafe-inline' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; img-src 'self' data: https://*; font-src 'self' data: https://*; connect-src 'self' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; frame-src 'self' https://*"
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/v1/documents
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'List all active documents.'
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"featured_documents":[{"id":27,"title":"1. Mengembalikan Pendidikan ke asalnya-1.pdf","slug":"doc-a7z0y","file_url":"http:\/\/localhost\/storage\/manual-uploads\/0. PROGRAM PEMBELAJARAN 40 PILAR.xlsx","original_filename":"0. PROGRAM PEMBELAJARAN 40 PILAR.xlsx","cover_image":"http:\/\/localhost\/storage\/document-covers\/WhatsApp Image 2026-03-12 at 1.49.09 PM(1).jpeg","mime_type":"application\/pdf","description":null,"tags":["featured"],"is_active":true,"is_featured":true,"event_id":null,"created_at":"2026-03-24T01:18:52+00:00"},{"id":34,"title":"0. PROGRAM PEMBELAJARAN 40 PILAR.xlsx","slug":"doc-pnxci","file_url":"http:\/\/localhost\/storage\/manual-uploads\/1. 40 PILAR KARAKTER diurai dalam KURIKULUM.pdf","original_filename":"1. 40 PILAR KARAKTER diurai dalam KURIKULUM.pdf","cover_image":null,"mime_type":null,"description":null,"tags":["featured"],"is_active":true,"is_featured":true,"event_id":null,"created_at":"2026-03-24T01:18:52+00:00"},{"id":30,"title":"4. BAKAT - TB - 40.pptx","slug":"doc-pvpme","file_url":"http:\/\/localhost\/storage\/manual-uploads\/0. FORM PERENCANAAN PROYEK PEMBELAJARAN.pdf","original_filename":"0. FORM PERENCANAAN PROYEK PEMBELAJARAN.pdf","cover_image":null,"mime_type":null,"description":null,"tags":["featured"],"is_active":true,"is_featured":true,"event_id":null,"created_at":"2026-03-24T01:18:52+00:00"},{"id":31,"title":"3. Pembelajaran Alamiyah.pptx","slug":"doc-tqtyz","file_url":"http:\/\/localhost\/storage\/manual-uploads\/0. LEMBAR OBSERVASI 1-PERTUMBUHAN KARAKTER.pdf","original_filename":"0. LEMBAR OBSERVASI 1-PERTUMBUHAN KARAKTER.pdf","cover_image":null,"mime_type":null,"description":null,"tags":["featured"],"is_active":true,"is_featured":true,"event_id":null,"created_at":"2026-03-24T01:18:52+00:00"}],"documents":{"data":[{"id":27,"title":"1. Mengembalikan Pendidikan ke asalnya-1.pdf","slug":"doc-a7z0y","file_url":"http:\/\/localhost\/storage\/manual-uploads\/0. PROGRAM PEMBELAJARAN 40 PILAR.xlsx","original_filename":"0. PROGRAM PEMBELAJARAN 40 PILAR.xlsx","cover_image":"http:\/\/localhost\/storage\/document-covers\/WhatsApp Image 2026-03-12 at 1.49.09 PM(1).jpeg","mime_type":"application\/pdf","description":null,"tags":["featured"],"is_active":true,"is_featured":true,"event_id":null,"created_at":"2026-03-24T01:18:52+00:00"},{"id":34,"title":"0. PROGRAM PEMBELAJARAN 40 PILAR.xlsx","slug":"doc-pnxci","file_url":"http:\/\/localhost\/storage\/manual-uploads\/1. 40 PILAR KARAKTER diurai dalam KURIKULUM.pdf","original_filename":"1. 40 PILAR KARAKTER diurai dalam KURIKULUM.pdf","cover_image":null,"mime_type":null,"description":null,"tags":["featured"],"is_active":true,"is_featured":true,"event_id":null,"created_at":"2026-03-24T01:18:52+00:00"},{"id":30,"title":"4. BAKAT - TB - 40.pptx","slug":"doc-pvpme","file_url":"http:\/\/localhost\/storage\/manual-uploads\/0. FORM PERENCANAAN PROYEK PEMBELAJARAN.pdf","original_filename":"0. FORM PERENCANAAN PROYEK PEMBELAJARAN.pdf","cover_image":null,"mime_type":null,"description":null,"tags":["featured"],"is_active":true,"is_featured":true,"event_id":null,"created_at":"2026-03-24T01:18:52+00:00"},{"id":31,"title":"3. Pembelajaran Alamiyah.pptx","slug":"doc-tqtyz","file_url":"http:\/\/localhost\/storage\/manual-uploads\/0. LEMBAR OBSERVASI 1-PERTUMBUHAN KARAKTER.pdf","original_filename":"0. LEMBAR OBSERVASI 1-PERTUMBUHAN KARAKTER.pdf","cover_image":null,"mime_type":null,"description":null,"tags":["featured"],"is_active":true,"is_featured":true,"event_id":null,"created_at":"2026-03-24T01:18:52+00:00"}],"links":{"first":"http:\/\/localhost\/api\/v1\/documents?page=1","last":"http:\/\/localhost\/api\/v1\/documents?page=1","prev":null,"next":null},"meta":{"current_page":1,"from":1,"last_page":1,"links":[{"url":null,"label":"&laquo; Previous","page":null,"active":false},{"url":"http:\/\/localhost\/api\/v1\/documents?page=1","label":"1","page":1,"active":true},{"url":null,"label":"Next &raquo;","page":null,"active":false}],"path":"http:\/\/localhost\/api\/v1\/documents","per_page":20,"to":4,"total":4}}}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-frame-options: SAMEORIGIN
+          x-content-type-options: nosniff
+          strict-transport-security: 'max-age=31536000; includeSubDomains'
+          referrer-policy: no-referrer-when-downgrade
+          content-security-policy: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; style-src 'self' 'unsafe-inline' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; img-src 'self' data: https://*; font-src 'self' data: https://*; connect-src 'self' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; frame-src 'self' https://*"
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/v1/documents/{document_id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Show a specific document.'
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      document_id:
+        custom: []
+        name: document_id
+        description: 'The ID of the document.'
+        required: true
+        example: 27
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      document_id: 27
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 200
+        content: '{"data":{"id":27,"title":"1. Mengembalikan Pendidikan ke asalnya-1.pdf","slug":"doc-a7z0y","file_url":"http:\/\/localhost\/storage\/manual-uploads\/0. PROGRAM PEMBELAJARAN 40 PILAR.xlsx","original_filename":"0. PROGRAM PEMBELAJARAN 40 PILAR.xlsx","cover_image":"http:\/\/localhost\/storage\/document-covers\/WhatsApp Image 2026-03-12 at 1.49.09 PM(1).jpeg","mime_type":"application\/pdf","description":null,"tags":["featured"],"is_active":true,"is_featured":true,"event_id":null,"created_at":"2026-03-24T01:18:52+00:00"}}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-frame-options: SAMEORIGIN
+          x-content-type-options: nosniff
+          strict-transport-security: 'max-age=31536000; includeSubDomains'
+          referrer-policy: no-referrer-when-downgrade
+          content-security-policy: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; style-src 'self' 'unsafe-inline' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; img-src 'self' data: https://*; font-src 'self' data: https://*; connect-src 'self' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; frame-src 'self' https://*"
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/v1/auth/register
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        custom: []
+        name: name
+        description: 'Must not be greater than 255 characters.'
+        required: true
+        example: b
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      phone_number:
+        custom: []
+        name: phone_number
+        description: 'Must not be greater than 20 characters.'
+        required: true
+        example: ngzmiyvdljnikhwa
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      email:
+        custom: []
+        name: email
+        description: 'Must be a valid email address. Must not be greater than 255 characters.'
+        required: false
+        example: breitenberg.gilbert@example.com
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      password:
+        custom: []
+        name: password
+        description: 'Must be at least 8 characters.'
+        required: true
+        example: kXaz<m
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      name: b
+      phone_number: ngzmiyvdljnikhwa
+      email: breitenberg.gilbert@example.com
+      password: kXaz<m
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/v1/auth/login
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Authenticate a user via their phone number and password.'
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      phone_number:
+        custom: []
+        name: phone_number
+        description: ''
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      password:
+        custom: []
+        name: password
+        description: ''
+        required: true
+        example: '|]|{+-'
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      phone_number: architecto
+      password: '|]|{+-'
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/v1/payments/webhook
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      order_id:
+        custom: []
+        name: order_id
+        description: ''
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      status_code:
+        custom: []
+        name: status_code
+        description: ''
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      gross_amount:
+        custom: []
+        name: gross_amount
+        description: ''
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      signature_key:
+        custom: []
+        name: signature_key
+        description: ''
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      transaction_status:
+        custom: []
+        name: transaction_status
+        description: ''
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      transaction_id:
+        custom: []
+        name: transaction_id
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      payment_type:
+        custom: []
+        name: payment_type
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      fraud_status:
+        custom: []
+        name: fraud_status
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      order_id: architecto
+      status_code: architecto
+      gross_amount: architecto
+      signature_key: architecto
+      transaction_status: architecto
+      transaction_id: architecto
+      payment_type: architecto
+      fraud_status: architecto
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/v1/auth/me
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get the authenticated user.'
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-frame-options: SAMEORIGIN
+          x-content-type-options: nosniff
+          strict-transport-security: 'max-age=31536000; includeSubDomains'
+          referrer-policy: no-referrer-when-downgrade
+          content-security-policy: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; style-src 'self' 'unsafe-inline' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; img-src 'self' data: https://*; font-src 'self' data: https://*; connect-src 'self' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; frame-src 'self' https://*"
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/v1/user
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Get the authenticated user.'
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-frame-options: SAMEORIGIN
+          x-content-type-options: nosniff
+          strict-transport-security: 'max-age=31536000; includeSubDomains'
+          referrer-policy: no-referrer-when-downgrade
+          content-security-policy: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; style-src 'self' 'unsafe-inline' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; img-src 'self' data: https://*; font-src 'self' data: https://*; connect-src 'self' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; frame-src 'self' https://*"
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/v1/auth/logout
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: 'Revoke the current token.'
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/v1/user/profile
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-frame-options: SAMEORIGIN
+          x-content-type-options: nosniff
+          strict-transport-security: 'max-age=31536000; includeSubDomains'
+          referrer-policy: no-referrer-when-downgrade
+          content-security-policy: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; style-src 'self' 'unsafe-inline' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; img-src 'self' data: https://*; font-src 'self' data: https://*; connect-src 'self' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; frame-src 'self' https://*"
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - PUT
+    uri: api/v1/user/profile
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        custom: []
+        name: name
+        description: 'Must not be greater than 255 characters.'
+        required: true
+        example: b
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      email:
+        custom: []
+        name: email
+        description: 'Must be a valid email address. Must not be greater than 255 characters.'
+        required: true
+        example: zbailey@example.net
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      phone_number:
+        custom: []
+        name: phone_number
+        description: 'Must not be greater than 255 characters.'
+        required: false
+        example: i
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      name: b
+      email: zbailey@example.net
+      phone_number: i
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - DELETE
+    uri: api/v1/user/profile
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/v1/organizations
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-frame-options: SAMEORIGIN
+          x-content-type-options: nosniff
+          strict-transport-security: 'max-age=31536000; includeSubDomains'
+          referrer-policy: no-referrer-when-downgrade
+          content-security-policy: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; style-src 'self' 'unsafe-inline' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; img-src 'self' data: https://*; font-src 'self' data: https://*; connect-src 'self' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; frame-src 'self' https://*"
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/v1/organizations
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        custom: []
+        name: name
+        description: 'Must not be greater than 255 characters.'
+        required: true
+        example: b
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      logo:
+        custom: []
+        name: logo
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      name: b
+      logo: architecto
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - PUT
+      - PATCH
+    uri: 'api/v1/organizations/{id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the organization.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        custom: []
+        name: name
+        description: 'Must not be greater than 255 characters.'
+        required: false
+        example: b
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      logo:
+        custom: []
+        name: logo
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      name: b
+      logo: architecto
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - DELETE
+    uri: 'api/v1/organizations/{id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the organization.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/v1/notifications
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-frame-options: SAMEORIGIN
+          x-content-type-options: nosniff
+          strict-transport-security: 'max-age=31536000; includeSubDomains'
+          referrer-policy: no-referrer-when-downgrade
+          content-security-policy: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; style-src 'self' 'unsafe-inline' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; img-src 'self' data: https://*; font-src 'self' data: https://*; connect-src 'self' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; frame-src 'self' https://*"
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/v1/notifications/unread-count
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-frame-options: SAMEORIGIN
+          x-content-type-options: nosniff
+          strict-transport-security: 'max-age=31536000; includeSubDomains'
+          referrer-policy: no-referrer-when-downgrade
+          content-security-policy: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; style-src 'self' 'unsafe-inline' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; img-src 'self' data: https://*; font-src 'self' data: https://*; connect-src 'self' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; frame-src 'self' https://*"
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/v1/notifications/mark-all-read
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: 'api/v1/notifications/{id}/mark-read'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the notification.'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: architecto
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/v1/registrations
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-frame-options: SAMEORIGIN
+          x-content-type-options: nosniff
+          strict-transport-security: 'max-age=31536000; includeSubDomains'
+          referrer-policy: no-referrer-when-downgrade
+          content-security-policy: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; style-src 'self' 'unsafe-inline' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; img-src 'self' data: https://*; font-src 'self' data: https://*; connect-src 'self' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; frame-src 'self' https://*"
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/v1/registrations
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      event_id:
+        custom: []
+        name: event_id
+        description: 'The <code>id</code> of an existing record in the events table.'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      organization_id:
+        custom: []
+        name: organization_id
+        description: 'The <code>id</code> of an existing record in the organizations table.'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      packages:
+        custom: []
+        name: packages
+        description: 'Must have at least 1 items.'
+        required: true
+        example:
+          - []
+        type: 'object[]'
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      'packages[].package_id':
+        custom: []
+        name: 'packages[].package_id'
+        description: ''
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      'packages[].count':
+        custom: []
+        name: 'packages[].count'
+        description: 'Must be at least 1.'
+        required: true
+        example: 22
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      event_id: architecto
+      packages:
+        -
+          package_id: architecto
+          count: 22
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/v1/registrations/{id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the registration.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-frame-options: SAMEORIGIN
+          x-content-type-options: nosniff
+          strict-transport-security: 'max-age=31536000; includeSubDomains'
+          referrer-policy: no-referrer-when-downgrade
+          content-security-policy: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; style-src 'self' 'unsafe-inline' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; img-src 'self' data: https://*; font-src 'self' data: https://*; connect-src 'self' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; frame-src 'self' https://*"
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - PUT
+      - PATCH
+    uri: 'api/v1/registrations/{id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the registration.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      organization_id:
+        custom: []
+        name: organization_id
+        description: 'The <code>id</code> of an existing record in the organizations table.'
+        required: false
+        example: null
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - DELETE
+    uri: 'api/v1/registrations/{id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      id:
+        custom: []
+        name: id
+        description: 'The ID of the registration.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/v1/registrations/{registration_id}/participants'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      registration_id:
+        custom: []
+        name: registration_id
+        description: 'The ID of the registration.'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      registration_id: architecto
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-frame-options: SAMEORIGIN
+          x-content-type-options: nosniff
+          strict-transport-security: 'max-age=31536000; includeSubDomains'
+          referrer-policy: no-referrer-when-downgrade
+          content-security-policy: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; style-src 'self' 'unsafe-inline' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; img-src 'self' data: https://*; font-src 'self' data: https://*; connect-src 'self' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; frame-src 'self' https://*"
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: 'api/v1/registrations/{registration_id}/participants'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      registration_id:
+        custom: []
+        name: registration_id
+        description: 'The ID of the registration.'
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      registration_id: architecto
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        custom: []
+        name: name
+        description: ''
+        required: true
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      email:
+        custom: []
+        name: email
+        description: 'Must be a valid email address.'
+        required: false
+        example: zbailey@example.net
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      phone:
+        custom: []
+        name: phone
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      notes:
+        custom: []
+        name: notes
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      name: architecto
+      email: zbailey@example.net
+      phone: architecto
+      notes: architecto
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - PUT
+    uri: 'api/v1/participants/{participant_id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      participant_id:
+        custom: []
+        name: participant_id
+        description: 'The ID of the participant.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      participant_id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      name:
+        custom: []
+        name: name
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+      email:
+        custom: []
+        name: email
+        description: 'Must be a valid email address.'
+        required: false
+        example: zbailey@example.net
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      phone:
+        custom: []
+        name: phone
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+      notes:
+        custom: []
+        name: notes
+        description: ''
+        required: false
+        example: architecto
+        type: string
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: true
+        deprecated: false
+    cleanBodyParameters:
+      name: architecto
+      email: zbailey@example.net
+      phone: architecto
+      notes: architecto
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - DELETE
+    uri: 'api/v1/participants/{participant_id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      participant_id:
+        custom: []
+        name: participant_id
+        description: 'The ID of the participant.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      participant_id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: api/v1/invoices
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-frame-options: SAMEORIGIN
+          x-content-type-options: nosniff
+          strict-transport-security: 'max-age=31536000; includeSubDomains'
+          referrer-policy: no-referrer-when-downgrade
+          content-security-policy: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; style-src 'self' 'unsafe-inline' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; img-src 'self' data: https://*; font-src 'self' data: https://*; connect-src 'self' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; frame-src 'self' https://*"
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/v1/invoices/{invoice_id}'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      invoice_id:
+        custom: []
+        name: invoice_id
+        description: 'The ID of the invoice.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      invoice_id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-frame-options: SAMEORIGIN
+          x-content-type-options: nosniff
+          strict-transport-security: 'max-age=31536000; includeSubDomains'
+          referrer-policy: no-referrer-when-downgrade
+          content-security-policy: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; style-src 'self' 'unsafe-inline' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; img-src 'self' data: https://*; font-src 'self' data: https://*; connect-src 'self' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; frame-src 'self' https://*"
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - GET
+    uri: 'api/v1/invoices/{invoice_id}/download'
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters:
+      invoice_id:
+        custom: []
+        name: invoice_id
+        description: 'The ID of the invoice.'
+        required: true
+        example: 1
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanUrlParameters:
+      invoice_id: 1
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters: []
+    cleanBodyParameters: []
+    fileParameters: []
+    responses:
+      -
+        custom: []
+        status: 401
+        content: '{"message":"Unauthenticated."}'
+        headers:
+          cache-control: 'no-cache, private'
+          content-type: application/json
+          x-frame-options: SAMEORIGIN
+          x-content-type-options: nosniff
+          strict-transport-security: 'max-age=31536000; includeSubDomains'
+          referrer-policy: no-referrer-when-downgrade
+          content-security-policy: "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; style-src 'self' 'unsafe-inline' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; img-src 'self' data: https://*; font-src 'self' data: https://*; connect-src 'self' https://* http://localhost:* http://[::1]:* ws://localhost:* ws://[::1]:*; frame-src 'self' https://*"
+          access-control-allow-origin: '*'
+        description: null
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null
+  -
+    custom: []
+    httpMethods:
+      - POST
+    uri: api/v1/payments/charge
+    metadata:
+      custom: []
+      groupName: Endpoints
+      groupDescription: ''
+      subgroup: ''
+      subgroupDescription: ''
+      title: ''
+      description: ''
+      authenticated: false
+      deprecated: false
+    headers:
+      Content-Type: application/json
+      Accept: application/json
+    urlParameters: []
+    cleanUrlParameters: []
+    queryParameters: []
+    cleanQueryParameters: []
+    bodyParameters:
+      invoice_id:
+        custom: []
+        name: invoice_id
+        description: 'The <code>id</code> of an existing record in the invoices table.'
+        required: true
+        example: 16
+        type: integer
+        enumValues: []
+        exampleWasSpecified: false
+        nullable: false
+        deprecated: false
+    cleanBodyParameters:
+      invoice_id: 16
+    fileParameters: []
+    responses: []
+    responseFields: []
+    auth: []
+    controller: null
+    method: null
+    route: null

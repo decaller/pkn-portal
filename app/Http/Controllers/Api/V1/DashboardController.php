@@ -74,7 +74,7 @@ class DashboardController extends Controller
             'featured_events' => EventResource::collection($featuredEvents),
             'latest_news' => NewsResource::collection($latestNews),
             'testimonials' => TestimonialResource::collection($testimonials),
-            'featured_document' => DocumentResource::make($featuredDocuments->first()),
+            'featured_documents' => DocumentResource::collection($featuredDocuments),
             'contact_info' => [
                 'phone' => Setting::defaultContactNumber(),
                 'whatsapp_url' => Setting::defaultContactWhatsAppUrl(),

@@ -23,7 +23,7 @@ class UserResource extends JsonResource
             'name' => $this->resource->name,
             'email' => $this->resource->email,
             'phone_number' => $this->resource->phone_number,
-            'organizations' => \App\Http\Resources\V1\OrganizationResource::collection($this->whenLoaded('organizations')),
+            'organizations' => OrganizationResource::collection($this->whenLoaded('organizations')),
         ];
     }
 }

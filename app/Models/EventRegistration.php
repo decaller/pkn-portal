@@ -153,8 +153,31 @@ class EventRegistration extends Model
             'verified_at' => $attributes['verified_at'] ?? now(),
         ])->save();
 
-        if (! $wasPaid && $this->booker) {
-            $this->booker->notify(new PaymentApprovedNotification($this));
+        if (! $wasPaid) {
+            // New Flow: Allocate Slots
+            $this->allocateParticipantSlots();
+
+            if ($this->booker) {
+                $this->booker->notify(new PaymentApprovedNotification($this));
+            }
+        }
+    }
+
+    /**
+     * Allocate empty participant slots based on package_breakdown.
+     */
+    public function allocateParticipantSlots(): void
+    {
+        $packageBreakdown = is_array($this->package_breakdown) ? $this->package_breakdown : [];
+
+        foreach ($packageBreakdown as $package) {
+            $count = $package['count'] ?? ($package['participant_count'] ?? 0);
+
+            for ($i = 0; $i < $count; $i++) {
+                $this->participants()->create([
+                    'name' => 'Pending...',
+                ]);
+            }
         }
     }
 

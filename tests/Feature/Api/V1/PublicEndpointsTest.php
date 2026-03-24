@@ -18,7 +18,7 @@ test('guest can access mobile dashboard', function () {
     Event::factory()->count(3)->create(['is_published' => true]);
     News::factory()->count(2)->create(['is_published' => true]);
     Testimonial::factory()->count(2)->create(['is_approved' => true]);
-    Document::factory()->create(['is_active' => true, 'tags' => ['featured']]);
+    Document::factory()->count(2)->create(['is_active' => true, 'tags' => ['featured']]);
 
     $response = $this->getJson('/api/v1/mobile-dashboard');
 
@@ -147,8 +147,8 @@ test('guest can filter featured documents', function () {
     $response = $this->getJson('/api/v1/documents?is_featured=1');
 
     $response->assertStatus(200)
-        ->assertJsonCount(1, 'featured')
-        ->assertJsonPath('featured.0.title', 'Featured Doc');
+        ->assertJsonCount(1, 'featured_documents')
+        ->assertJsonPath('featured_documents.0.title', 'Featured Doc');
 });
 
 test('guest can filter documents by category tag', function () {

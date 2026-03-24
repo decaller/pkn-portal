@@ -45,6 +45,7 @@ pest()->browser()->timeout(30000);
 function assertMatchesApiResult(TestResponse $response, string $path): void
 {
     $fullPath = base_path("react native dev guide/api_result/{$path}");
+    // dump("Reading API result from: {$fullPath}");
 
     if (! file_exists($fullPath)) {
         test()->fail("API result file not found at: {$fullPath}");

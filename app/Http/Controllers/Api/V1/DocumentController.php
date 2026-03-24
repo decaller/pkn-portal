@@ -7,7 +7,6 @@ use App\Http\Resources\V1\DocumentResource;
 use App\Models\Document;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class DocumentController extends Controller
 {
@@ -38,7 +37,7 @@ class DocumentController extends Controller
         $documents = $query->latest()->paginate($request->integer('per_page', 20));
 
         return response()->json([
-            'featured' => DocumentResource::collection($featuredDocuments),
+            'featured_documents' => DocumentResource::collection($featuredDocuments),
             'documents' => DocumentResource::collection($documents)->response()->getData(true),
         ]);
     }
