@@ -2,11 +2,12 @@
 
 namespace App\Providers\Filament;
 
+use App\Filament\Admin\Widgets\ContainerHealthWidget;
 use App\Filament\Admin\Widgets\LatestEventRegistrationsWidget;
 use App\Filament\Admin\Widgets\LatestEventsWidget;
+use App\Filament\Admin\Widgets\PlatformStatsWidget;
 use App\Filament\Pages\Tenancy\EditOrganizationProfile;
 use App\Filament\Pages\Tenancy\RegisterOrganization;
-use App\Filament\Shared\Widgets\FeaturedDocumentsWidget;
 use App\Http\Middleware\RedirectIfNotSuperAdmin;
 use App\Models\Organization;
 use CraftForge\FilamentLanguageSwitcher\FilamentLanguageSwitcherPlugin;
@@ -62,9 +63,10 @@ class AdminPanelProvider extends PanelProvider
             ->widgets([
                 AccountWidget::class,
                 FilamentInfoWidget::class,
+                PlatformStatsWidget::class,
+                ContainerHealthWidget::class,
                 LatestEventsWidget::class,
                 LatestEventRegistrationsWidget::class,
-                FeaturedDocumentsWidget::class,
             ])
             ->middleware([
                 EncryptCookies::class,

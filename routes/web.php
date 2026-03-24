@@ -35,6 +35,7 @@ Route::get(
 
 Route::get('/webview-login', function (Request $request) {
     $ticket = $request->query('ticket');
+    $redirectUrl = $request->query('redirect', '/user');
 
     if (! $ticket) {
         return redirect('/login')->withErrors('No ticket provided.');
@@ -52,6 +53,11 @@ Route::get('/webview-login', function (Request $request) {
     if ($user) {
         Auth::guard('web')->login($user);
         Cache::forget($cacheKey);
+
+        // Basic validation: ensure the redirect is a relative path or safe URL structure
+        if (str_starts_with($redirectUrl, '/')) {
+            return redirect($redirectUrl);
+        }
 
         return redirect('/user');
     }

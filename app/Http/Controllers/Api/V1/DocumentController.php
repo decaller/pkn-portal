@@ -33,12 +33,14 @@ class DocumentController extends Controller
         // Get featured documents (limit to 10)
         $featuredDocuments = (clone $query)->featured()->latest()->limit(10)->get();
 
-        // Get paginated documents
-        $documents = $query->latest()->paginate($request->integer('per_page', 20));
+        // Get all active documents
+        $documents = $query->latest()->get();
 
         return response()->json([
             'featured_documents' => DocumentResource::collection($featuredDocuments),
-            'documents' => DocumentResource::collection($documents)->response()->getData(true),
+            'documents' => [
+                'data' => DocumentResource::collection($documents),
+            ],
         ]);
     }
 

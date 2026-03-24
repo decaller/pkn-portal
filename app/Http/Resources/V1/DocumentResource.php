@@ -41,7 +41,7 @@ class DocumentResource extends JsonResource
             'cover_image' => $this->absoluteUrl($this->resource->cover_image),
             'mime_type' => $this->resource->mime_type,
             'description' => $this->resource->description,
-            'tags' => $this->resource->tags,
+            'tags' => $this->resource->tags ?? [],
             'is_active' => $this->resource->is_active,
             'is_featured' => $this->resource->is_featured,
             'event_id' => $this->resource->event_id,
