@@ -1,9 +1,12 @@
 <?php
 
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Notifications\DatabaseNotification;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\Sanctum;
+
+uses(RefreshDatabase::class);
 
 test('authenticated user can list their notifications', function () {
     $user = User::factory()->create();

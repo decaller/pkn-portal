@@ -8,6 +8,7 @@ use App\Models\News;
 use App\Models\Testimonial;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Notifications\Notification;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\Sanctum;
 
@@ -17,38 +18,19 @@ test('guest can access mobile dashboard', function () {
     Event::factory()->count(3)->create(['is_published' => true]);
     News::factory()->count(2)->create(['is_published' => true]);
     Testimonial::factory()->count(2)->create(['is_approved' => true]);
+    Document::factory()->create(['is_active' => true, 'tags' => ['featured']]);
 
     $response = $this->getJson('/api/v1/mobile-dashboard');
 
-    $response->assertStatus(200)
-        ->assertJsonStructure([
-            'featured_events' => [
-                '*' => ['id', 'title', 'slug', 'cover_image'],
-            ],
-            'latest_news' => [
-                '*' => ['id', 'title', 'thumbnail'],
-            ],
-            'testimonials' => [
-                '*' => ['id', 'content', 'rating', 'user' => ['name']],
-            ],
-            'featured_documents' => [
-                '*' => ['id', 'title', 'slug', 'file_url'],
-            ],
-            'contact_info' => [
-                'phone',
-                'whatsapp_url',
-            ],
-            'alerts',
-            'stats' => [
-                'active_registrations',
-                'pending_payments',
-            ],
-        ]);
+    $response->assertStatus(200);
+
+    assertMatchesApiResult($response, 'mobile-dashboard.json');
 });
 
 test('dashboard stats and alerts are scoped to the authenticated mobile user when a bearer token is present', function () {
     $user = User::factory()->create();
     $otherUser = User::factory()->create();
+    Document::factory()->create(['is_active' => true, 'tags' => ['featured']]);
 
     EventRegistration::factory()->create([
         'booker_user_id' => $user->id,
@@ -61,7 +43,7 @@ test('dashboard stats and alerts are scoped to the authenticated mobile user whe
         'payment_status' => 'submitted',
     ]);
 
-    $user->notify(new class extends \Illuminate\Notifications\Notification
+    $user->notify(new class extends Notification
     {
         public function via(object $notifiable): array
         {
@@ -94,10 +76,8 @@ test('guest can list and search events', function () {
     Event::factory()->create(['title' => 'Other Event', 'is_published' => true]);
 
     $response = $this->getJson('/api/v1/events?search=Searchable');
-
-    $response->assertStatus(200)
-        ->assertJsonCount(1, 'data')
-        ->assertJsonPath('data.0.title', 'Searchable Event');
+    $response->assertStatus(200);
+    assertMatchesApiResult($response, 'events.json');
 });
 
 test('guest can filter events by category', function () {
@@ -148,27 +128,16 @@ test('guest can list news with pagination', function () {
     News::factory()->count(20)->create(['is_published' => true]);
 
     $response = $this->getJson('/api/v1/news');
-
-    $response->assertStatus(200)
-        ->assertJsonStructure(['data', 'links', 'meta'])
-        ->assertJsonCount(15, 'data'); // default per_page is 15
+    $response->assertStatus(200);
+    assertMatchesApiResult($response, 'news.json');
 });
 
 test('guest can list documents', function () {
     Document::factory()->count(5)->create(['is_active' => true]);
 
     $response = $this->getJson('/api/v1/documents');
-
-    $response->assertStatus(200)
-        ->assertJsonCount(5, 'documents.data')
-        ->assertJsonStructure([
-            'featured',
-            'documents' => [
-                'data' => [
-                    '*' => ['id', 'title', 'is_featured'],
-                ],
-            ],
-        ]);
+    $response->assertStatus(200);
+    assertMatchesApiResult($response, 'documents.json');
 });
 
 test('guest can filter featured documents', function () {

@@ -18,12 +18,16 @@ class TestimonialResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        if (! $this->resource) {
+            return [];
+        }
+
         return [
             'id' => $this->resource->id,
             'content' => $this->resource->content,
             'rating' => $this->resource->rating,
             'user' => [
-                'name' => $this->resource->user->name ?? $this->resource->guest_name,
+                'name' => $this->resource->user?->name ?? $this->resource->guest_name,
             ],
             'event_id' => $this->resource->event_id,
             'is_approved' => $this->resource->is_approved,

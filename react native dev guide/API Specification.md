@@ -18,6 +18,40 @@ Response rules:
 
 The mobile app uses a **Native Login Strategy**. The app sends credentials directly to the authentication endpoint and saves the returned token.
 
+### `POST /auth/register`
+
+**Auth required:** no
+
+**Purpose:**
+
+- Register a new user via their name, phone number, and password.
+
+**Request Payload:**
+
+```json
+{
+  "name": "Full Name",
+  "phone_number": "08123456789",
+  "email": "user@example.com",
+  "password": "secretpassword",
+  "password_confirmation": "secretpassword"
+}
+```
+
+**Response:**
+
+```json
+{
+  "success": true,
+  "token": "plain-text-token",
+  "user": {
+    "id": 1,
+    "name": "Full Name",
+    "phone_number": "08123456789"
+  }
+}
+```
+
 ### `POST /auth/login`
 
 **Auth required:** no
@@ -186,6 +220,7 @@ Return article content plus absolute banner URLs.
 - **Auth required**: yes
 - **Purpose**: Create a new event registration natively.
 - **Payload**: `{ event_id, package_id, participants: [ { name, category, ... } ] }`
+- **Contract note**: `GET /events/{id}` must include a stable identifier for each `registration_packages` item if `package_id` is required here. If package IDs are not exposed, document and support an alternative create payload such as `package_name` or `package_breakdown`.
 
 ### `PUT /registrations/{id}`
 

@@ -28,11 +28,15 @@ class EventResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        if (! $this->resource) {
+            return [];
+        }
+
         return [
             'id' => $this->resource->id,
             'title' => $this->resource->title,
             'slug' => $this->resource->slug,
-            'summary' => $this->resource->summary, // from add_expansion_columns_to_events_table
+            'summary' => $this->resource->summary,
             'description' => $this->resource->description,
             'event_date' => $this->resource->event_date?->format('Y-m-d'),
             'city' => $this->resource->city,
@@ -55,10 +59,16 @@ class EventResource extends JsonResource
             'max_capacity' => $this->resource->max_capacity,
             'available_spots' => $this->resource->availableSpots(),
             'is_full' => $this->resource->isFull(),
-            'registration_packages' => $this->resource->registration_packages, // JSON array
-            'rundown' => $this->resource->rundown, // JSON array
+            'registration_packages' => $this->resource->registration_packages,
+            'rundown' => $this->resource->rundown,
             'tags' => $this->resource->tags,
             'proposal' => $this->absoluteUrl($this->resource->proposal),
+            'created_at' => $this->resource->created_at,
+            'updated_at' => $this->resource->updated_at,
+            'event_type' => $this->resource->event_type?->value ?? $this->resource->event_type,
+            'survey_template_id' => $this->resource->survey_template_id,
+            'place' => $this->resource->place,
+            'payment_instructions' => $this->resource->payment_instructions,
             'testimonials' => TestimonialResource::collection($this->whenLoaded('approvedTestimonials')),
         ];
     }

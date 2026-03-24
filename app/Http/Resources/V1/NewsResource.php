@@ -28,6 +28,10 @@ class NewsResource extends JsonResource
      */
     public function toArray(Request $request): array
     {
+        if (! $this->resource) {
+            return [];
+        }
+
         return [
             'id' => $this->resource->id,
             'title' => $this->resource->title,
@@ -37,9 +41,9 @@ class NewsResource extends JsonResource
             'event_id' => $this->resource->event_id,
             'created_at' => $this->resource->created_at?->toIso8601String(),
             'event' => $this->whenLoaded('event', fn () => [
-                'id' => $this->resource->event->id,
-                'title' => $this->resource->event->title,
-                'slug' => $this->resource->event->slug,
+                'id' => $this->resource->event?->id,
+                'title' => $this->resource->event?->title,
+                'slug' => $this->resource->event?->slug,
             ]),
         ];
     }

@@ -1,12 +1,12 @@
 <?php
 
-use App\Models\User;
-use App\Models\Invoice;
-use App\Models\Event;
-use App\Models\EventRegistration;
+use App\Enums\InvoiceStatus;
 use App\Enums\PaymentStatus;
 use App\Enums\RegistrationStatus;
-use App\Enums\InvoiceStatus;
+use App\Models\Event;
+use App\Models\EventRegistration;
+use App\Models\Invoice;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
 
@@ -20,18 +20,18 @@ test('authenticated user can list their invoices', function () {
         'event_id' => $event->id,
         'payment_status' => PaymentStatus::Unpaid,
         'status' => RegistrationStatus::Draft,
-        'total_amount' => 1000
+        'total_amount' => 1000,
     ]);
-    
+
     // One invoice is auto-created. Let's create a second one with version 2
     Invoice::create([
-        'event_registration_id' => $registration->id, 
-        'invoice_number' => 'INV-002', 
-        'status' => InvoiceStatus::Issued, 
-        'total_amount' => 1000, 
-        'version' => 2, 
-        'issued_at' => now(), 
-        'due_at' => now()->addDays(7)
+        'event_registration_id' => $registration->id,
+        'invoice_number' => 'INV-002',
+        'status' => InvoiceStatus::Issued,
+        'total_amount' => 1000,
+        'version' => 2,
+        'issued_at' => now(),
+        'due_at' => now()->addDays(7),
     ]);
 
     Sanctum::actingAs($user, ['*']);
@@ -52,9 +52,12 @@ test('authenticated user can view specific invoice', function () {
         'event_id' => $event->id,
         'payment_status' => PaymentStatus::Unpaid,
         'status' => RegistrationStatus::Draft,
-        'total_amount' => 1000
+        'total_amount' => 1000,
+        'package_breakdown' => [
+            ['package_name' => 'General', 'participant_count' => 1, 'unit_price' => 1000],
+        ],
     ]);
-    
+
     $invoice = $registration->invoices()->first();
 
     Sanctum::actingAs($user, ['*']);
@@ -65,7 +68,7 @@ test('authenticated user can view specific invoice', function () {
         ->assertJsonPath('data.id', $invoice->id)
         ->assertJsonPath('data.registration_id', $registration->id)
         ->assertJsonPath('data.status', 'unpaid')
-        ->assertJsonPath('data.gross_amount', 1000.0)
+        ->assertJsonPath('data.gross_amount', 1000)
         ->assertJsonStructure([
             'data' => [
                 'items',
@@ -84,9 +87,9 @@ test('user cannot view someone elses invoice', function () {
         'event_id' => $event->id,
         'payment_status' => PaymentStatus::Unpaid,
         'status' => RegistrationStatus::Draft,
-        'total_amount' => 1000
+        'total_amount' => 1000,
     ]);
-    
+
     $invoice = $registration->invoices()->first();
 
     Sanctum::actingAs($user, ['*']);
@@ -104,9 +107,9 @@ test('authenticated user can get invoice download link', function () {
         'event_id' => $event->id,
         'payment_status' => PaymentStatus::Unpaid,
         'status' => RegistrationStatus::Draft,
-        'total_amount' => 1000
+        'total_amount' => 1000,
     ]);
-    
+
     $invoice = $registration->invoices()->first();
 
     Sanctum::actingAs($user, ['*']);

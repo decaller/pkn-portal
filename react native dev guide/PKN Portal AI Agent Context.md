@@ -4,6 +4,8 @@
 
 This mobile app is the React Native companion for the existing Laravel 12 + Filament 5 portal.
 
+> **Backend Database:** The backend uses **PostgreSQL exclusively** (via Laravel Sail's `pgsql` service). Never suggest SQLite for backend tasks. Tests also run against a dedicated PostgreSQL `testing` database.
+
 The backend already has strong web-side domain logic for:
 
 - phone-number login
@@ -60,17 +62,19 @@ Rules:
 2. Prefer packages that work with standard Expo workflows.
 3. Do not use `react-navigation` directly; use Expo Router patterns.
 
-## Authentication rule (Native Focus)
+## Authentication rule (Sanctum Implementation)
 
-Use a **Native Login Strategy**.
+Use a **Native Login Strategy** powered by Laravel Sanctum.
 
 ### Login Flow:
-1. Native app provides a typical Login form.
-2. User authenticates via API Call.
-3. Native app extracts the `token` from the JSON response.
+1. Native app provides a typical Login form (phone number + password).
+2. User authenticates via API Call to `POST /api/v1/auth/login`.
+3. Native app extracts the `plainTextToken` from the JSON response.
+4. The token is stored in `expo-secure-store` and sent as a `Bearer` token in the `Authorization` header.
 
 This ensures:
 - The app has a **Sanctum Bearer Token** for native API calls.
+- Old non-functional tokens are revoked on the server upon new login.
 
 ## APIs Only rule
 

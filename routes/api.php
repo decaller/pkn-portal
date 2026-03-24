@@ -8,8 +8,8 @@ use App\Http\Controllers\Api\V1\InvoiceController;
 use App\Http\Controllers\Api\V1\NewsController;
 use App\Http\Controllers\Api\V1\NotificationController;
 use App\Http\Controllers\Api\V1\OrganizationController;
-use App\Http\Controllers\Api\V1\PaymentController;
 use App\Http\Controllers\Api\V1\ParticipantController;
+use App\Http\Controllers\Api\V1\PaymentController;
 use App\Http\Controllers\Api\V1\ProfileController;
 use App\Http\Controllers\Api\V1\RegistrationController;
 use Illuminate\Support\Facades\Route;
@@ -41,6 +41,9 @@ Route::prefix('v1')->group(function () {
     });
 
     // 2. Native Login & Identity
+    Route::post('/auth/register', [AuthController::class, 'register'])
+        ->name('api.v1.auth.register');
+
     Route::post('/auth/login', [AuthController::class, 'login'])
         ->name('api.v1.auth.login');
 

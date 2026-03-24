@@ -2,8 +2,11 @@
 
 use App\Models\Organization;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Str;
 use Laravel\Sanctum\Sanctum;
+
+uses(RefreshDatabase::class);
 
 test('authenticated user can fetch their profile with organizations', function () {
     $user = User::factory()->has(Organization::factory()->count(2))->create();
@@ -11,10 +14,8 @@ test('authenticated user can fetch their profile with organizations', function (
 
     $response = $this->getJson('/api/v1/user/profile');
 
-    $response->assertStatus(200)
-        ->assertJsonPath('data.id', $user->id)
-        ->assertJsonPath('data.name', $user->name)
-        ->assertJsonCount(2, 'data.organizations');
+    $response->assertStatus(200);
+    assertMatchesApiResult($response, 'profile.json');
 });
 
 test('unauthenticated user cannot fetch profile', function () {

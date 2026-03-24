@@ -33,6 +33,16 @@ class News extends Model
             ->dontSubmitEmptyLogs();
     }
 
+    /**
+     * @return array<string, string>
+     */
+    protected function casts(): array
+    {
+        return [
+            'is_published' => 'boolean',
+        ];
+    }
+
     public function event(): BelongsTo
     {
         return $this->belongsTo(Event::class);

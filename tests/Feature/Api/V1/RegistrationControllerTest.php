@@ -6,7 +6,10 @@ use App\Models\Event;
 use App\Models\EventRegistration;
 use App\Models\Organization;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
+
+uses(RefreshDatabase::class);
 
 test('authenticated user can create registration', function () {
     $user = User::factory()->create();
@@ -154,8 +157,8 @@ test('authenticated user can list their registrations', function () {
 
     $response = $this->getJson('/api/v1/registrations');
 
-    $response->assertStatus(200)
-        ->assertJsonCount(1, 'data');
+    $response->assertStatus(200);
+    assertMatchesApiResult($response, 'registrations.json');
 });
 
 test('authenticated user can view specific registration', function () {
@@ -174,6 +177,6 @@ test('authenticated user can view specific registration', function () {
 
     $response = $this->getJson("/api/v1/registrations/{$registration->id}");
 
-    $response->assertStatus(200)
-        ->assertJsonPath('data.id', $registration->id);
+    $response->assertStatus(200);
+    assertMatchesApiResult($response, 'registrations/9.json');
 });

@@ -2,7 +2,11 @@
 
 namespace Database\Factories;
 
+use App\Enums\PaymentStatus;
+use App\Enums\RegistrationStatus;
+use App\Models\Event;
 use App\Models\EventRegistration;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -18,7 +22,11 @@ class EventRegistrationFactory extends Factory
     public function definition(): array
     {
         return [
-            //
+            'event_id' => Event::factory(),
+            'booker_user_id' => User::factory(),
+            'status' => RegistrationStatus::Draft,
+            'payment_status' => PaymentStatus::Unpaid,
+            'total_amount' => 0,
         ];
     }
 }

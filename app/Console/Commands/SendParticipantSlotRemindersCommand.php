@@ -46,7 +46,14 @@ class SendParticipantSlotRemindersCommand extends Command
                     $alreadyNotified = $registration->booker->notifications()
                         ->where('type', EmptyParticipantSpotReminderNotification::class)
                         ->where('created_at', '>=', now()->subDays(3))
-                        ->whereRaw("(data::jsonb)->>'registration_id' = ?", [(string) $registration->id])
+                        ->where(function ($q) use ($registration): void {
+                            $driver = $q->getConnection()->getDriverName();
+                            if ($driver === 'pgsql') {
+                                $q->whereRaw("(data::jsonb)->>'registration_id' = ?", [(string) $registration->id]);
+                            } else {
+                                $q->whereRaw("json_extract(data, '$.registration_id') = ?", [(string) $registration->id]);
+                            }
+                        })
                         ->exists();
 
                     if ($alreadyNotified) {

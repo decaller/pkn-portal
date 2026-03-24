@@ -167,6 +167,7 @@ protected function isAccessible(User $user, ?string $path = null): bool
 
 ## Database
 
+- **CRITICAL: This project uses PostgreSQL (pgsql) exclusively.** Never use SQLite-specific syntax, functions, or workarounds (e.g., `strftime`, `:memory:` databases). The Sail `pgsql` service is always available.
 - Always use proper Eloquent relationship methods with return type hints. Prefer relationship methods over raw queries or manual joins.
 - Use Eloquent models and relationships before suggesting raw database queries.
 - Avoid `DB::`; prefer `Model::query()`. Generate code that leverages Laravel's ORM capabilities rather than bypassing them.
@@ -189,6 +190,11 @@ protected function isAccessible(User $user, ?string $path = null): bool
 ## Authentication & Authorization
 
 - Use Laravel's built-in authentication and authorization features (gates, policies, Sanctum, etc.).
+- **Sanctum (Mobile App)**: The API uses Sanctum tokens for mobile authentication. 
+    - Tokens are issued via `POST /api/v1/auth/login` and `POST /api/v1/auth/register`.
+    - Always use `auth:sanctum` middleware for protected API routes.
+    - Ensure `HasApiTokens` is present on the `User` model.
+    - Token name used is typically `mobile-app`.
 
 ## URL Generation
 

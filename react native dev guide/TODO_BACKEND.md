@@ -32,7 +32,8 @@ _The mobile app is now using a fully native login flow instead of a WebView brid
 
 - [x] **Sanctum Authentication**
     - Ensure Laravel Sanctum is installed and configured for mobile token authentication.
-    - Implement `POST /api/v1/auth/login` returning a plaintext token and user profile.
+    - [x] Implement `POST /api/v1/auth/register` for new user registration.
+    - [x] Implement `POST /api/v1/auth/login` returning a plaintext token and user profile.
     - Implement `POST /api/v1/auth/logout` to revoke the token.
     - Implement `GET /api/v1/user` to get the authenticated user's details.
 
@@ -57,22 +58,27 @@ _Registration flows will be handled natively via API rather than redirecting to 
 
 - [x] **Registrations API**
     - Implement `GET /api/v1/registrations` to list event registrations for the authenticated user.
+    - Implement `GET /api/v1/registrations/{id}` to fetch one registration in full detail.
     - Implement `POST /api/v1/registrations` to create a new registration (event_id, package_id, participants).
     - Implement `PUT /api/v1/registrations/{id}` to update registration details.
     - Implement `DELETE /api/v1/registrations/{id}` to cancel draft/unpaid registrations.
+    - Implement `POST /api/v1/registrations/{id}/cancel` because the mobile detail screen uses this explicit cancel action.
+    - **Requirement**: `GET /api/v1/registrations` may return a Laravel API Resource collection (`{ data: [...] }`), but each item must include at least `id`, `registration_number`, `event_id`, `status`, `total_amount`, `created_at`, `event`, and `participants`.
+    - **Requirement**: `GET /api/v1/registrations/{id}` should match the shape used in [`9.json`](api_result/registrations/9.json), wrapped as `{ data: {...} }`, including `event`, `participants`, `participant_count`, `package_name` or `package_breakdown`, and payment-related fields when available.
+    - **Requirement**: `GET /api/v1/events/{id}` must expose a stable `id` for every `registration_packages` entry, or `POST /api/v1/registrations` must explicitly support an alternative payload keyed by `package_name`/`package_breakdown`. Right now the event payload examples omit package IDs, which prevents the native app from submitting a valid documented `package_id`.
     - > [!IMPORTANT]
     - > **Debugging "Empty Registrations" (Checklist):**
     - > 1. **Auth Scoping**: Ensure the `Registrations` query is filtered by `auth()->id()`.
     - > 2. **Token Validity**: The mobile app sends the token in the `Authorization: Bearer <token>` header. Verify Sanctum is correctly identifying the user.
     - > 3. **Data Presence**: Check the database for entries in the `registrations` table linked to the test user's ID.
-    - > 4. **Response Format**: Ensure the API returns a JSON array: `[]` for no data, or `[{...}]` for existing data. Avoid wrapping it in an extra object unless using `data` key (standard Laravel Resource).
+    - > 4. **Response Format**: Ensure the API returns either a plain array or a standard Laravel Resource collection with `data`; do not return a non-standard wrapper shape.
     - > 5. **Relationships**: The app expects `event` and `participants` to be included in the response. Check if Eager Loading is implemented.
 
 - [x] **Participants CRUD**
     - Implement `GET /api/v1/registrations/{id}/participants` to list participants.
     - Implement `POST /api/v1/registrations/{id}/participants` to add a new participant.
-    - Implement `PUT /api/v1/participants/{participant_id}` to update a participant.
-    - Implement `DELETE /api/v1/participants/{participant_id}` to remove a participant.
+    - Implement `PUT /api/v1/registrations/{id}/participants/{participant_id}` to update a participant.
+    - Implement `DELETE /api/v1/registrations/{id}/participants/{participant_id}` to remove a participant.
 
 - [x] **Organizations API**
     - Implement `GET /api/v1/organizations` to list organizations the user belongs to.

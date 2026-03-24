@@ -2,7 +2,10 @@
 
 use App\Models\Organization;
 use App\Models\User;
+use Illuminate\Foundation\Testing\RefreshDatabase;
 use Laravel\Sanctum\Sanctum;
+
+uses(RefreshDatabase::class);
 
 test('authenticated user can list their organizations', function () {
     $user = User::factory()->has(Organization::factory()->count(3))->create();

@@ -15,7 +15,6 @@ use App\Models\Setting;
 use App\Models\Testimonial;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
-use Laravel\Sanctum\PersonalAccessToken;
 
 class DashboardController extends Controller
 {
@@ -75,7 +74,7 @@ class DashboardController extends Controller
             'featured_events' => EventResource::collection($featuredEvents),
             'latest_news' => NewsResource::collection($latestNews),
             'testimonials' => TestimonialResource::collection($testimonials),
-            'featured_documents' => DocumentResource::collection($featuredDocuments),
+            'featured_document' => DocumentResource::make($featuredDocuments->first()),
             'contact_info' => [
                 'phone' => Setting::defaultContactNumber(),
                 'whatsapp_url' => Setting::defaultContactWhatsAppUrl(),
@@ -94,11 +93,7 @@ class DashboardController extends Controller
 
     private function resolveApiUser(): ?User
     {
-        $token = request()->bearerToken();
-        if (! $token) {
-            return null;
-        }
-
-        return PersonalAccessToken::findToken($token)?->tokenable;
+        /** @var User|null */
+        return auth('sanctum')->user();
     }
 }

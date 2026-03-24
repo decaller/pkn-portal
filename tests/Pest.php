@@ -1,5 +1,7 @@
 <?php
 
+use Illuminate\Testing\TestResponse;
+use PHPUnit\Framework\Assert;
 use Tests\TestCase;
 
 /*
@@ -14,7 +16,6 @@ use Tests\TestCase;
 */
 
 pest()->extend(TestCase::class)
- // ->use(Illuminate\Foundation\Testing\RefreshDatabase::class)
     ->in('Feature', 'Browser');
 
 pest()->browser()->timeout(30000);
@@ -30,10 +31,6 @@ pest()->browser()->timeout(30000);
 |
 */
 
-expect()->extend('toBeOne', function () {
-    return $this->toBe(1);
-});
-
 /*
 |--------------------------------------------------------------------------
 | Functions
@@ -45,7 +42,44 @@ expect()->extend('toBeOne', function () {
 |
 */
 
-function something()
+function assertMatchesApiResult(TestResponse $response, string $path): void
 {
-    // ..
+    $fullPath = base_path("react native dev guide/api_result/{$path}");
+
+    if (! file_exists($fullPath)) {
+        test()->fail("API result file not found at: {$fullPath}");
+    }
+
+    $expectedContent = file_get_contents($fullPath);
+    $appUrl = rtrim(config('app.url'), '/');
+    $normalizedExpected = json_decode(str_replace('http://localhost', $appUrl, $expectedContent), true);
+
+    assertArrayStructure($normalizedExpected, $response->json());
+}
+
+function assertArrayStructure(array $expected, array $actual, string $path = ''): void
+{
+    foreach ($expected as $key => $value) {
+        Assert::assertArrayHasKey($key, $actual, 'Missing key: '.($path ? "{$path}.{$key}" : $key));
+
+        if (is_array($value) && ! empty($value)) {
+            $currentPath = $path ? "{$path}.{$key}" : $key;
+
+            if ($actual[$key] === null) {
+                continue;
+            }
+
+            if (array_is_list($value)) {
+                Assert::assertIsArray($actual[$key], "Key {$currentPath} is not an array");
+                if (isset($value[0]) && is_array($value[0])) {
+                    foreach ($actual[$key] as $index => $item) {
+                        assertArrayStructure($value[0], $item, "{$currentPath}[{$index}]");
+                    }
+                }
+            } else {
+                Assert::assertIsArray($actual[$key], "Key {$currentPath} is not an array (value is ".gettype($actual[$key]).')');
+                assertArrayStructure($value, $actual[$key], $currentPath);
+            }
+        }
+    }
 }

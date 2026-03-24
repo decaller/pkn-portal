@@ -129,7 +129,7 @@ class DatabaseSeeder extends Seeder
             ['slug' => 'pkn-recap-2023'],
             [
                 'title' => 'PKN Recap 2023',
-                'description' => 'Past recap event used for tests.',
+                'description' => 'Retrospeksi capaian dan evaluasi program PKN sepanjang tahun 2023.',
                 'event_date' => now()->subYears(1)->toDateString(),
                 'is_published' => true,
                 'allow_registration' => false,
@@ -142,7 +142,7 @@ class DatabaseSeeder extends Seeder
             ['slug' => 'pkn-mini-summit-2024'],
             [
                 'title' => 'PKN Mini Summit 2024',
-                'description' => 'Past mini summit used for testing.',
+                'description' => 'Pertemuan strategis pengurus dan mitra PKN untuk menyelaraskan visi 2024.',
                 'event_date' => now()->subMonths(8)->toDateString(),
                 'is_published' => true,
                 'allow_registration' => false,
