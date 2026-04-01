@@ -29,8 +29,8 @@ it('does not send a payment upload reminder when a registration is created', fun
         'event_id' => $event->id,
         'organization_id' => $organization->id,
         'booker_user_id' => $user->id,
-        'package_breakdown' => [['package_name' => 'General', 'quantity' => 1, 'unit_price' => 0]],
-        'total_amount' => 0,
+        'package_breakdown' => [['package_name' => 'General', 'quantity' => 1, 'unit_price' => 100]],
+        'total_amount' => 100,
         'status' => RegistrationStatus::Draft,
         'payment_status' => PaymentStatus::Unpaid,
     ]);
@@ -50,8 +50,8 @@ it('sends a payment approved notification when the gateway marks a registration 
         'event_id' => $event->id,
         'organization_id' => $organization->id,
         'booker_user_id' => $user->id,
-        'package_breakdown' => [['package_name' => 'General', 'quantity' => 1, 'unit_price' => 0]],
-        'total_amount' => 0,
+        'package_breakdown' => [['package_name' => 'General', 'quantity' => 1, 'unit_price' => 100]],
+        'total_amount' => 100,
         'status' => RegistrationStatus::Draft,
         'payment_status' => PaymentStatus::Unpaid,
     ]);
@@ -103,8 +103,8 @@ it('sends participant slot reminders via the scheduled command when spots are em
         'event_id' => $event->id,
         'organization_id' => $organization->id,
         'booker_user_id' => $user->id,
-        'package_breakdown' => [['package_name' => 'General', 'quantity' => 2, 'unit_price' => 0]],
-        'total_amount' => 0,
+        'package_breakdown' => [['package_name' => 'General', 'quantity' => 2, 'unit_price' => 100]],
+        'total_amount' => 100,
         'status' => RegistrationStatus::Draft,
         'payment_status' => PaymentStatus::Unpaid,
     ]);

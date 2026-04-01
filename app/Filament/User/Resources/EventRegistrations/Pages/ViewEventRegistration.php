@@ -13,9 +13,11 @@ use Filament\Notifications\Notification;
 use Filament\Resources\Pages\ViewRecord;
 use Filament\Schemas\Components\Utilities\Get;
 use Filament\Schemas\Components\Utilities\Set;
+use App\Services\Payments\InvoicePaymentService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use Throwable;
 
 class ViewEventRegistration extends ViewRecord
 {
@@ -29,6 +31,36 @@ class ViewEventRegistration extends ViewRecord
         $canManage = auth()->user()->can('manageParticipants', $this->record);
 
         return [
+            Action::make('pay_now')
+                ->label(fn (): string => ($this->record->latestInvoice?->hasActivePaymentAttempt() ?? false)
+                    ? __('Continue Payment')
+                    : __('Pay Now'))
+                ->icon('heroicon-o-credit-card')
+                ->color('success')
+                ->visible(fn (): bool => $this->record->latestInvoice?->canStartGatewayPayment() ?? false)
+                ->action(function (): void {
+                    try {
+                        $invoice = $this->record->latestInvoice;
+
+                        if (! $invoice) {
+                            throw new \RuntimeException('No invoice found');
+                        }
+
+                        $payment = app(InvoicePaymentService::class)->createOrReuseSnapPayment($invoice);
+
+                        Notification::make()
+                            ->title(__('Payment session created'))
+                            ->success()
+                            ->send();
+
+                        $this->dispatch('open-midtrans-snap', token: $payment->snap_token);
+                    } catch (Throwable) {
+                        Notification::make()
+                            ->title(__('Unable to start payment'))
+                            ->danger()
+                            ->send();
+                    }
+                }),
             Action::make('view_event')
                 ->label(__('View Event'))
                 ->icon('heroicon-o-calendar')

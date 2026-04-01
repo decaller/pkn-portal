@@ -66,8 +66,8 @@ it('can register a personal user and create an event registration', function () 
         ->first();
 
     expect($registration)->not->toBeNull()
-        ->and($registration->status)->toBe(RegistrationStatus::Draft)
-        ->and($registration->payment_status)->toBe(PaymentStatus::Unpaid)
+        ->and($registration->status)->toBe(RegistrationStatus::Paid)
+        ->and($registration->payment_status)->toBe(PaymentStatus::Verified)
         ->and($registration->total_amount)->toEqual(0);
 
     // Verify Personal Organization is created

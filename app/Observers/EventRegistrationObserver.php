@@ -23,6 +23,8 @@ class EventRegistrationObserver implements ShouldHandleEventsAfterCommit
     public function created(EventRegistration $registration): void
     {
         $this->invoiceService->regenerate($registration, 'Superseded by newer invoice');
+
+        $this->checkAndMarkFreeRegistration($registration);
     }
 
     public function updated(EventRegistration $registration): void
@@ -30,6 +32,8 @@ class EventRegistrationObserver implements ShouldHandleEventsAfterCommit
         if ($this->shouldRegenerateInvoice($registration)) {
             $this->invoiceService->regenerate($registration, 'Superseded by newer invoice');
         }
+
+        $this->checkAndMarkFreeRegistration($registration);
     }
 
     private function shouldRegenerateInvoice(EventRegistration $registration): bool
@@ -38,5 +42,14 @@ class EventRegistrationObserver implements ShouldHandleEventsAfterCommit
             ->keys()
             ->intersect(self::INVOICE_AFFECTING_FIELDS)
             ->isNotEmpty();
+    }
+
+    private function checkAndMarkFreeRegistration(EventRegistration $registration): void
+    {
+        if ($registration->total_amount <= 0 && $registration->payment_status !== \App\Enums\PaymentStatus::Verified) {
+            $registration->markPaidFromGateway([
+                'verified_at' => now(),
+            ]);
+        }
     }
 }
